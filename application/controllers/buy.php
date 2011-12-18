@@ -44,91 +44,98 @@ class Buy extends Application
 	public function process($api_key,$trx_id){
 		
 		$merchant = $this->get_key_info($api_key);
-		if($trx_info = $this->get_trx_info($trx_id)){
-			if($trx_info->table == $this->config->item('assigned_delivery_table')){
-				//transaction already assigned
-				$data['message'] = "This delivery order has already processed and ongoing delivery. have a nice day :)";
-				$data['page_title'] = 'Delivery is on its way';
-				$this->ag_auth->buyview('message',$data);
-			}else if($trx_info->table == $this->config->item('incoming_delivery_table')){
-				//transaction already recorded in incoming table
-				$data['message'] = "This delivery order has already received. Would you like to make changes ?";
-				$data['page_title'] = 'Delivery order recieved';
-				$this->ag_auth->buyview('message',$data);
+		if($merchant){
+			if($trx_info = $this->get_trx_info($trx_id)){
+				if($trx_info->table == $this->config->item('assigned_delivery_table')){
+					//transaction already assigned
+					$data['message'] = "This delivery order has already processed and ongoing delivery. have a nice day :)";
+					$data['page_title'] = 'Delivery is on its way';
+					$this->ag_auth->buyview('message',$data);
+				}else if($trx_info->table == $this->config->item('incoming_delivery_table')){
+					//transaction already recorded in incoming table
+					$data['message'] = "This delivery order has already received. Would you like to make changes ?";
+					$data['page_title'] = 'Delivery order recieved';
+					$this->ag_auth->buyview('message',$data);
+				}
+			}else{
+
+				if($merchant->fetch_method == 'URL'){
+					$url = $merchant->fetch_detail_url.'/'.$api_key.'/'.$trx_id;
+				}else{
+					$url = $merchant->fetch_detail_url.'?key='.$api_key.'&trx='.$trx_id;
+				}
+
+				//print $url;
+				$trx_detail = $this->curl->simple_get($url);
+				//print $trx_detail;
+
+				$delivery_id = $this->trxrecord($api_key,$trx_id,$trx_detail);
+
+				$trx_detail = get_object_vars(json_decode($trx_detail));
+
+				$this->table->set_heading(
+					'No.',		 	 	
+					'Description',	 	 	 	 	 	 	 
+					'Unit Price',			
+					'Quantity',		
+					'Total',			
+					'Discount'
+					); // Setting headings for the table
+
+				$d = 0;
+				$gt = 0;
+
+				//print_r($trx_detail['trx_detail'] );
+				$seq = 1;
+				foreach($trx_detail['trx_detail'] as $val)
+				{
+
+					$this->table->add_row(
+						$seq,		 	 	
+						$val->unit_description,	 	 	 	 	 	 	 
+						$val->unit_price,			
+						$val->unit_quantity,		
+						$val->unit_total,			
+						$val->unit_discount
+					);
+
+					$gt += $val->unit_total;
+					$d += $val->unit_discount;
+					$seq++;
+				}
+
+				if(isset($trx_detail['cod_charges'])){
+					$this->table->add_row(
+						'&nbsp',		
+						'&nbsp',		
+						'&nbsp',		
+						'COD Charges',		
+						($trx_detail['cod_charges'] == 0 )?'-':$trx_detail['cod_charges'],			
+						'-'
+					);
+
+					$gt += $trx_detail['cod_charges'];
+				}
+
+				$this->table->add_row(
+					'&nbsp',		
+					'&nbsp',		
+					'&nbsp',		
+					'Total',		
+					$gt,			
+					$d
+				);
+
+				$data['delivery_id'] = $delivery_id;
+				$data['trx_detail'] = $trx_detail;
+				$data['page_title'] = 'Order Process';
+				$this->ag_auth->buyview('buy/process',$data);
 			}
 		}else{
-				
-			if($merchant->fetch_method == 'URL'){
-				$url = $merchant->fetch_detail_url.'/'.$api_key.'/'.$trx_id;
-			}else{
-				$url = $merchant->fetch_detail_url.'?key='.$api_key.'&trx='.$trx_id;
-			}
-			
-			//print $url;
-			$trx_detail = $this->curl->simple_get($url);
-			//print $trx_detail;
-			
-			$delivery_id = $this->trxrecord($api_key,$trx_id,$trx_detail);
-			
-			$trx_detail = get_object_vars(json_decode($trx_detail));
-			
-			$this->table->set_heading(
-				'No.',		 	 	
-				'Description',	 	 	 	 	 	 	 
-				'Unit Price',			
-				'Quantity',		
-				'Total',			
-				'Discount'
-				); // Setting headings for the table
-
-			$d = 0;
-			$gt = 0;
-			
-			//print_r($trx_detail['trx_detail'] );
-			$seq = 1;
-			foreach($trx_detail['trx_detail'] as $val)
-			{
-
-				$this->table->add_row(
-					$seq,		 	 	
-					$val->unit_description,	 	 	 	 	 	 	 
-					$val->unit_price,			
-					$val->unit_quantity,		
-					$val->unit_total,			
-					$val->unit_discount
-				);
-
-				$gt += $val->unit_total;
-				$d += $val->unit_discount;
-				$seq++;
-			}
-			
-			if(isset($trx_detail['cod_charges'])){
-				$this->table->add_row(
-					'&nbsp',		
-					'&nbsp',		
-					'&nbsp',		
-					'COD Charges',		
-					($trx_detail['cod_charges'] == 0 )?'-':$trx_detail['cod_charges'],			
-					'-'
-				);
-				
-				$gt += $trx_detail['cod_charges'];
-			}
-
-			$this->table->add_row(
-				'&nbsp',		
-				'&nbsp',		
-				'&nbsp',		
-				'Total',		
-				$gt,			
-				$d
-			);
-			
-			$data['delivery_id'] = $delivery_id;
-			$data['trx_detail'] = $trx_detail;
-			$data['page_title'] = 'Order Process';
-			$this->ag_auth->buyview('buy/process',$data);
+			$data['message'] = 'Oops, we are really sorry, but we can\'t find your beloved merchant in our database';
+			$data['page_title'] = 'Merchant Application not found';
+			$data['back_url'] = '';
+			$this->ag_auth->buyview('message',$data);
 		}
 	}
 	
