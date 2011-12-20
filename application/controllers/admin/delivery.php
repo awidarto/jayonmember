@@ -16,7 +16,8 @@ class Delivery extends Application
 	
 	public function incoming()
 	{
-		$data = $this->db->where('status','incoming')->where('merchant_id',$this->session->userdata('userid'))->or_where('buyer_id',$this->session->userdata('userid'))->get($this->config->item('incoming_delivery_table'));
+		//print $this->session->userdata('userid');
+		$data = $this->db->where('merchant_id',$this->session->userdata('userid'))->or_where('buyer_id',$this->session->userdata('userid'))->get($this->config->item('incoming_delivery_table'));
 		
 		//print $this->db->last_query();
 		
