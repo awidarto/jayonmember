@@ -42,7 +42,7 @@
 			<input type="hidden" name="group_id" size="50" class="form" value="<?php echo group_id('buyer'); ?>" /><br /><br />
 			<input type="checkbox" name="merchant_request" id="merchant_request" value="1" <?php echo set_checkbox('merchant_request', '1',false); ?> onClick="javascript:showMerchant();" /> Request merchant account<br /><br />
 
-		<div id="merchant_box" style="display:none;background-color:#eaeaea;width:300px;padding:5px;" >
+		<div id="merchant_box" style="display:none;background-color:#eaeaea;width:360px;padding:5px;" >
 		
 			Merchant Name:<br />
 			<input type="text" name="merchantname" size="50" class="form" value="<?php echo set_value('merchantname'); ?>" /><?php echo form_error('merchantname'); ?><br /><br />

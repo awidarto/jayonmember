@@ -11,7 +11,7 @@
 	{
 	?>
 		<li class="<?php print set_hilite('admin\/dashboard')?>" ><?php echo anchor('admin/dashboard', 'Dashboard'); ?></li>
-		<li class="<?php print set_hilite('admin\/delivery\/incoming')?>" ><?php if(user_group('merchant') OR user_group('buyer')) { echo anchor('admin/delivery/incoming', 'Incoming Orders'); } ?></li>
+		<li class="<?php print set_hilite('admin\/delivery\/incoming')?><?php print set_hilite('admin\/delivery\/assign')?>" ><?php if(user_group('merchant') OR user_group('buyer')) { echo anchor('admin/delivery/incoming', 'Incoming Orders'); } ?></li>
 		<li class="<?php print set_hilite('admin\/delivery\/assigned')?>" ><?php if(user_group('merchant') OR user_group('buyer')) { echo anchor('admin/delivery/assigned', 'Assigned Orders'); } ?></li>
 		<li class="<?php print set_hilite('admin\/delivery\/delivered')?>" ><?php if(user_group('merchant')) { echo anchor('admin/delivery/delivered', 'Delivered Orders'); } ?></li>
 		<li class="<?php print set_hilite('admin\/delivery\/log')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/log', 'Delivery Log'); } ?></li>

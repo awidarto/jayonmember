@@ -52,7 +52,7 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array('ag_asset','table','ag_auth','curl');
+$autoload['libraries'] = array('ag_asset','table','ag_auth','curl','breadcrumb');
 
 
 /*

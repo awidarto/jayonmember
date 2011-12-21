@@ -11,6 +11,7 @@ class Admin extends Application
 	{
 		if(logged_in())
 		{
+			$this->breadcrumb->add_crumb('Home','admin/dashboard');
 			$page['page_title'] = 'Dashboard';
 			$this->ag_auth->view('dashboard',$page);
 		}
@@ -22,6 +23,8 @@ class Admin extends Application
 	
 	
 	public function register(){
+		$this->breadcrumb->add_crumb('Home',base_url());
+		$this->breadcrumb->add_crumb('Register','register');
 		
 		$this->form_validation->set_rules('username', 'Username', 'required|min_length[6]|callback_field_exists');
 		$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|matches[password_conf]');
@@ -44,6 +47,7 @@ class Admin extends Application
 				
 		if($this->form_validation->run() == FALSE)
 		{
+			
 			$data['groups'] = array(
 				group_id('merchant')=>group_desc('merchant'),
 				group_id('buyer')=>group_desc('buyer')
@@ -95,6 +99,8 @@ class Admin extends Application
 			
 			if($this->db->insert($this->config->item('jayon_members_table'),$dataset) === TRUE)
 			{
+				$this->breadcrumb->append_crumb('Success','');
+				
 				$data['message'] = "The user account has now been created.";
 				$data['page_title'] = 'Add Member';
 				$data['back_url'] = anchor('admin/members/manage','Back to list');
@@ -103,6 +109,8 @@ class Admin extends Application
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
+				$this->breadcrumb->append_crumb('Failed','');
+				
 				$data['message'] = "The user account has not been created.";
 				$data['page_title'] = 'Add Member Error';
 				$data['back_url'] = anchor('admin/members/manage','Back to list');

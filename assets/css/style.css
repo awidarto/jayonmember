@@ -79,3 +79,23 @@ a{color:#231e18;margin-right:10px;}
 .clear{
 	clear:both;
 }
+
+#registration {
+	display:block;
+	background-color:maroon;
+	color: white;
+	padding: 8px;
+	margin-top:5px;
+	text-align:right;
+}
+
+#registration a{
+	color:orange;
+	margin-right:5px;
+}
+
+#breadcrumb{
+	padding:8px;
+	padding-left:20px;
+	margin-top:15px;
+}
