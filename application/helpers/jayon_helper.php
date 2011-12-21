@@ -27,5 +27,16 @@ function ajax_find_zones($zone,$col = 'district'){
 	return $q->result_array();
 }
 
+function user_group_id($group)
+{
+	$CI =& get_instance();
+	
+	$this->db->select('id');
+	$this->db->where('title',$group);
+	$result = $this->db->get($this->ag_auth->config['auth_group_table']);
+	$row = $result->row();
+	return $row->id;
+}
+
 
 ?>

@@ -8,6 +8,7 @@
 			Password:<br />
 			<input type="password" name="password" value="<?php echo set_value('password'); ?>" size="50" class="form" /><?php echo form_error('password'); ?><br /><br />
 			<input type="submit" value="Login" name="login" />
+			<?php echo anchor('register', 'Register','style="float:right;padding:8px;"'); ?>
 			</form>
 	</div>
 </div>
