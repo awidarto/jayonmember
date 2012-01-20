@@ -7,6 +7,7 @@
 		</style>
 
 		<?php echo $this->ag_asset->load_css('style.css');?>
+		<?php echo $this->ag_asset->load_css('menu.css');?>
 
 		<?php echo $this->ag_asset->load_css('datatables_page.css','jquery-datatables');?>
 		<?php echo $this->ag_asset->load_css('datatables_table.css','jquery-datatables');?>
@@ -22,15 +23,6 @@
 		<?php echo $this->ag_asset->load_script('jquery-ui-timepicker-addon.js','jquery-ui');?>
 
 		<title><?php echo $this->config->item('site_title'); ?></title>
-		<script>
-			$(document).ready(function() {
-			    $('.dataTable').dataTable(
-					{
-						
-					}
-				);
-			} );
-		</script>
 	
 	</head>
 	<body>

@@ -1,6 +1,6 @@
 <?php
 
-class Delivery extends Application
+class Buyer extends Application
 {
 	
 	public function __construct()
@@ -16,7 +16,7 @@ class Delivery extends Application
 	    
 	}
 
-	public function ajaxmyorders(){
+	public function ajaxorders(){
 
 		$limit_count = $this->input->post('iDisplayLength');
 		$limit_offset = $this->input->post('iDisplayStart');
@@ -41,7 +41,7 @@ class Delivery extends Application
 		// get total count result
 		$count_all = $this->db->count_all($this->config->item('incoming_delivery_table'));
 
-		$count_display_all = $this->db->where('status !=','assigned')->where('status !=','dated')->where($this->config->item('incoming_delivery_table').'.merchant_id',$this->session->userdata('userid'))->count_all_results($this->config->item('incoming_delivery_table'));
+		$count_display_all = $this->db->where('status !=','assigned')->where('status !=','dated')->where($this->config->item('incoming_delivery_table').'.buyer_id',$this->session->userdata('userid'))->count_all_results($this->config->item('incoming_delivery_table'));
 		
 		//search column
 		if($this->input->post('sSearch') != ''){
@@ -71,7 +71,7 @@ class Delivery extends Application
 		$this->db->join('applications as a','delivery_order_incoming.application_id=b.id','left');
 		
 		
-		$data = $this->db->where('status !=','assigned')->where('status !=','dated')->where($this->config->item('incoming_delivery_table').'.merchant_id',$this->session->userdata('userid'))->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
+		$data = $this->db->where('status !=','assigned')->where('status !=','dated')->where($this->config->item('incoming_delivery_table').'.buyer_id',$this->session->userdata('userid'))->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
 		
 		//print $this->db->last_query();
 		
@@ -117,12 +117,12 @@ class Delivery extends Application
 		print json_encode($result);
 	}
 	
-	public function myorders()
+	public function orders()
 	{
-		$this->breadcrumb->add_crumb('Orders','admin/delivery/incoming');
-		$this->breadcrumb->add_crumb('Incoming Orders','admin/delivery/incoming');
+		$this->breadcrumb->add_crumb('My Orders','admin/buyer/orders');
+		$this->breadcrumb->add_crumb('My Delivery Orders','admin/buyer/orders');
 
-		$data = $this->db->where('status !=','assigned')->where('status !=','dated')->get($this->config->item('incoming_delivery_table'));
+		$data = $this->db->where('status !=','assigned')->where('status !=','dated')->where($this->config->item('incoming_delivery_table').'.buyer_id',$this->session->userdata('userid'))->get($this->config->item('incoming_delivery_table'));
 		
 		$result = $data->result_array();
 		
@@ -176,188 +176,10 @@ class Delivery extends Application
 			);
 		}
 		$page['sortdisable'] = '';
-		$page['ajaxurl'] = 'admin/delivery/ajaxmyorders';
+		$page['ajaxurl'] = 'admin/buyer/ajaxorders';
 		$page['page_title'] = 'My Delivery Orders';
 		$this->ag_auth->view('incomingajaxlistview',$page); // Load the view
 	}
-
-
-
-	public function ajaxincoming(){
-
-		$limit_count = $this->input->post('iDisplayLength');
-		$limit_offset = $this->input->post('iDisplayStart');
-
-		$sort_col = $this->input->post('iSortCol_0');
-		$sort_dir = $this->input->post('sSortDir_0');
-
-		$columns = array(
-			'buyerdeliverytime',
-			'delivery_id',		
-			'app_name',               
-			'buyer_id',			
-			'merchant',		
-			'merchant_trans_id',   
-			'shipping_address',	
-			'phone',			
-			'status'
-			);
-		
-		
-
-		// get total count result
-		$count_all = $this->db->count_all($this->config->item('incoming_delivery_table'));
-
-		$count_display_all = $this->db->where('status !=','assigned')->where($this->config->item('incoming_delivery_table').'.merchant_id',$this->session->userdata('userid'))->count_all_results($this->config->item('incoming_delivery_table'));
-		
-		//search column
-		if($this->input->post('sSearch') != ''){
-			$srch = $this->input->post('sSearch');
-			//$this->db->like('buyerdeliveryzone',$srch);
-			$this->db->or_like('buyerdeliverytime',$srch);
-			$this->db->or_like('delivery_id',$srch);
-		}
-		
-		if($this->input->post('sSearch_0') != ''){
-			$this->db->like('buyerdeliverytime',$this->input->post('sSearch_0'));
-		}
-		
-		
-		if($this->input->post('sSearch_1') != ''){
-			$this->db->like('buyerdeliveryzone',$this->input->post('sSearch_1'));
-		}
-		
-		
-		if($this->input->post('sSearch_2') != ''){
-			$this->db->like('delivery_id',$this->input->post('sSearch_2'));
-		}
-
-		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
-		$this->db->join('members as b','delivery_order_incoming.buyer_id=b.id','left');
-		$this->db->join('members as m','delivery_order_incoming.merchant_id=m.id','left');
-		$this->db->join('applications as a','delivery_order_incoming.application_id=b.id','left');
-		
-		
-		$data = $this->db->where('status !=','assigned')->where($this->config->item('incoming_delivery_table').'.merchant_id',$this->session->userdata('userid'))->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
-		
-		//print $this->db->last_query();
-		
-		//->group_by(array('buyerdeliverytime','buyerdeliveryzone'))
-		
-		$result = $data->result_array();
-			
-		$aadata = array();
-		
-		foreach($result as $value => $key)
-		{
-			$delete = anchor("admin/delivery/delete/".$key['delivery_id']."/", "Delete"); // Build actions links
-			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
-			$assign = anchor("admin/delivery/assign/".$key['delivery_id']."/", "Assign"); // Build actions links
-			
-			$app = $this->get_app_info($key['application_key']);
-			
-			$lessday = ((strtotime($key['buyerdeliverytime']) - time()) < (12*60*60))?true:false;
-			
-			if($lessday){
-				$reqdate = '<span class="red">'.$key['buyerdeliverytime'].'</span>';
-			}else{
-				$reqdate = $key['buyerdeliverytime'];
-			}
-			
-			$aadata[] = array(
-				$reqdate,
-				$key['buyerdeliveryzone'],
-				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],			 	 	 	 	 	 	 
-				$app['application_name'],		 	 	
-				//$app['domain'],		 	 	
-				$key['buyer'],			 	 	
-				$key['merchant'],			 	 	
-				$key['merchant_trans_id'],		 	 	 	 	 	 	 
-				$key['shipping_address'],	 	 				 
-				$key['phone'],				 	 	 	 	 	 	 
-				$key['status']			 	 	 	 	 	 	 
-				//$key['reschedule_ref'],		 	 	 	 	 	 	 
-				//$key['revoke_ref'],
-				//($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
-			);
-		}
-		
-		$result = array(
-			'sEcho'=> $this->input->post('sEcho'),
-			'iTotalRecords'=>$count_all,
-			'iTotalDisplayRecords'=> $count_display_all,
-			'aaData'=>$aadata
-		);
-		
-		print json_encode($result);
-	}
-	
-	public function incoming()
-	{
-		$this->breadcrumb->add_crumb('Orders','admin/delivery/incoming');
-		$this->breadcrumb->add_crumb('Incoming Orders','admin/delivery/incoming');
-
-		$data = $this->db->where('status !=','assigned')->where('status !=','dated')->get($this->config->item('incoming_delivery_table'));
-		
-		$result = $data->result_array();
-		
-		$this->table->set_heading(
-			'Requested Date',
-			'Zone',
-			'Delivery ID',			 	 	 	 	 	 	 
-			'App Name',	 	 	
-			//'App Domain',	 	 	
-			'Buyer',			 	 	
-			'Merchant',			 	 	
-			'Merchant Trans ID',		 	 	 	 	 	 	 
-			'Shipping Address',	 	 				 
-			'Phone',				 	 	 	 	 	 	 
-			'Status'				 	 	 	 	 	 	 
-			//'Reschedule Ref',		 	 	 	 	 	 	 
-			//'Revoke Ref',
-			//'Actions'
-			); // Setting headings for the table
-		
-		$this->table->set_footing(
-			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
-			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
-			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
-			form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"')
-			);
-		
-		foreach($result as $value => $key)
-		{
-			$delete = anchor("admin/delivery/deleteassigned/".$key['id']."/", "Delete"); // Build actions links
-			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
-			$assign = anchor("admin/delivery/assign/".$key['delivery_id']."/", "Assign"); // Build actions links
-			
-			$app = $this->get_app_info($key['application_key']);
-			
-			$this->table->add_row(
-				$key['buyerdeliverytime'],			 	 	
-				$key['buyerdeliveryzone'],			 	 	
-				$key['delivery_id'],			 	 	 	 	 	 	 
-				$app['application_name'],		 	 	
-				//$app['domain'],		 	 	
-				$key['buyer_id'],			 	 	
-				$key['merchant_id'],			 	 	
-				$key['merchant_trans_id'],		 	 	 	 	 	 	 
-				$key['shipping_address'],	 	 				 
-				$key['phone'],				 	 	 	 	 	 	 
-				$key['status']				 	 	 	 	 	 	 
-				//$key['reschedule_ref'],		 	 	 	 	 	 	 
-				//$key['revoke_ref'],
-				//($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
-			);
-		}
-		$page['sortdisable'] = '';
-		$page['ajaxurl'] = 'admin/delivery/ajaxincoming';
-		$page['page_title'] = 'Incoming Delivery Orders';
-		$this->ag_auth->view('incomingajaxlistview',$page); // Load the view
-	}
-
-	/* zoning */
-	
 	
 	public function ajaxzoning(){
 
@@ -525,7 +347,7 @@ class Delivery extends Application
 	}
 
 	public function ajaxassigndate(){
-		$assignment_date = trim($this->input->post('assignment_date'));
+		$assignment_date = $this->input->post('assignment_date');
 		$delivery_ids = $this->input->post('delivery_id');
 		
 		foreach($delivery_ids as $did){
@@ -763,7 +585,7 @@ class Delivery extends Application
 		// get total count result
 		$count_all = $this->db->count_all($this->config->item('assigned_delivery_table'));
 
-		$count_display_all = $this->db->count_all_results($this->config->item('assigned_delivery_table'));
+		$count_display_all = $this->db->where($this->config->item('assigned_delivery_table').'.buyer_id',$this->session->userdata('userid'))->count_all_results($this->config->item('assigned_delivery_table'));
 				
 		//search column
 		if($this->input->post('sSearch') != ''){
@@ -795,7 +617,7 @@ class Delivery extends Application
 		$this->db->join('devices as d','delivery_order_active.device_id=d.id','left');
 		$this->db->join('couriers as c','delivery_order_active.courier_id=c.id','left');
 				
-		$data = $this->db->where('status !=','assigned')->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('assigned_delivery_table'));
+		$data = $this->db->where($this->config->item('assigned_delivery_table').'.buyer_id',$this->session->userdata('userid'))->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('assigned_delivery_table'));
 		
 		//print $this->db->last_query();
 		
@@ -837,11 +659,11 @@ class Delivery extends Application
 
 	public function dispatched()
 	{
-		$this->breadcrumb->add_crumb('Orders','admin/delivery/incoming');
-		$this->breadcrumb->add_crumb('Dispatched Orders','admin/delivery/assigned');
+		$this->breadcrumb->add_crumb('My Orders','admin/buyer/orders');
+		$this->breadcrumb->add_crumb('Dispatched Orders','admin/buyer/dispatched');
 		
-		$data = $this->db->get($this->config->item('assigned_delivery_table'));
-		$data = $this->db->where('status','dispatched')->get($this->config->item('assigned_delivery_table'));
+		//$data = $this->db->get($this->config->item('assigned_delivery_table'));
+		$data = $this->db->where($this->config->item('assigned_delivery_table').'.buyer_id',$this->session->userdata('userid'))->where('status','dispatched')->get($this->config->item('assigned_delivery_table'));
 		$result = $data->result_array();
 		
 		$this->table->set_heading(
@@ -892,7 +714,7 @@ class Delivery extends Application
 			);
 		}
 		$page['sortdisable'] = '11';
-		$page['ajaxurl'] = 'admin/delivery/ajaxdispatched';
+		$page['ajaxurl'] = 'admin/buyer/ajaxdispatched';
 		$page['page_title'] = 'Dispatched Delivery Orders';
 		$this->ag_auth->view('dispatchajaxlistview',$page); // Load the view
 	}
@@ -1424,24 +1246,28 @@ class Delivery extends Application
 	}
 	
 	private function do_date_assignment($delivery_id,$assignment_date){
-		/*$incoming = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('incoming_delivery_table'));
+		$incoming = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('incoming_delivery_table'));
 		$dataset = $incoming->row_array();
 		unset($dataset['id']);
-		*/
 		$dataset['status'] = 'dated';
 		$dataset['assigntime'] = date('Y-m-d h:i:s',time());
-		$dataset['buyerdeliverytime'] = trim($assignment_date);
+		$dataset['assignment_date'] = $assignment_date;
 		
-		if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('buyerdeliverytime'=>$assignment_date,'status'=>'dated')) == TRUE)
-		{	
-			$order_exist = 'ORDER_ASSIGNED'; 
+		$chk = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
+		if($chk->num_rows() > 0){
+			$order_exist = 'ORDER_ALREADY_ASSIGNED'; 
+		}else{
+			$order_exist = false; 
+
+			if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('assignment_date'=>$assignment_date,'status'=>'dated')) === TRUE)
+			{	
+				$order_exist = 'ORDER_ASSIGNED'; 
+			}
+			else
+			{
+				$order_exist = 'ORDER_FAILED_ASSIGNMENT'; 
+			}
 		}
-		else
-		{
-			$order_exist = 'ORDER_FAILED_ASSIGNMENT'; 
-		}
-		
-		//print $this->db->last_query();
 		
 		return $order_exist;
 	}
