@@ -267,7 +267,7 @@ class Delivery extends Application
 			$aadata[] = array(
 				$reqdate,
 				$key['buyerdeliveryzone'],
-				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],			 	 	 	 	 	 	 
+				($lessday)?$key['delivery_id']:form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],			 	 	 	 	 	 	 
 				$app['application_name'],		 	 	
 				//$app['domain'],		 	 	
 				$key['buyer'],			 	 	
