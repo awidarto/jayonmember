@@ -27,6 +27,16 @@ function ajax_find_zones($zone,$col = 'district'){
 	return $q->result_array();
 }
 
+function get_option($key){
+	$CI =& get_instance();
+	
+	$CI->db->select('val');
+	$CI->db->where('key',$key);
+	$result = $CI->db->get($CI->config->item('jayon_options_table'));
+	$row = $result->row();
+	return $row->val;
+}
+
 function user_group_id($group)
 {
 	$CI =& get_instance();
@@ -36,6 +46,32 @@ function user_group_id($group)
 	$result = $this->db->get($this->ag_auth->config['auth_group_table']);
 	$row = $result->row();
 	return $row->id;
+}
+
+function getdateblock($month = null){
+	$blocking = array();
+	$month = (is_null($month))?date('m',time()):$month;
+	$year = date('Y',time());
+
+	for($m = $month; $m < ($month + 2);$m++){
+		for($i = 1;$i < 32;$i++){
+			//print $date."\r\n";
+			if(checkdate($m,$i,$year)){
+				//check weekends
+				$month = str_pad($m,2,'0',STR_PAD_LEFT);
+				$day = str_pad($i,2,'0',STR_PAD_LEFT);
+				$date = $year.'-'.$month.'-'.$day;
+				$day = getdate(strtotime($date));
+				//print_r($day)."\r\n";
+				if($day['weekday'] == 'Sunday' || $day['weekday'] == 'Saturday'){
+					$blocking[$date] = 'weekend';
+				}else{
+					$blocking[$date] = 'open';
+				}
+			}
+		}
+	}
+	return json_encode($blocking);
 }
 
 

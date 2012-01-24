@@ -31,6 +31,10 @@ class Ajax extends Application
 		print json_encode($zones);
 	}
 	
+	public function getdateblock($month = null){
+		print getdateblock($month);
+	}
+	
 	public function incomingmonthly(){
 		
 	}

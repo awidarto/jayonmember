@@ -253,10 +253,16 @@ class Delivery extends Application
 			$delete = anchor("admin/delivery/delete/".$key['delivery_id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$assign = anchor("admin/delivery/assign/".$key['delivery_id']."/", "Assign"); // Build actions links
+			//$cancel = anchor("admin/delivery/cancel/".$key['delivery_id']."/", "Cancel"); // Build actions links
+			//$cancel = '<span onClick="javascript:docancel(\''.$key['delivery_id'].'\');" style="cursor:pointer;">Cancel</span>';
+			$cancel = '<span class="cancel_link" id="'.$key['delivery_id'].'" style="cursor:pointer;">Cancel</span>';
 			
 			$app = $this->get_app_info($key['application_key']);
 			
-			$lessday = ((strtotime($key['buyerdeliverytime']) - time()) < (12*60*60))?true:false;
+			//$auto_lock = get_option('auto_lock_hours');
+			
+			$lessday = ((strtotime($key['buyerdeliverytime']) - time()) < (get_option('auto_lock_hours')*60*60))?true:false;
+			$lessday = ($key['buyerdeliverytime'] === '0000-00-00 00:00:00')?false:$lessday;
 			
 			if($lessday){
 				$reqdate = '<span class="red">'.$key['buyerdeliverytime'].'</span>';
@@ -275,7 +281,8 @@ class Delivery extends Application
 				$key['merchant_trans_id'],		 	 	 	 	 	 	 
 				$key['shipping_address'],	 	 				 
 				$key['phone'],				 	 	 	 	 	 	 
-				$key['status']			 	 	 	 	 	 	 
+				($key['status'] == 'canceled')?'<span class="red">'.$key['status'].'</span>':$key['status'],
+				($key['status'] == 'canceled')?'':$cancel				 	 	 	 	 	 	 
 				//$key['reschedule_ref'],		 	 	 	 	 	 	 
 				//$key['revoke_ref'],
 				//($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
@@ -312,10 +319,10 @@ class Delivery extends Application
 			'Merchant Trans ID',		 	 	 	 	 	 	 
 			'Shipping Address',	 	 				 
 			'Phone',				 	 	 	 	 	 	 
-			'Status'				 	 	 	 	 	 	 
+			'Status',				 	 	 	 	 	 	 
 			//'Reschedule Ref',		 	 	 	 	 	 	 
 			//'Revoke Ref',
-			//'Actions'
+			'Actions'
 			); // Setting headings for the table
 		
 		$this->table->set_footing(
@@ -330,7 +337,8 @@ class Delivery extends Application
 			$delete = anchor("admin/delivery/deleteassigned/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 			$assign = anchor("admin/delivery/assign/".$key['delivery_id']."/", "Assign"); // Build actions links
-			
+			//$cancel = '<span onClick="javascript:docancel();" >Cancel</span>';
+			$cancel = '<span class="cancel_link" id="'.$key['delivery_id'].'" style="cursor:pointer;">Cancel</span>';
 			$app = $this->get_app_info($key['application_key']);
 			
 			$this->table->add_row(
@@ -344,7 +352,8 @@ class Delivery extends Application
 				$key['merchant_trans_id'],		 	 	 	 	 	 	 
 				$key['shipping_address'],	 	 				 
 				$key['phone'],				 	 	 	 	 	 	 
-				$key['status']				 	 	 	 	 	 	 
+				($key['status'] == 'canceled')?'<span class="red">'.$key['status'].'</span>':$key['status'],
+				($key['status'] == 'canceled')?'':$cancel				 	 	 	 	 	 	 
 				//$key['reschedule_ref'],		 	 	 	 	 	 	 
 				//$key['revoke_ref'],
 				//($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
@@ -534,6 +543,17 @@ class Delivery extends Application
 		
 		print json_encode(array('result'=>'ok'));
 	}
+
+	public function ajaxcancel(){
+		$delivery_id = $this->input->post('delivery_id');
+		
+		$actor = 'M:'.$this->session->userdata('userid');
+		
+		$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('status'=>'canceled','change_actor'=>$actor));
+		
+		print json_encode(array('result'=>'ok'));
+	}
+
 
 	public function ajaxdispatch(){
 

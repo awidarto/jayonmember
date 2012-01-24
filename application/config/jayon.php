@@ -36,6 +36,7 @@ $config['device_assignment_table'] = 'device_assignment';
 $config['jayon_members_table'] = 'members';
 $config['jayon_couriers_table'] = 'couriers';
 $config['jayon_devices_table'] = 'devices';
+$config['jayon_options_table'] = 'options';
 
 $config['fetch_method'] = array(
 	'GET'=>'GET',
