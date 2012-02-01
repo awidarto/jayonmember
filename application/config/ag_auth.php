@@ -36,7 +36,7 @@ $config['auth_logout'] = 'http://www.jayonexpress.com/';
 /**
 * The URI string to redirect to when a user entered incorrect login details or is not authenticated
 */
-$config['auth_incorrect_login'] = 'login';
+$config['auth_incorrect_login'] = 'http://www.jayonexpress.com/';
 
 /**
 * bool TRUE / FALSE
