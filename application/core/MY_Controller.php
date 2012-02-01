@@ -124,7 +124,7 @@ class Application extends CI_Controller
 			else
 			{
 				//JEX system should redirect to main site
-				redirect($this->CI->config->item('auth_logout').'?login=err');
+				redirect($this->config->item('auth_logout').'?login=err');
 
 				//$data['message'] = "The username and password did not match.";
 				//$this->ag_auth->view('message', $data);
