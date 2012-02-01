@@ -31,7 +31,7 @@ $config['auth_login'] = 'admin/dashboard';
 /**
 * The default URI string to redirect to after a successful logout.
 */
-$config['auth_logout'] = 'login';
+$config['auth_logout'] = 'http://www.jayonexpress.com/';
 
 /**
 * The URI string to redirect to when a user entered incorrect login details or is not authenticated

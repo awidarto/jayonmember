@@ -123,8 +123,11 @@ class Application extends CI_Controller
 			} // if($user_data['password'] === $password)
 			else
 			{
-				$data['message'] = "The username and password did not match.";
-				$this->ag_auth->view('message', $data);
+				//JEX system should redirect to main site
+				redirect($this->CI->config->item('auth_logout').'?login=err');
+
+				//$data['message'] = "The username and password did not match.";
+				//$this->ag_auth->view('message', $data);
 			}
 		} // if($this->form_validation->run() == FALSE)
 		
