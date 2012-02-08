@@ -503,8 +503,8 @@ class Delivery extends Application
 
 	public function inprogress()
 	{
-		$this->breadcrumb->add_crumb('Orders','admin/delivery/incoming');
-		$this->breadcrumb->add_crumb('Incoming Orders','admin/delivery/incoming');
+		$this->breadcrumb->add_crumb('Orders','admin/delivery/inprogress');
+		$this->breadcrumb->add_crumb('In Progress Orders','admin/delivery/inprogress');
 
 		$data = $this->db->where('status !=','assigned')->where('status !=','dated')->get($this->config->item('incoming_delivery_table'));
 
