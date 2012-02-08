@@ -49,6 +49,7 @@
 			<?php if(user_group('merchant')):?><li class="<?php print set_hilite('admin\/delivery')?>" ><?php if(user_group('merchant')) { echo anchor('admin/delivery/incoming', 'Orders'); } ?><?php endif;?>
 				<ul>
 					<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/delivery\/incoming')?>" ><?php if(user_group('buyer') || user_group('merchant')) { echo anchor('admin/delivery/incoming', 'Incoming Orders'); } ?></li><?php endif;?>
+					<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/delivery\/inprogress')?>" ><?php if(user_group('buyer') || user_group('merchant')) { echo anchor('admin/delivery/inprogress', 'In Progress Orders'); } ?></li><?php endif;?>
 					<?php if(user_group('admin')):?><li class="<?php print set_hilite('admin\/delivery\/zoning')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/zoning', 'Zone Assignment'); } ?></li><?php endif;?>
 					<?php if(user_group('admin')):?><li class="<?php print set_hilite('admin\/delivery\/assigned')?>" ><?php if(user_group('admin')) { echo anchor('admin/delivery/assigned', 'Assigned Orders'); } ?></li><?php endif;?>
 					<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/delivery\/dispatched')?>" ><?php if(user_group('buyer') || user_group('merchant')) { echo anchor('admin/delivery/dispatched', 'Dispatched Orders'); } ?></li><?php endif;?>

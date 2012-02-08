@@ -31,12 +31,18 @@ $config['auth_login'] = 'admin/dashboard';
 /**
 * The default URI string to redirect to after a successful logout.
 */
-$config['auth_logout'] = 'http://www.jayonexpress.com/';
+
+if($_SERVER['HTTP_HOST'] == 'localhost'){
+	$config['auth_logout'] = 'login';
+}else{
+	//online version should redirect to main site
+	$config['auth_logout'] = 'http://www.jayonexpress.com/';
+}
 
 /**
 * The URI string to redirect to when a user entered incorrect login details or is not authenticated
 */
-$config['auth_incorrect_login'] = 'http://www.jayonexpress.com/';
+$config['auth_incorrect_login'] = 'login';
 
 /**
 * bool TRUE / FALSE

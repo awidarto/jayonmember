@@ -3,9 +3,9 @@
 function get_yearly_sequence()
 {
 	$CI =& get_instance();
-	
+
 	$year = date('Y',time());
-	
+
 	$q = $CI->db->select('sequence')->where('year',$year)->get($CI->config->item('sequence_table'));
 	if($q->num_rows() > 0){
 
@@ -29,7 +29,7 @@ function ajax_find_zones($zone,$col = 'district'){
 
 function get_option($key){
 	$CI =& get_instance();
-	
+
 	$CI->db->select('val');
 	$CI->db->where('key',$key);
 	$result = $CI->db->get($CI->config->item('jayon_options_table'));
@@ -40,7 +40,7 @@ function get_option($key){
 function user_group_id($group)
 {
 	$CI =& get_instance();
-	
+
 	$this->db->select('id');
 	$this->db->where('title',$group);
 	$result = $this->db->get($this->ag_auth->config['auth_group_table']);
@@ -74,5 +74,46 @@ function getdateblock($month = null){
 	return json_encode($blocking);
 }
 
+function colorizestatus($status){
+	switch($status){
+		case 'canceled':
+			$class = 'red';
+			break;
+		case 'cancel':
+			$class = 'orange';
+			break;
+		case 'confirmed':
+			$class = 'green';
+			break;
+		case 'confirmed':
+			$class = 'green';
+			break;
+		default:
+			$class = 'black';
+	}
+
+	return sprintf('<span class="%s">%s</span>',$class,$status);
+}
+
+function statusaction($status){
+	switch($status){
+		case 'canceled':
+			$class = 'red';
+			break;
+		case 'cancel':
+			$class = 'orange';
+			break;
+		case 'confirmed':
+			$class = 'green';
+			break;
+		case 'confirmed':
+			$class = 'green';
+			break;
+		default:
+			$class = 'black';
+	}
+
+	return sprintf('<span class="%s">%s</span>',$class,$status);
+}
 
 ?>

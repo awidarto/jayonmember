@@ -1,8 +1,15 @@
 <script>
 	var asInitVals = new Array();
 	var dateBlock = <?php print getdateblock();?>;
+	/*
+	$.post('<?php print site_url('ajax/getdateblock');?>',{'month':1}, function(data) {
+		dateBlock = data;
+		console.log(dateBlock);
+	},'json');
+	*/
 	
 	$(document).ready(function() {
+
 	    var oTable = $('.dataTable').dataTable(
 			{
 				"bProcessing": true,
@@ -60,11 +67,16 @@
 			}
 		} );
 		
-		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
+		/*============other stuff below==============*/
+		
+		$('#search_deliverytime').datepicker({ 
+			dateFormat: 'yy-mm-dd'
+		});
 		
 		$('#search_deliverytime').change(function(){
 			oTable.fnFilter( this.value, $('tfoot input').index(this) );
 		});
+
 
 		/*Delivery process mandatory*/
 		$('#date_display').datepicker({
@@ -120,17 +132,15 @@
 			}
 			return [select,css,popup];
 		}
-		
+				
 		//$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
-		//$('#assign_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
+		//$('#assign_deliverytime').datetimepicker({ dateFormat: 'yy-mm-dd',timeFormat: 'hh:mm:ss' });
 		
 		$('#doAssign').click(function(){
 			var assigns = '';
 			var count = 0;
 			$('.assign_check:checked').each(function(){
-
-				var deliverydate = $('#'+this.value).html();
-				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong><br />' + deliverydate +'</li>';
+				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;">'+this.value+'</li>';
 				count++;
 			});
 			
@@ -141,43 +151,7 @@
 				alert('Please select one or more delivery orders');
 			}
 		});
-
-		$('#doCancel').click(function(){
-			var assigns = '';
-			var count = 0;
-			$('.assign_check:checked').each(function(){
-
-				var deliverydate = $('#'+this.value).html();
-				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong><br />' + deliverydate +'</li>';
-				count++;
-			});
-			
-			if(count > 0){
-				$('#cancel_list').html(assigns);
-				$('#cancel_dialog').dialog('open');
-			}else{
-				alert('Please select one or more delivery orders');
-			}
-		});
-
-		$('#doConfirm').click(function(){
-			var assigns = '';
-			var count = 0;
-			$('.assign_check:checked').each(function(){
-
-				var deliverydate = $('#'+this.value).html();
-				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong><br />' + deliverydate +'</li>';
-				count++;
-			});
-			
-			if(count > 0){
-				$('#confirm_list').html(assigns);
-				$('#confirm_dialog').dialog('open');
-			}else{
-				alert('Please select one or more delivery orders');
-			}
-		});
-
+		
 		$('table.dataTable').click(function(e){
 			if ($(e.target).is('.cancel_link')) {
 				var delivery_id = e.target.id;
@@ -241,79 +215,17 @@
 				$('#assign_deliverytime').val('');
 			}
 		});
-
-		$('#confirm_dialog').dialog({
-			autoOpen: false,
-			height: 300,
-			width: 400,
-			modal: true,
-			buttons: {
-				"Confirm Delivery Orders": function() {
-					var delivery_ids = [];
-					i = 0;
-					$('.assign_check:checked').each(function(){
-						delivery_ids[i] = $(this).val();
-						i++;
-					}); 
-					$.post('<?php print site_url('admin/delivery/ajaxconfirm');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids}, function(data) {
-						if(data.result == 'ok'){
-							//redraw table
-							oTable.fnDraw();
-							$('#confirm_dialog').dialog( "close" );
-						}
-					},'json');
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-				//allFields.val( "" ).removeClass( "ui-state-error" );
-				$('#confirm_list').html('');
-			}
-		});
-
-		$('#cancel_dialog').dialog({
-			autoOpen: false,
-			height: 300,
-			width: 400,
-			modal: true,
-			buttons: {
-				"Cancel Delivery Orders": function() {
-					var delivery_ids = [];
-					i = 0;
-					$('.assign_check:checked').each(function(){
-						delivery_ids[i] = $(this).val();
-						i++;
-					}); 
-					$.post('<?php print site_url('admin/delivery/ajaxcancel');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids}, function(data) {
-						if(data.result == 'ok'){
-							//redraw table
-							oTable.fnDraw();
-							$('#cancel_dialog').dialog( "close" );
-						}
-					},'json');
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-				//allFields.val( "" ).removeClass( "ui-state-error" );
-				$('#cancel_list').html('');
-			}
-		});
-
-
+		
 		/*
 		function refresh(){
 			oTable.fnDraw();
 			setTimeout(refresh, 10000);
 		}
-
 		refresh();
 		*/
+
 	} );
+	
 	
 	
 </script>
@@ -341,35 +253,6 @@
 			<td style="border:0;margin:0;">
 				<input id="assign_deliverytime" type="text" value=""><br />
 				<div id="date_display"></div>
-			</td>
-		</tr>
-	</table>
-</div>
-
-<div id="confirm_dialog" title="Confirm Delivery Orders">
-	<table style="width:100%;border:0;margin:0;">
-		<tr>
-			<td style="width:250px;vertical-align:top">
-				Delivery Orders :
-			</td>
-		</tr>
-		<tr>
-			<td style="overflow:auto;width:250px;vertical-align:top">
-				<ul id="confirm_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
-			</td>
-		</tr>
-	</table>
-</div>
-<div id="cancel_dialog" title="Cancel Delivery Orders">
-	<table style="width:100%;border:0;margin:0;">
-		<tr>
-			<td style="width:250px;vertical-align:top">
-				Delivery Orders :
-			</td>
-		</tr>
-		<tr>
-			<td style="overflow:auto;width:250px;vertical-align:top">
-				<ul id="cancel_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
 			</td>
 		</tr>
 	</table>

@@ -23,6 +23,7 @@
 		<?php echo $this->ag_asset->load_script('jquery-ui-timepicker-addon.js','jquery-ui');?>
 
 		<title><?php echo $this->config->item('site_title'); ?></title>
+
 	
 	</head>
 	<body>
