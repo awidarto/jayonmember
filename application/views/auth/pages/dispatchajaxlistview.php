@@ -92,15 +92,15 @@
 			}
 		});
 
-		/*
+		
 		$('table.dataTable').click(function(e){
-			
-			var delivery_id = e.target.id;
-			$('#change_id').html(delivery_id);
-			$('#changestatus_dialog').dialog('open');
-			
+			if ($(e.target).is('.changestatus')) {
+				var delivery_id = e.target.id;
+				$('#change_id').html(delivery_id);
+				$('#changestatus_dialog').dialog('open');
+			}
 		});
-		*/
+		
 		$('#getDevices').click(function(){
 			if($('#assign_deliverytime').val() == ''){
 				alert('Please specify intended delivery time');
