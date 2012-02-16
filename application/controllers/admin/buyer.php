@@ -65,13 +65,18 @@ class Buyer extends Application
 			$this->db->like('delivery_id',$this->input->post('sSearch_2'));
 		}
 
-		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
-		$this->db->join('members as b','delivery_order_incoming.buyer_id=b.id','left');
-		$this->db->join('members as m','delivery_order_incoming.merchant_id=m.id','left');
-		$this->db->join('applications as a','delivery_order_incoming.application_id=b.id','left');
+		$this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
+		$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
+		$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
+		$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=b.id','left');
 		
 		
-		$data = $this->db->where('status !=','assigned')->where('status !=','dated')->where($this->config->item('incoming_delivery_table').'.buyer_id',$this->session->userdata('userid'))->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
+		$data = $this->db
+			->where('status !=','assigned')
+			->where('status !=','dated')
+			->where($this->config->item('incoming_delivery_table').'.buyer_id',$this->session->userdata('userid'))
+			->limit($limit_count, $limit_offset)
+			->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
 		
 		//print $this->db->last_query();
 		

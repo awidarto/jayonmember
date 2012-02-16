@@ -46,7 +46,10 @@
 					<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/buyer\/dispatched')?>" ><?php if(user_group('buyer') || user_group('merchant')) { echo anchor('admin/buyer/dispatched', 'Dispatched Orders'); } ?></li><?php endif;?>
 				</ul>
 			</li>
-			<?php if(user_group('merchant')):?><li class="<?php print set_hilite('admin\/delivery')?>" ><?php if(user_group('merchant')) { echo anchor('admin/delivery/incoming', 'Orders'); } ?><?php endif;?>
+		<?php if($this->session->userdata('merchant_request') == 0):?>
+
+			<?php if(user_group('merchant')):?>
+			<li class="<?php print set_hilite('admin\/delivery')?>" ><?php if(user_group('merchant')) { echo anchor('admin/delivery/incoming', 'Orders'); } ?><?php endif;?>
 				<ul>
 					<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/delivery\/incoming')?>" ><?php if(user_group('buyer') || user_group('merchant')) { echo anchor('admin/delivery/incoming', 'Incoming Orders'); } ?></li><?php endif;?>
 					<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/delivery\/dispatched')?>" ><?php if(user_group('buyer') || user_group('merchant')) { echo anchor('admin/delivery/dispatched', 'In Progress Orders'); } ?></li><?php endif;?>
@@ -62,7 +65,8 @@
 					<li class="<?php print set_hilite('admin\/location\/tracker')?>" ><?php if(user_group('admin')) { echo anchor('admin/location/tracker', 'Location Tracker'); } ?></li>
 				</ul>
 			</li>
-			<?php if(user_group('merchant')):?><li class="<?php print set_hilite('admin\/apps')?>" ><?php if(user_group('merchant')) { echo anchor('admin/apps/manage', 'Merchant Options'); } ?><?php endif;?>
+			<?php if(user_group('merchant')):?>
+			<li class="<?php print set_hilite('admin\/apps')?>" ><?php if(user_group('merchant')) { echo anchor('admin/apps/manage', 'Merchant Options'); } ?><?php endif;?>
 				<ul>
 					<li class="<?php print set_hilite('admin\/apps')?>" ><?php if(user_group('merchant')) { echo anchor('admin/apps/manage', 'Application Keys'); } ?></li>
 				</ul>
@@ -74,6 +78,11 @@
 					<li class="<?php print set_hilite('admin\/couriers')?>" ><?php if(user_group('admin')) { echo anchor('admin/couriers/manage', 'Couriers'); } ?></li>
 				</ul>
 			</li>
+		<?php else: ?>
+			<li class="<?php print set_hilite('admin\/merchant\/request')?>" >
+				<?php echo anchor('admin/merchant/request', 'Become A Merchant'); ?>
+			</li>
+		<?php endif;?>
 		<?php
 		}
 		else
