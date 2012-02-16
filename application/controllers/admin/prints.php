@@ -14,61 +14,66 @@ class Prints extends Application
 	    
 	}
 	
-	public function deliveryslip($delivery_id)
-	{
-		$main = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
-
-		$data['main_info'] = $main->row_array();
-		
-		$details = $this->db->where('delivery_id',$delivery_id)->order_by('unit_sequence','asc')->get($this->config->item('delivery_details_table'));
-		
-		$details = $details->result_array();
-		
-		$this->table->set_heading(
-			'No.',		 	 	
-			'Description',	 	 	 	 	 	 	 
-			'Unit Price',			
-			'Quantity',		
-			'Total',			
-			'Discount'
-			); // Setting headings for the table
-		
-		$d = 0;
-		$gt = 0;
-
-		foreach($details as $value => $key)
+		public function deliveryslip($delivery_id)
 		{
-			
+			$main = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
+
+			$data['main_info'] = $main->row_array();
+
+			$details = $this->db->where('delivery_id',$delivery_id)->order_by('unit_sequence','asc')->get($this->config->item('delivery_details_table'));
+
+			$details = $details->result_array();
+
+			$this->table->set_heading(
+				'No.',		 	 	
+				'Description',	 	 	 	 	 	 	 
+				'Quantity',		
+				'Total'			
+				); // Setting headings for the table
+
+			$d = 0;
+			$gt = 0;
+
+			foreach($details as $value => $key)
+			{
+
+				$this->table->add_row(
+					(int)$key['unit_sequence'] + 1,		 	 	
+					$key['unit_description'],	 	 	 	 	 	 	 
+					$key['unit_quantity'],		
+					$key['unit_total']			
+				);
+
+				$gt += $key['unit_total'];
+				$d += $key['unit_discount'];
+
+			}
+
 			$this->table->add_row(
-				$key['unit_sequence'],		 	 	
-				$key['unit_description'],	 	 	 	 	 	 	 
-				$key['unit_price'],			
-				$key['unit_quantity'],		
-				$key['unit_total'],			
-				$key['unit_discount']
+				'&nbsp',		
+				'&nbsp',		
+				'Total',		
+				$gt
 			);
-			
-			$gt += $key['unit_total'];
-			$d += $key['unit_discount'];
-			
+
+			$data['grand_total'] = $gt;
+			$data['grand_discount'] = $d;
+
+			$qr_data = $delivery_id."\r\n".$data['main_info']['merchant_trans_id'];
+
+			$this->gc_qrcode->size(100)
+                ->data($qr_data)
+                ->output_encoding('UTF-8')
+                ->error_correction_level('L')
+                ->margin(0);
+
+            $data['qr'] = $this->gc_qrcode->img();
+
+            $this->gc_qrcode->clear();
+
+			$data['page_title'] = 'Delivery Orders';
+			$this->load->view('print/deliveryslip',$data); // Load the view
 		}
-
-		$this->table->add_row(
-			'&nbsp',		
-			'&nbsp',		
-			'&nbsp',		
-			'Total',		
-			$gt,			
-			$d
-		);
-		
-		$data['grand_total'] = $gt;
-		$data['grand_discount'] = $d;
-		
-
-		$data['page_title'] = 'Delivery Orders';
-		$this->load->view('print/deliveryslip',$data); // Load the view
 	}
-}
 
 ?>
