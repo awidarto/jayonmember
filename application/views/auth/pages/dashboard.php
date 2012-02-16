@@ -1,15 +1,17 @@
+<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+<?php echo $this->ag_asset->load_script('gmap3.min.js');?>
 <script>
 
 	$(document).ready(function() {
-		
+
 		$('#map').gmap3({
 			action:'init',
 			options:{
-			      center:[-6.17742,106.828308],
-			      zoom: 12
-			    }
+				  center:[-6.17742,106.828308],
+				  zoom: 12
+				}
 		});
-	        
+
 	});
 
 </script>

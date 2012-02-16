@@ -53,6 +53,10 @@ a{color:#231e18;margin-right:10px;}
 	text-align:right;
 }
 
+button {
+	height:31px;
+}
+
 .button {
 	padding:9px;
 	background-color:orange;
@@ -106,6 +110,30 @@ a{color:#231e18;margin-right:10px;}
 	padding: 3px;
 }
 
+.blue{
+	color: white;
+	font-weight:bold;
+	display: block;
+	background-color: blue;
+	padding: 3px;
+}
+
+.maroon{
+	color: white;
+	font-weight:bold;
+	display: block;
+	background-color: maroon;
+	padding: 3px;
+}
+
+.brown{
+	color: white;
+	font-weight:bold;
+	display: block;
+	background-color: brown;
+	padding: 3px;
+}
+
 .green{
 	color:white;
 	font-weight:bold;
@@ -130,6 +158,22 @@ a{color:#231e18;margin-right:10px;}
 	padding: 3px;
 }
 
+.orange{
+	color:white;
+	font-weight:bold;
+	display: block;
+	background-color: orange;
+	padding: 3px;
+}
+
+td .cancel_link{
+	text-decoration:underline;
+}
+
+div.oi.error{
+	margin:0px;
+	width:100%;
+}
 .weekend{
 	background:red;
 }

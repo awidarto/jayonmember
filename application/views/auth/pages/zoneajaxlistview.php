@@ -65,10 +65,16 @@
 			minLength: 2
 		});
 
+		$( '#assign_deliverycity' ).autocomplete({
+			source: '<?php print site_url('ajax/getcities')?>',
+			method: 'post',
+			minLength: 2
+		});
+
 		
-		$('#search_deliverydate').datepicker({ dateFormat: 'yy-mm-dd' });
+		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		
-		$('#search_deliverydate').change(function(){
+		$('#search_deliverytime').change(function(){
 			oTable.fnFilter( this.value, $('tfoot input').index(this) );
 		});
 
@@ -78,35 +84,47 @@
 		
 		$('#doAssign').click(function(){
 			var assigns = '';
-			var count = 0;
-			$('.assign_check:checked').each(function(){
-				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;">'+this.value+'</li>';
-				count++;
-			});
+			var date_assign = $('.assign_date:checked').val();
+			var city_assign = $('.assign_city:checked').val();
+
 			
-			if(count > 0){
+			if(date_assign == '' || city_assign == '' ){
+
+				alert('Please select one or more delivery orders');
+
+			}else{
+
+				$('#disp_deliverycity').html(city_assign);
+				$('#disp_deliverytime').html(date_assign);
+
+				//$('.assign_check:checked').each(function(){
+
+				var city_assign_class = city_assign.replace(' ','_');
+				$('.' + date_assign +'_'+ city_assign_class).each(function(){
+
+					var zone = date_assign + ' | ' +$('#'+this.value).html() +' | '+ city_assign;
+
+					zone += '<input type="checkbox" name="assign_check_dev[]" value="'+this.value+'" class="id_assign">';
+
+					assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong> <br /> '+ zone +'</li>';
+				});
+
+				$.post('<?php print site_url('admin/delivery/ajaxdevicecap');?>',{ assignment_date: date_assign,assignment_zone: $('#assign_deliveryzone').val(),assignment_city: city_assign }, function(data) {
+					$('#dev_list').html(data.html);
+				},'json');
+
 				$('#trans_list').html(assigns);
 				$('#assign_dialog').dialog('open');
-			}else{
-				alert('Please select one or more delivery orders');
+
 			}
 		});
-
-		/*
-		$('table.dataTable').click(function(e){
-			
-			var delivery_id = e.target.id;
-			$('#change_id').html(delivery_id);
-			$('#changestatus_dialog').dialog('open');
-			
-		});
-		*/
+		
 		$('#getDevices').click(function(){
 			if($('#assign_deliverytime').val() == ''){
 				alert('Please specify intended delivery time');
 			}else{
 				//alert($('#assign_deliverytime').val());
-				$.post('<?php print site_url('admin/delivery/ajaxdevicecap');?>',{ assignment_date: $('#assign_deliverytime').val(),assignment_zone: $('#assign_deliveryzone').val() }, function(data) {
+				$.post('<?php print site_url('admin/delivery/ajaxdevicecap');?>',{ assignment_date: $('#assign_deliverytime').val(),assignment_zone: $('#assign_deliveryzone').val(),assignment_city: $('#assign_deliverycity').val() }, function(data) {
 					$('#dev_list').html(data.html);
 				},'json');
 			}
@@ -115,28 +133,37 @@
 		$('#assign_dialog').dialog({
 			autoOpen: false,
 			height: 300,
-			width: 600,
+			width: 800,
 			modal: true,
 			buttons: {
 				"Assign to Device": function() {
-					if($('#assign_deliverytime').val() == ''){
-						alert('Please specify date.');
+					var device_id = $("input[name='dev_id']:checked").val();
+
+					if($('#assign_deliverytime').val() == '' || device_id == '' || device_id == undefined){
+						alert('Please specify date and or device.');
 					}else{
-						var device_id = $("input[name='dev_id']:checked").val();
 						var delivery_ids = [];
 						i = 0;
-						$('.assign_check:checked').each(function(){
+						$('.id_assign:checked').each(function(){
 							delivery_ids[i] = $(this).val();
 							i++;
 						}); 
-						$.post('<?php print site_url('admin/delivery/ajaxassignzone');?>',{ assignment_device_id: device_id,'delivery_id[]':delivery_ids, assignment_zone: $('#assign_deliveryzone').val() }, function(data) {
-							if(data.result == 'ok'){
-								//redraw table
-								oTable.fnDraw();
-								$('#assign_dialog').dialog( "close" );
-							}
+						$.post('<?php print site_url('admin/delivery/ajaxassignzone');?>',
+							{ 
+								assignment_device_id: device_id,
+								'delivery_id[]':delivery_ids,
+								assignment_timeslot: $('.timeslot:checked').val(),
+								assignment_zone: $('#assign_deliveryzone').val(), 
+								assignment_city: $('#disp_deliverycity').html() }, 
+								function(data) {
+								if(data.result == 'ok'){
+									//redraw table
+									oTable.fnDraw();
+									$('#assign_dialog').dialog( "close" );
+								}
 						},'json');
 					}
+					
 				},
 				Cancel: function() {
 					$('#dev_list').html("");
@@ -148,38 +175,6 @@
 				$('#assign_deliverytime').val('');
 			}
 		});
-
-		$('#changestatus_dialog').dialog({
-			autoOpen: false,
-			height: 250,
-			width: 400,
-			modal: true,
-			buttons: {
-				"Confirm Delivery Orders": function() {
-					var delivery_id = $('#change_id').html();
-
-					$.post('<?php print site_url('admin/delivery/ajaxchangestatus');?>',{ 
-						'delivery_id':delivery_id,
-						'new_status': $('#new_status').val(),
-						'actor': $('#actor').val()
-					}, function(data) {
-						if(data.result == 'ok'){
-							//redraw table
-							oTable.fnDraw();
-							$('#changestatus_dialog').dialog( "close" );
-						}
-					},'json');
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-				//allFields.val( "" ).removeClass( "ui-state-error" );
-				$('#confirm_list').html('');
-			}
-		});
-
 		/*
 		function refresh(){
 			oTable.fnDraw();
@@ -202,51 +197,22 @@
 <div id="assign_dialog" title="Assign Selection to Device">
 	<table style="width:100%;border:0;margin:0;">
 		<tr>
-			<td style="width:50%;border:0;margin:0;">
-				Delivery Orders :
-			</td>
-			<td style="width:50%;border:0;margin:0;">
-				Select Zone :<br />
-				<input id="assign_deliveryzone" type="text" value=""><br />
-				Delivery Time :<br />
-				<input id="assign_deliverytime" type="text" value="">
-				<?php print form_button('getdevices','Get Devices','id="getDevices"');?>
-			</td>
-		</tr>
-		<tr>
-			<td style="overflow:auto;">
+			<td style="width:50%;border:0;margin:0;vertical-align: top">
+				<h4>Delivery Orders :</h4>
 				<ul id="trans_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
 			</td>
-			<td>
+			<td style="width:50%;border:0;margin:0;vertical-align: top">
+				<table style="margin: 0px;border: 0px;">
+					<tr>
+						<td>
+							City : <span id="disp_deliverycity" style="font-weight: bold"></span>
+						</td>
+						<td>
+							Delivery Time : <span id="disp_deliverytime" style="font-weight: bold" ></span>
+						</td>
+					</tr>
+				</table>
 				<ul id="dev_list" style="border-top:thin solid grey;list-style-type:none;padding-left:0px;"></ul>
-			</td>
-		</tr>
-	</table>
-</div>
-
-<div id="changestatus_dialog" title="Change Delivery Orders">
-	<table style="width:100%;border:0;margin:0;">
-		<tr>
-			<td style="width:250px;vertical-align:top">
-				<strong>Delivery ID : </strong><span id="change_id"></span><br /><br />
-				<?php
-					$status_list = $this->config->item('status_colors');
-					$status_list = array_keys($status_list);
-
-					$sl = array();
-					foreach($status_list as $s){
-						$sl[$s]=$s;
-					}
-
-					$actor = $this->config->item('actors_title');
-
-
-					print 'Actor <br />';
-					print form_dropdown('actor',$actor,'','id="actor"').'<br /><br />';
-					print ' New Status<br />';
-					print form_dropdown('new_status',$sl,'','id="new_status"');
-
-				?>
 			</td>
 		</tr>
 	</table>
