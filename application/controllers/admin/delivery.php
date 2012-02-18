@@ -1232,7 +1232,7 @@ class Delivery extends Application
 	public function dispatched()
 	{
 		$this->breadcrumb->add_crumb('Orders','admin/delivery/incoming');
-		$this->breadcrumb->add_crumb('Dispatched Orders','admin/delivery/assigned');
+		$this->breadcrumb->add_crumb('In Progress Orders','admin/delivery/assigned');
 
 		$this->table->set_heading(
 			'Delivery Date',
