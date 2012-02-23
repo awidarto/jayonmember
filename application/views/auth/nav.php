@@ -26,8 +26,8 @@
 		<li class="<?php print set_hilite('admin\/dashboard')?>" ><?php echo anchor('admin/dashboard', 'Dashboard'); ?></li>
 		<li class="<?php print set_hilite('admin\/buyer')?>" ><?php if(user_group('buyer') || user_group('merchant')) { echo anchor('admin/buyer/orders', 'My Orders'); } ?>
 			<ul>
-				<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/buyer\/orders')?>" ><?php echo anchor('admin/buyer/orders', 'In-Process Orders'); ?></li><?php endif;?>
-				<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/buyer\/dispatched')?>" ><?php echo anchor('admin/buyer/dispatched', 'Dispatched Orders'); ?></li><?php endif;?>
+				<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/buyer\/orders')?>" ><?php echo anchor('admin/buyer/orders', 'In Progress Orders'); ?></li><?php endif;?>
+				<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/buyer\/delivered')?>" ><?php echo anchor('admin/buyer/delivered', 'Delivered Orders'); ?></li><?php endif;?>
 			</ul>
 		</li>
 
