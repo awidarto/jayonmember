@@ -151,8 +151,8 @@ class Buyer extends Application
 		$this->table->set_footing(
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
-			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
-			form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"')
+			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />'
+			//form_button('do_assign','Assign Delivery Date to Selection','id="doAssign"')
 			);
 		
 		foreach($result as $value => $key)
