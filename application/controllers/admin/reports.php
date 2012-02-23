@@ -1,6 +1,6 @@
 <?php
 
-class Merchant extends Application
+class Reports extends Application
 {
 	
 	public function __construct()
@@ -16,12 +16,20 @@ class Merchant extends Application
 		
 	}
 
-	public function request(){
-
-		$this->breadcrumb->add_crumb('Merchant Request','admin/merchant/request');
+	public function index(){
 		
-		$page['page_title'] = 'Merchant Request';
-		$this->ag_auth->view('merchant/request',$page); // Load the view
+	}
+
+	public function daily(){
+		
+	}
+
+	public function weekly(){
+		
+	}
+
+	public function monthly(){
+		
 	}
 
 }

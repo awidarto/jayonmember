@@ -49,6 +49,13 @@
 					<li class="<?php print set_hilite('admin\/location\/tracker')?>" ><?php if(user_group('admin')) { echo anchor('admin/location/tracker', 'Location Tracker'); } ?></li>
 				</ul>
 			</li>
+			<li class="<?php print set_hilite('admin\/reports')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports', 'Reports'); } ?>
+				<ul>
+					<li class="<?php print set_hilite('admin\/reports\/weekly')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/daily', 'Daily'); } ?></li>
+					<li class="<?php print set_hilite('admin\/reports\/daily')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/weekly', 'Weekly'); } ?></li>
+					<li class="<?php print set_hilite('admin\/reports\/mothly')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/monthly', 'Monthly'); } ?></li>
+				</ul>
+			</li>
 			<li class="<?php print set_hilite('admin\/apps')?>" ><?php if(user_group('merchant')) { echo anchor('admin/apps/manage', 'Merchant Options'); } ?>
 				<ul>
 					<li class="<?php print set_hilite('admin\/apps')?>" ><?php if(user_group('merchant')) { echo anchor('admin/apps/manage', 'Application Keys'); } ?></li>
