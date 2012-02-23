@@ -78,6 +78,17 @@
 		   	}
 		});
 
+		$('#search_timestamp').datepicker({ dateFormat: 'yy-mm-dd' });
+		$('#search_reporttime').datepicker({ dateFormat: 'yy-mm-dd' });
+
+		$('#search_timestamp').change(function(){
+			oTable.fnFilter( this.value, $('tfoot input').index(this) );
+		});
+
+		$('#search_reporttime').change(function(){
+			oTable.fnFilter( this.value, $('tfoot input').index(this) );
+		});
+
 		$('#doArchive').click(function(){
 			var assigns = '';
 			var count = 0;
@@ -103,14 +114,16 @@
 			width: 400,
 			modal: true,
 			buttons: {
-				"Cancel Delivery Orders": function() {
+				"Archive Delivery Orders": function() {
 					var delivery_ids = [];
+					var laststatus = [];
 					i = 0;
 					$('.assign_check:checked').each(function(){
 						delivery_ids[i] = $(this).val();
+						laststatus[i] = $(this).attr('title');
 						i++;
 					}); 
-					$.post('<?php print site_url('admin/delivery/ajaxarchive');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids}, function(data) {
+					$.post('<?php print site_url('admin/delivery/ajaxarchive');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids,'laststatus[]':laststatus}, function(data) {
 						if(data.result == 'ok'){
 							//redraw table
 							oTable.fnDraw();
@@ -129,7 +142,7 @@
 		});
 	});
 </script>
-<?php if(isset($add_button) && user_group('admin')):?>
+<?php if(isset($add_button)):?>
 	<div class="button_nav">
 		<?php echo anchor($add_button['link'],$add_button['label'],'class="button add"')?>
 	</div>
