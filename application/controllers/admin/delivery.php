@@ -160,7 +160,7 @@ class Delivery extends Application
 				$key['phone'],
 				colorizestatus($key['status']),
 				$reference,
-				($key['status'] == 'canceled')?'':$reschedule.' '.$cancel
+				($key['status'] == 'canceled')?'':$reschedule
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
 				//($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete

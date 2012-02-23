@@ -36,6 +36,8 @@
 			Signature:<br />
 			<textarea name="signature" cols="60" rows="10"><?php echo set_value('signature'); ?></textarea><br />
 
+			<?php print form_fieldset_close(); ?>
+
 			<input type="submit" value="Add" name="add" />
 				<?php
 					print $back_url;
