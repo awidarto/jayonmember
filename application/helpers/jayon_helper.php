@@ -239,8 +239,14 @@ function send_admin($subject,$to,$cc = null,$template = 'default',$data = '',$at
 }
 
 function colorizestatus($status){
+
 	$colors = config_item('status_colors');
-	$class = $colors[$status];
+	if($status == '' || !in_array($status, array_keys($colors))){
+		$class = 'brown';
+		$status = 'N/A';
+	}else{
+		$class = $colors[$status];
+	}
 
 	return sprintf('<span class="%s">%s</span>',$class,$status);
 }

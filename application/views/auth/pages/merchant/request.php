@@ -31,7 +31,6 @@
 				<input type="text" name="email" size="50" class="form" value="<?php echo set_value('email'); ?>" /><?php echo form_error('email'); ?><br /><br />
 
 			<?php print form_fieldset_close();?>
-			<br />
 		
 			<?php print form_fieldset('Bank Account');?>
 				Bank:<br />
@@ -43,9 +42,11 @@
 				Account Number:<br />
 				<input type="text" name="account_number" size="50" class="form" value="<?php echo set_value('account_number'); ?>" /><?php echo form_error('account_number'); ?><br /><br />
 			<?php print form_fieldset_close();?>
-			<br />
 
-			<?php print form_fieldset('Merchant Address');?>			
+			<?php print form_fieldset('Merchant Main Address');?>	
+
+				<input type="checkbox" checked="1" name="same_as_personal_address" id="same_as_personal_address" value="1" <?php echo set_checkbox('same_as_personal_address', '1',false); ?>" /> Same as my personal address<br /><br />
+		
 				Street:<br />
 				<input type="text" name="street" size="50" class="form" value="<?php echo set_value('mobile'); ?>" /><?php echo form_error('mobile'); ?><br /><br />
 
@@ -70,7 +71,6 @@
 				Mobile Number:<br />
 				<input type="text" name="mobile" size="50" class="form" value="<?php echo set_value('mobile'); ?>" /><?php echo form_error('mobile'); ?><br /><br />
 			<?php print form_fieldset_close();?>
-			<br />
 			<input type="submit" value="Register" name="register" />
 			</form>
 	</div>
