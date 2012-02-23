@@ -140,6 +140,7 @@ class Buyer extends Application
 
 	public function orders()
 	{
+		$this->breadcrumb->add_crumb('My Orders','admin/buyer/orders');
 		$this->breadcrumb->add_crumb('In Progress Orders','admin/buyer/orders');
 
 		$this->table->set_heading(
@@ -289,8 +290,8 @@ class Buyer extends Application
 
 	public function delivered()
 	{
-		$this->breadcrumb->add_crumb('Orders','admin/delivery/incoming');
-		$this->breadcrumb->add_crumb('Delivered Orders','admin/delivery/delivered');
+		$this->breadcrumb->add_crumb('My Orders','admin/buyer/orders');
+		$this->breadcrumb->add_crumb('Delivered Orders','admin/buyer/delivered');
 
 		$this->table->set_heading(
 			'Delivery Time',
