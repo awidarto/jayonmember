@@ -21,7 +21,7 @@ class Delivery extends Application
 		$limit_count = $this->input->post('iDisplayLength');
 		$limit_offset = $this->input->post('iDisplayStart');
 
-		$sort_col = $this->input->post('iSortCol_0');
+		$sort_col = ($this->input->post('iSortCol_0') == '')?0:$this->input->post('iSortCol_0');
 		$sort_dir = $this->input->post('sSortDir_0');
 
 		$columns = array(
