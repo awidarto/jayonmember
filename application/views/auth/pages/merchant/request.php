@@ -19,58 +19,63 @@
 
 
 <div id="form">
-	
+	<?php echo validation_errors(); ?>
 	<div class="form_box">
 			<form method="post">
-			<?php print form_fieldset('Main Information');?>
 
-				Merchant Name:<br />
-				<input type="text" name="merchantname" size="50" class="form" value="<?php echo set_value('merchantname'); ?>" /><?php echo form_error('merchantname'); ?><br /><br />
+			<?php print form_fieldset('Main Merchant Information');?>
 
-				Official Email:<br />
-				<input type="text" name="email" size="50" class="form" value="<?php echo set_value('email'); ?>" /><?php echo form_error('email'); ?><br /><br />
+			Merchant Name:<br />
+			<input type="text" name="merchantname" size="50" class="form" value="<?php echo set_value('merchantname',$user['merchantname']); ?>" /><?php echo form_error('merchantname'); ?><br /><br />
+
+			Official Email:<br />
+			<input type="text" name="mc_email" size="50" class="form" value="<?php echo set_value('mc_email',$user['mc_email']); ?>" /><?php echo form_error('mc_email'); ?><br /><br />
 
 			<?php print form_fieldset_close();?>
 		
 			<?php print form_fieldset('Bank Account');?>
-				Bank:<br />
-				<input type="text" name="bank" size="50" class="form" value="<?php echo set_value('bank'); ?>" /><?php echo form_error('bank'); ?><br /><br />
 
-				Account Name:<br />
-				<input type="text" name="account_name" size="50" class="form" value="<?php echo set_value('account_name'); ?>" /><?php echo form_error('account_name'); ?><br /><br />
+			Bank:<br />
+			<input type="text" name="bank" size="50" class="form" value="<?php echo set_value('bank',$user['bank']); ?>" /><?php echo form_error('bank'); ?><br /><br />
 
-				Account Number:<br />
-				<input type="text" name="account_number" size="50" class="form" value="<?php echo set_value('account_number'); ?>" /><?php echo form_error('account_number'); ?><br /><br />
+			Account Name:<br />
+			<input type="text" name="account_name" size="50" class="form" value="<?php echo set_value('account_name',$user['account_name']); ?>" /><?php echo form_error('account_name'); ?><br /><br />
+
+			Account Number:<br />
+			<input type="text" name="account_number" size="50" class="form" value="<?php echo set_value('account_number',$user['account_number']); ?>" /><?php echo form_error('account_number'); ?><br /><br />
+
 			<?php print form_fieldset_close();?>
 
 			<?php print form_fieldset('Merchant Main Address');?>	
 
-				<input type="checkbox" checked="1" name="same_as_personal_address" id="same_as_personal_address" value="1" <?php echo set_checkbox('same_as_personal_address', '1',false); ?>" /> Same as my personal address<br /><br />
-		
-				Street:<br />
-				<input type="text" name="street" size="50" class="form" value="<?php echo set_value('mobile'); ?>" /><?php echo form_error('mobile'); ?><br /><br />
+			<?php echo form_checkbox('same_as_personal_address', '1', $user['same_as_personal_address']);?> Same as personal address<br /><br />
 
-				District:<br />
-				<input type="text" name="district" size="50" class="form" value="<?php echo set_value('district'); ?>" /><?php echo form_error('district'); ?><br /><br />
+			Street:<br />
+			<input type="text" name="mc_street" size="50" class="form" value="<?php echo set_value('mc_mobile',$user['mc_street']); ?>" /><?php echo form_error('mc_street'); ?><br /><br />
 
-				City:<br />
-				<input type="text" name="city" size="50" class="form" value="<?php echo set_value('city'); ?>" /><?php echo form_error('city'); ?><br /><br />
+			District:<br />
+			<input type="text" name="mc_district" size="50" class="form" value="<?php echo set_value('mc_district',$user['mc_district']); ?>" /><?php echo form_error('mc_district'); ?><br /><br />
 
-				Province:<br />
-				<input type="text" name="province" size="50" class="form" value="<?php echo set_value('province'); ?>" /><?php echo form_error('province'); ?><br /><br />
+			City:<br />
+			<input type="text" name="mc_city" size="50" class="form" value="<?php echo set_value('mc_city',$user['mc_city']); ?>" /><?php echo form_error('mc_city'); ?><br /><br />
 
-				Country:<br />
-				<input type="text" name="country" size="50" class="form" value="<?php echo set_value('country'); ?>" /><?php echo form_error('country'); ?><br /><br />
+			Province:<br />
+			<input type="text" name="mc_province" size="50" class="form" value="<?php echo set_value('mc_province',$user['mc_province']); ?>" /><?php echo form_error('mc_province'); ?><br /><br />
 
-				ZIP:<br />
-				<input type="text" name="zip" size="50" class="form" value="<?php echo set_value('zip'); ?>" /><?php echo form_error('zip'); ?><br /><br />
+			Country:<br />
+			<input type="text" name="mc_country" size="50" class="form" value="<?php echo set_value('mc_country',$user['mc_country']); ?>" /><?php echo form_error('mc_country'); ?><br /><br />
 
-				Phone Number:<br />
-				<input type="text" name="phone" size="50" class="form" value="<?php echo set_value('phone'); ?>" /><?php echo form_error('phone'); ?><br /><br />
+			ZIP:<br />
+			<input type="text" name="mc_zip" size="50" class="form" value="<?php echo set_value('mc_zip',$user['mc_zip']); ?>" /><?php echo form_error('mc_zip'); ?><br /><br />
 
-				Mobile Number:<br />
-				<input type="text" name="mobile" size="50" class="form" value="<?php echo set_value('mobile'); ?>" /><?php echo form_error('mobile'); ?><br /><br />
-			<?php print form_fieldset_close();?>
+			Phone Number:<br />
+			<input type="text" name="mc_phone" size="50" class="form" value="<?php echo set_value('mc_phone',$user['mc_phone']); ?>" /><?php echo form_error('mc_phone'); ?><br /><br />
+
+			Mobile Number:<br />
+			<input type="text" name="mc_mobile" size="50" class="form" value="<?php echo set_value('mc_mobile',$user['mc_mobile']); ?>" /><?php echo form_error('mc_mobile'); ?><br /><br />
+
+			<?php print form_fieldset_close(); ?>
+
 			<input type="submit" value="Register" name="register" />
 			</form>
 	</div>

@@ -49,10 +49,10 @@ $autoload['packages'] = array();
 |
 | Prototype:
 |
-|	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
+|	$autoload['libraries'] = array('database', 'session', 'xmlrpc','oi');
 */
 
-$autoload['libraries'] = array('ag_asset','table','ag_auth','curl','breadcrumb','gc_qrcode');
+$autoload['libraries'] = array('ag_asset','table','ag_auth','curl','breadcrumb','gc_qrcode','oi');
 
 
 /*
@@ -80,7 +80,7 @@ $autoload['helper'] = array('asset','date','jayon');
 |
 */
 
-$autoload['config'] = array('jayon','gc_qrcode');
+$autoload['config'] = array('jayon','gc_qrcode','oi');
 
 
 /*

@@ -56,8 +56,9 @@
 					<li class="<?php print set_hilite('admin\/reports\/mothly')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/monthly', 'Monthly'); } ?></li>
 				</ul>
 			</li>
-			<li class="<?php print set_hilite('admin\/apps')?>" ><?php if(user_group('merchant')) { echo anchor('admin/apps/manage', 'Merchant Options'); } ?>
+			<li class="<?php print set_hilite('admin\/merchant')?>" ><?php if(user_group('merchant')) { echo anchor('admin/merchant', 'Merchant Options'); } ?>
 				<ul>
+					<li class="<?php print set_hilite('admin\/merchant\/edit')?>" ><?php if(user_group('merchant')) { echo anchor('admin/merchant/edit', 'Edit Merchant Info'); } ?></li>
 					<li class="<?php print set_hilite('admin\/apps')?>" ><?php if(user_group('merchant')) { echo anchor('admin/apps/manage', 'Application Keys'); } ?></li>
 				</ul>
 			</li>
