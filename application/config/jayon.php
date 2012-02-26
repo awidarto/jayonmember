@@ -35,10 +35,12 @@ $config['device_assignment_table'] = 'device_assignment';
 
 $config['jayon_members_table'] = 'members';
 $config['jayon_couriers_table'] = 'couriers';
+$config['jayon_holidays_table'] = 'holidays';
 $config['jayon_devices_table'] = 'devices';
 $config['jayon_options_table'] = 'options';
 $config['jayon_zones_table'] = 'districts';
 $config['jayon_timeslots_table'] = 'slots';
+$config['jayon_email_outbox_table'] = 'email_outbox';
 
 $config['jayon_mobile_table'] = 'mobile_orders';
 
