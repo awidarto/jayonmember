@@ -205,7 +205,7 @@ Array
 			</tr>
 		</thead>
 		<tbody>
-			<tr style="height:150px;">
+			<tr style="height:40px;">
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
