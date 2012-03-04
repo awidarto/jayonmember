@@ -104,7 +104,9 @@ class Delivery extends Application
 			->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
 			->group_end();
 		
-		$data = $this->db->limit($limit_count, $limit_offset)->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
+		$data = $this->db->limit($limit_count, $limit_offset)
+			->order_by('buyerdeliverytime','desc')
+			->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
 
 		//print $this->db->last_query();
 
@@ -1474,6 +1476,7 @@ class Delivery extends Application
 		$data = $this->db
 			->where($this->config->item('delivered_delivery_table').'.merchant_id',$this->session->userdata('userid'))
 			->where('status',$this->config->item('trans_status_mobile_delivered'))
+			->order_by('deliverytime','desc')
 			->limit($limit_count, $limit_offset)
 			->get($this->config->item('delivered_delivery_table'));
 
@@ -1739,6 +1742,7 @@ class Delivery extends Application
 
 		$data = $this->db	
 			->limit($limit_count, $limit_offset)
+			->order_by('deliverytime','desc')
 			->get($this->config->item('delivered_delivery_table'));
 
 		$result = $data->result_array();
@@ -1897,6 +1901,7 @@ class Delivery extends Application
 		$data = $this->db
 			->where($this->config->item('delivered_delivery_table').'.merchant_id',$this->session->userdata('userid'))
 			->where('status',$this->config->item('trans_status_mobile_rescheduled'))
+			->order_by('deliverytime','desc')
 			->limit($limit_count, $limit_offset)
 			->get($this->config->item('delivered_delivery_table'));
 
