@@ -38,7 +38,14 @@
 			<input type="text" name="logo_url" size="50" class="form" value="<?php echo set_value('logo_url',$user['logo_url']); ?>" /><br /><?php echo form_error('logo_url'); ?><br />
 
 			Signature:<br />
-			<textarea name="signature" cols="60" rows="10"><?php echo set_value('signature',$user['signature']); ?></textarea><br />
+			<textarea name="signature" cols="60" rows="10"><?php echo set_value('signature',$user['signature']); ?></textarea><br /><br />
+
+			Buyer Notifications :<br />
+			<?php // echo form_checkbox('notify_on_new_buyer', '1', $user['notify_on_new_buyer']);// Send notification on new member<br /> ?>
+			<?php echo form_checkbox('notify_on_new_order', '1', $user['notify_on_new_order']);?> Send notification on new order<br />
+			<?php // echo form_checkbox('notify_on_reschedule', '1', $user['notify_on_reschedule']);// Send notification on rescheduled order<br />?>
+			<?php // echo form_checkbox('notify_on_revoked', '1', $user['notify_on_revoked']);// Send notification on revoked order<br />?>
+			<?php // echo form_checkbox('notify_on_noshow', '1', $user['notify_on_noshow']);// Send notification on no show<br />?>
 
 			<?php print form_fieldset_close(); ?>
 
