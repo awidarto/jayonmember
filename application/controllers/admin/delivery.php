@@ -105,6 +105,7 @@ class Delivery extends Application
 			->group_end();
 		
 		$data = $this->db->limit($limit_count, $limit_offset)
+			->order_by($this->config->item('incoming_delivery_table').'.created','desc')
 			->order_by('buyerdeliverytime','desc')
 			->order_by($columns[$sort_col],$sort_dir)->get($this->config->item('incoming_delivery_table'));
 
@@ -149,6 +150,7 @@ class Delivery extends Application
 			$deliveryidfield = ($key['status'] == $this->config->item('trans_status_canceled'))?$key['delivery_id']:form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'];
 
 			$aadata[] = array(
+				date('Y-m-d h:i:s',$key['created']),				
 				'<span id="'.$key['delivery_id'].'"><input type="hidden" value="'.$key['buyerdeliverytime'].'" id="cd_'.$key['delivery_id'].'">'.$reqdate.'</span>',
 				$key['buyerdeliveryzone'],
 				$key['buyerdeliverycity'],
@@ -185,6 +187,7 @@ class Delivery extends Application
 		$this->breadcrumb->add_crumb('Incoming Orders','admin/delivery/incoming');
 
 		$this->table->set_heading(
+			'Timestamp',
 			'Requested Date',
 			'Zone',
 			'City',
