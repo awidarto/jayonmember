@@ -1914,6 +1914,8 @@ class Delivery extends Application
 		{
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
+			$cancel = '<span class="cancel_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Cancel</span>';
+			$proceed = '<span class="proceed_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Proceed</span>';
 
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
@@ -1926,8 +1928,10 @@ class Delivery extends Application
 				$key['shipping_address'],
 				$key['phone'],
 				colorizestatus($key['status']),
-				$key['reschedule_ref'],
-				$key['revoke_ref']
+				colorizestatus($key['status']),
+				$proceed.' '.$cancel
+				//$key['reschedule_ref'],
+				//$key['revoke_ref']
 			);
 		}
 
@@ -1957,8 +1961,9 @@ class Delivery extends Application
 			'Shipping Address',
 			'Phone',
 			'Status',
-			'Reschedule Ref',
-			'Revoke Ref'
+			'Action'
+			//'Reschedule Ref',
+			//'Revoke Ref'
 			); // Setting headings for the table
 
 		$this->table->set_footing(

@@ -1,42 +1,19 @@
-<?php
-//print_r($main_info);
-/*
-Array
-(
-	[id] => 1
-	[ordertime] => 0000-00-00 00:00:00
-	[assigntime] => 2011-12-12 10:02:41
-	[deliverytime] => 0000-00-00 00:00:00
-	[assignment_date] => 2011-12-14
-	[delivery_id] => 00000017-10-122011-0000000001
-	[application_id] => 1
-	[application_key] => 23c33397a9b1ecb579c53fe200e26c12709ee379
-	[buyer_id] => 1
-	[merchant_id] => 17
-	[merchant_trans_id] => 123456789
-	[courier_id] => 0
-	[device_id] => 16
-	[shipping_address] => Kompleks DKI D3 Joglo
-	[phone] => 02112345678
-	[status] => assigned
-	[delivery_note] =>
-	[undersign] =>
-	[latitude] => 0.000000000000
-	[longitude] => 0.000000000000
-	[reschedule_ref] =>
-	[revoke_ref] =>
-)
-
-*/
-?>
+<html>
+<head>
+	<title>Delivery Slip</title>
 	<style>
 
+		html{margin:0px;}
+
+		body{margin:5px;}
+
 		#wrapper{
-			width:98%;
+			width:850px;
 			margin:5px;
 			display:block;
-			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Arial ;
+			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Helvetica ;
 			font-size:14px;
+			text-align:left;
 		}
 
 		h2{
@@ -50,7 +27,7 @@ Array
 
 		.dataTable{
 			width:100%;
-			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Arial ;
+			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Helvetica ;
 			margin-top:8px;
 
 		}
@@ -91,9 +68,9 @@ Array
 
 		#jayon_logo{
 			vertical-align:top;
-			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Arial ;
+			font-family:'Trebuchet Ms', 'Yanone Kaffeesatz', Lato, Lobster, 'Lobster Two','Droid Sans', Helvetica ;
 			font-size: 11px;
-			text-align:right;
+			text-align:left;
 		}
 
 		#jayon_logo img{
@@ -103,10 +80,7 @@ Array
 		#order_detail,#merchant_detail{
 			vertical-align:top;
 			padding-top:0px;
-		}
-
-		#merchant_detail td{
-			width:400px;
+			
 		}
 
 		#order_detail h2{
@@ -116,11 +90,6 @@ Array
 		#merchant_detail{
 			margin:0px;
 			padding:8px;
-			width:450px;
-		}
-
-		#mainInfo, #orderInfo{
-			width:100%;
 		}
 
 		#mainInfo tr>td:first-child, #orderInfo tr>td:first-child{
@@ -128,7 +97,9 @@ Array
 		}
 
 		table#main_table{
-			width:100%;
+			width:850px;
+			padding:0px;
+			margin:0px;
 		}
 
 		.row_label{
@@ -136,13 +107,15 @@ Array
 		}
 
 		table#signBox{
-			font-size: 13px;
+			font-size: 12px;
 			margin-top:15px;
+			width:840px;
 		}
 
 		#signBox th{
-			width:150px;
+			width:100px;
 			vertical-align:top;
+			border-top: thin solid #eee;
 			border-bottom: thin solid #eee;
 			border-right:thin solid #eee;
 			margin:2px;
@@ -158,12 +131,6 @@ Array
 			border-left: thin solid #eee;
 		}
 
-		#signBox th{
-			border-top: thin solid #eee;
-			border-bottom: thin solid #eee;
-			border-right:thin solid #eee;
-		}
-
 		#signBox th:first-child{
 			border-left: thin solid #eee;
 		}
@@ -174,11 +141,13 @@ Array
 		}
 
 	</style>
+</head>
+<body>
 <div id="wrapper">
 	<table id="main_table">
 		<tbody>
 			<tr>
-				<td  id="merchant_detail">
+				<td id="merchant_detail">
 					<table border="0" cellpadding="4" cellspacing="0" id="mainLogo">
 						<tbody>
 							<tr>
@@ -294,4 +263,5 @@ Array
 		</tbody>
 	</table>
 </div>
-
+</body>
+</html>

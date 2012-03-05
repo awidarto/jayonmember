@@ -14,7 +14,7 @@ class Prints extends Application
 	    
 	}
 	
-		public function deliveryslip($delivery_id, $print = null)
+		public function deliveryslip($delivery_id,$pdf = false)
 		{
 			$main = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
 
@@ -50,8 +50,8 @@ class Prints extends Application
 			}
 
 			$this->table->add_row(
-				'&nbsp',		
-				'&nbsp',		
+				'&nbsp;',		
+				'&nbsp;',		
 				'Total',		
 				$gt
 			);
@@ -63,8 +63,8 @@ class Prints extends Application
 				);
 			}else{
 				$this->table->add_row(
-				'&nbsp',		
-				'&nbsp',		
+				'&nbsp;',		
+				'&nbsp;',		
 				'COD',		
 				$data['main_info']['currency'].' '.$data['main_info']['cod_cost']
 			);
@@ -84,12 +84,17 @@ class Prints extends Application
 
             $data['qr'] = $this->gc_qrcode->img();
 
-            $data['doprint'] = (is_null($print))?false:true;
-
             $this->gc_qrcode->clear();
 
 			$data['page_title'] = 'Delivery Orders';
-			$this->load->view('print/deliveryslip',$data); // Load the view
+
+			if($pdf){
+				$html = $this->load->view('print/deliveryslip',$data,true);
+				//print $html; // Load the view
+				pdf_create($html, $delivery_id.'.pdf','A4','landscape', true); 
+			}else{
+				$this->load->view('print/deliveryslip',$data); // Load the view
+			}
 		}
 	}
 
