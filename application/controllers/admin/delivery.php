@@ -151,7 +151,8 @@ class Delivery extends Application
 			$deliveryidfield = ($key['status'] == $this->config->item('trans_status_canceled'))?$key['delivery_id']:form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'];
 
 			$aadata[] = array(
-				//date('Y-m-d h:i:s',$key['created']),				
+				//date('Y-m-d h:i:s',$key['created']),	
+				$key['ordertime'],
 				'<span id="'.$key['delivery_id'].'"><input type="hidden" value="'.$key['buyerdeliverytime'].'" id="cd_'.$key['delivery_id'].'">'.$reqdate.'</span>',
 				$key['buyerdeliveryzone'],
 				$key['buyerdeliverycity'],
@@ -188,8 +189,8 @@ class Delivery extends Application
 		$this->breadcrumb->add_crumb('Incoming Orders','admin/delivery/incoming');
 
 		$this->table->set_heading(
-			//'Timestamp',
-			'Requested Date',
+			'Timestamp',
+			'Requested Delivery Date',
 			'Zone',
 			'City',
 			'Delivery ID',
@@ -208,7 +209,7 @@ class Delivery extends Application
 			); // Setting headings for the table
 
 		$this->table->set_footing(
-			//'',
+			'',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
 			'<input type="text" name="search_city" id="search_city" value="Search city" class="search_init" />',
