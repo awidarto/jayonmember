@@ -68,9 +68,9 @@ class Prints extends Application
 			}
 
 			$gt = ($data['main_info']['total_price'] < $gt)?$gt:$data['main_info']['total_price'];
-			$dsc = $data['main_info']['total_discount'];
-			$tax = $data['main_info']['total_tax'];
-			$cod = $data['main_info']['cod_cost'];
+			$dsc = (int)$data['main_info']['total_discount'];
+			$tax = (int)$data['main_info']['total_tax'];
+			$cod = (int)$data['main_info']['cod_cost'];
 			$chg = ($gt - $dsc) + $tax + $cod;
 
 			$this->table->add_row(
