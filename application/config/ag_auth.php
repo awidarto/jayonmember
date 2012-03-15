@@ -39,6 +39,16 @@ if($_SERVER['HTTP_HOST'] == 'localhost'){
 	$config['auth_logout'] = 'http://www.jayonexpress.com/';
 }
 
+if($_SERVER['HTTP_HOST'] == 'localhost'){
+	$config['auth_register_fail'] = 'register';
+	$config['auth_register_success'] = 'register';
+}else{
+	//online version should redirect to main site
+	$config['auth_register_fail'] = 'http://www.jayonexpress.com/';
+	$config['auth_register_success'] = 'http://www.jayonexpress.com/';
+}
+
+
 /**
 * The URI string to redirect to when a user entered incorrect login details or is not authenticated
 */

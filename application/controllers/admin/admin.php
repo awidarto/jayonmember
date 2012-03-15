@@ -57,6 +57,8 @@ class Admin extends Application
 		}
 		else
 		{
+			$epassword = set_value('password'); // for email notification
+
 			$username = set_value('username');
 			$password = $this->ag_auth->salt(set_value('password'));
 			$fullname = set_value('fullname');
@@ -99,22 +101,33 @@ class Admin extends Application
 			
 			if($this->db->insert($this->config->item('jayon_members_table'),$dataset) === TRUE)
 			{
+				$edata['email'] = $email;
+				$edata['fullname'] = $fullname;
+				$edata['password'] = $epassword;
+				send_notification('New Member Registration - Jayon Express COD Service',$email,null,'new_member',$edata,null);
+
+				redirect($this->config->item('auth_register_success').'?reg=success');
+
+				/*
 				$this->breadcrumb->append_crumb('Success','');
 				
 				$data['message'] = "The user account has now been created.";
 				$data['page_title'] = 'Add Member';
 				$data['back_url'] = anchor('admin/members/manage','Back to list');
 				$this->ag_auth->view('message', $data);
-				
+				*/
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
+				redirect($this->config->item('auth_register_fail').'?reg=err');
+				/*
 				$this->breadcrumb->append_crumb('Failed','');
 				
 				$data['message'] = "The user account has not been created.";
 				$data['page_title'] = 'Add Member Error';
 				$data['back_url'] = anchor('admin/members/manage','Back to list');
 				$this->ag_auth->view('message', $data);
+				*/
 			}
 
 		} // if($this->form_validation->run() == FALSE)

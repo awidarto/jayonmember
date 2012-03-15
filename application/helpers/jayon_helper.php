@@ -132,7 +132,8 @@ function send_notification($subject,$to,$cc = null,$template = 'default',$data =
 		'smtp_port' => $CI->config->item('smtp_port'),
 		'smtp_user' => $CI->config->item('notify_username'),
 		'smtp_pass' => $CI->config->item('notify_password'),
-		'charset'   => 'iso-8859-1'
+		'charset'   => 'iso-8859-1',
+		'mailtype'	=> 'html'
 	);
 
 	$CI->load->library('email',$config);
@@ -210,7 +211,8 @@ function send_admin($subject,$to,$cc = null,$template = 'default',$data = '',$at
 		'smtp_port' => $CI->config->item('smtp_port'),
 		'smtp_user' => $CI->config->item('admin_username'),
 		'smtp_pass' => $CI->config->item('admin_password'),
-		'charset'   => 'iso-8859-1'
+		'charset'   => 'iso-8859-1',
+		'mailtype'	=> 'html'
 	);
 
 	$CI->load->library('email',$config);
