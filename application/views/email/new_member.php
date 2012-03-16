@@ -3,7 +3,7 @@
 <p>Hello <?php print $fullname?>,</p>
 
 <p>
-You are now registered as a buyer and may choose Jayon Express cod payment option at participating online stores.<br />
+You are now registered as a buyer and choose Jayon Express COD payment option at participating online stores.<br />
 Please verify the details you submitted below.
 </p>
 <p>

@@ -458,7 +458,12 @@ class Delivery extends Application
 		$delivery_id = $this->input->post('delivery_id');
 		$buyerdeliverytime = $this->input->post('buyerdeliverytime');
 
+		$buyeremail = array();
+
+		$single = true;
+
 		if(is_array($delivery_id)){
+
 			foreach ($delivery_id as $d) {
 				$buyeremail[] = $this->do_reschedule($d,$buyerdeliverytime,$this->config->item('trans_status_rescheduled'),$condition);
 
@@ -478,6 +483,7 @@ class Delivery extends Application
 
 				delivery_log($data);
 			}
+				$single = false;
 		}else{
 			$buyeremail = $this->do_reschedule($delivery_id,$buyerdeliverytime,$this->config->item('trans_status_rescheduled'),$condition);
 
@@ -498,10 +504,27 @@ class Delivery extends Application
 				delivery_log($data);
 		}
 
-		print json_encode(array('result'=>'ok'));
+		print_r($buyeremail);
 
-		//send_notification('Rescheduled Orders',$buyeremail,null,'rescheduled_order_buyer',null,null);
-		//send_notification('Rescheduled Orders',$buyeremail,null,'rescheduled_order',$edata,null);
+		$edata = array();
+
+		if($single){
+			$edata = $buyeremail;
+			$edata['detail'] = false;
+			//send_notification('New Member Registration - Jayon Express COD Service',$email,null,'new_member',$edata,null);
+			send_notification('Rescheduled Orders - Jayon Express COD Service',$buyeremail['buyeremail'],null,'rescheduled_order_buyer',$edata,null);
+			//send_notification('Rescheduled Orders',$buyeremail,null,'rescheduled_order',$edata,null);
+		}else{
+			foreach($buyeremail as $b){
+				$edata = $b;
+				$edata['detail'] = false;
+				send_notification('Rescheduled Orders',$b['buyeremail'],null,'rescheduled_order_buyer',$nedata,null);
+				//send_notification('Rescheduled Orders',$buyeremail,null,'rescheduled_order',$edata,null);
+			}
+		}
+
+
+		print json_encode(array('result'=>'ok'));
 
 	}
 
@@ -2505,7 +2528,20 @@ class Delivery extends Application
 			$actor = $this->session->userdata('userid');
 			$change_actor = 'A:'.$actor;
 			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('buyerdeliverytime'=>$buyerdeliverytime, 'change_actor'=>$change_actor));
-			$order_exist = 'ORDER_UPDATED';
+			
+			$this->db->select('*,b.fullname as buyerfullname,b.email as buyeremail,m.merchantname as merchantname,a.* as app');
+			$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
+			$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
+			$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=b.id','left');
+
+
+			$fullorder = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('incoming_delivery_table'));
+
+			$fullorder = $fullorder->row_array();
+
+			$fullorder['new_date'] = $buyerdeliverytime;
+
+			$order_exist = $fullorder;
 
 			$data = array(
 				'timestamp'=>date('Y-m-d h:i:s',time()),
