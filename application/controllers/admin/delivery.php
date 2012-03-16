@@ -504,7 +504,7 @@ class Delivery extends Application
 				delivery_log($data);
 		}
 
-		print_r($buyeremail);
+		//print_r($buyeremail);
 
 		$edata = array();
 
