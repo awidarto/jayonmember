@@ -195,20 +195,21 @@
     [contact_person]
 */
 
-$merchant_info = ($main_info['m_pic']=='')?'':$main_info['contact_person'].'<br />';
-$merchant_info .= $main_info['m_street'].'<br />'.
-    $main_info['m_district'].'<br />'.
-    $main_info['m_city'].','.
-    $main_info['m_zip'].'<br />'.
-    //$main_info['mc_province'].'<br />'.
-    $main_info['m_country'].'<br />'.
-    'Phone : '.$main_info['m_phone'];
+    //print_r($main_info);
+$merchant_info = '';
+$merchant_info = ($main_info['m_pic']=='')?$main_info['mc_pic'].'<br />':$main_info['m_pic'].'<br />';
+$merchant_info .= ($main_info['m_street']=='')?$main_info['mc_street'].'<br />': $main_info['m_street'].'<br />';
+$merchant_info .= ($main_info['m_district'] == '')?$main_info['mc_district'].'<br />':$main_info['m_district'].'<br />';
+$merchant_info .= ($main_info['m_city'] == '')?$main_info['mc_city'].',':$main_info['m_city'].',';
+$merchant_info .= ($main_info['m_zip']=='')?$main_info['mc_zip'].'<br />':$main_info['m_zip'].'<br />';
+$merchant_info .= ($main_info['m_country']=='')?$main_info['mc_country'].'<br />':$main_info['m_country'].'<br />';
+$merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone']:'Phone : '.$main_info['m_phone'];
 
 
 ?>							
 							<tr>
 								<td>Store Detail:</td>
-								<td><?php print $merchant_info;?></td>
+								<td><?php print trim($merchant_info);?></td>
 							</tr>
 						</tbody>
 					</table>
@@ -238,7 +239,7 @@ $merchant_info .= $main_info['m_street'].'<br />'.
 
 							<tr>
 								<td class="row_label">Delivered To:</td>
-								<td><?php print $main_info['recipient_name'];?></td>
+								<td><?php print ($main_info['recipient_name'] == "")?$main_info['buyer_name']:$main_info['recipient_name'];?></td>
 							</tr>
 							<tr>
 								<td>Shipping Address:</td>
