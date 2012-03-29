@@ -1355,7 +1355,8 @@ class Delivery extends Application
 				$zonefield,
 				//$key['merchant'],
 				$key['merchant_trans_id'],
-				$key['delivery_id'],
+				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
+				//$key['delivery_id'],
 				$key['buyer'],
 				$key['shipping_address'],
 				$key['phone'],
@@ -2197,6 +2198,21 @@ class Delivery extends Application
 		$page['ajaxurl'] = 'admin/delivery/ajaxlog';
 		$page['page_title'] = 'Delivery Log';
 		$this->ag_auth->view('archivedajaxlistview',$page); // Load the view
+	}
+
+	public function view($delivery_id){
+		$this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+		$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
+		$this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
+		$this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=b.id','left');
+		$this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
+		$this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
+
+		$res = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
+		$result = $res->row_array();
+
+		$data['order_details'] = $result;
+		$this->load->view('auth/pages/viewdetails',$data);
 	}
 
 	public function deleteassigned($id)
