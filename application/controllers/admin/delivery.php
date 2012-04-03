@@ -148,7 +148,7 @@ class Delivery extends Application
 				$reference = $key['revoke_ref'];
 			}
 
-			$deliveryidfield = ($key['status'] == $this->config->item('trans_status_canceled'))?$key['delivery_id']:form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'];
+			$deliveryidfield = ($key['status'] == $this->config->item('trans_status_canceled'))?$key['delivery_id']:form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
 
 			$aadata[] = array(
 				//date('Y-m-d h:i:s',$key['created']),	
@@ -1617,7 +1617,7 @@ class Delivery extends Application
 
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
-				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],
+				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//$key['application_id'],
 				$key['buyer'],
 				$key['app_name'],
@@ -1882,7 +1882,7 @@ class Delivery extends Application
 
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
-				$key['delivery_id'],
+				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],
 				//$key['application_id'],
 				$key['buyer'],
@@ -2045,7 +2045,7 @@ class Delivery extends Application
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
 				'<span id="'.$key['delivery_id'].'"><input type="hidden" value="'.$key['buyerdeliverytime'].'" id="cd_'.$key['delivery_id'].'">'.$key['buyerdeliverytime'].'</span>',
-				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').$key['delivery_id'],
+				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//$key['application_id'],
 				$key['buyer'],
 				$key['app_name'],
@@ -2143,7 +2143,7 @@ class Delivery extends Application
 			$aadata[] = array(
 				$key['timestamp'],
 				$key['report_timestamp'],
-				$key['delivery_id'],
+				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				$key['device_id'],
 				$key['courier_id'],
 				$key['actor_type'],
