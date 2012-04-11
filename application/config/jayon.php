@@ -18,7 +18,13 @@ $config['site_title']	= 'Jayon Express - Member';
 
 $config['infinite_scroll'] = false;
 
-$config['api_url'] = 'http://localhost/jayonadmin/api/v1/';
+if($_SERVER['HTTP_HOST'] == 'localhost'){
+	$config['api_url'] = 'http://localhost/jayonadmin/api/v1/';
+}else{
+	//online version should redirect to main site
+	$config['api_url'] = 'http://www.jayonexpress.com/jayonadmin/api/v1/';
+}
+
 
 /*table names*/
 $config['incoming_delivery_table'] = 'delivery_order_active';
