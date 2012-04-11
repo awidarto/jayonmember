@@ -18,6 +18,8 @@ $config['site_title']	= 'Jayon Express - Member';
 
 $config['infinite_scroll'] = false;
 
+$config['api_url'] = 'http://localhost/jayonadmin/api/v1/';
+
 /*table names*/
 $config['incoming_delivery_table'] = 'delivery_order_active';
 $config['assigned_delivery_table'] = 'delivery_order_active';

@@ -143,6 +143,12 @@
 		//$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		//$('#assign_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		
+		$('#neworder').click(function(){
+			var src = '<?php print base_url() ?>/admin/order/neworder';
+
+			$('#neworder_frame').attr('src',src);
+			$('#neworder_dialog').dialog('open');
+		});
 		
 		$('#doAssign').click(function(){
 			var assigns = '';
@@ -439,6 +445,27 @@
 			}
 		});
 
+		$('#neworder_dialog').dialog({
+			autoOpen: false,
+			height: 600,
+			width: 950,
+			modal: true,
+			buttons: {
+				Save: function(){
+					var nframe = document.getElementById('neworder_frame');
+					var nframeWindow = nframe.contentWindow;
+					nframeWindow.submitorder();
+				}, 
+				Close: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				
+			}
+		});
+
+
 		/*
 		function refresh(){
 			oTable.fnDraw();
@@ -451,6 +478,10 @@
 	
 	
 </script>
+<div class="button_nav">
+	<span class="button add" id="neworder" style="cursor:pointer;">New Order</span>
+</div>
+
 <?php if(isset($add_button)):?>
 	<div class="button_nav">
 		<?php echo anchor($add_button['link'],$add_button['label'],'class="button add"')?>
@@ -537,3 +568,12 @@
     marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
     title="Dialog Title">Your browser does not suppr</iframe>
 </div>
+
+<div id="neworder_dialog" title="New Order" style="overflow:hidden;padding:8px;">
+	<input type="hidden" value="" id="print_id" />
+	<iframe id="neworder_frame" name="print_frame" width="100%" height="100%"
+    marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
+    title="New Order">Your browser does not suppr</iframe>
+</div>
+
+

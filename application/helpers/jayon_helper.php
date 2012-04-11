@@ -36,6 +36,39 @@ function ajax_find_zones($zone,$col = 'district'){
 	return $q->result_array();
 }
 
+function ajax_find_cities($zone,$col = 'city'){
+	$CI =& get_instance();
+	$CI->db->distinct();
+	$q = $CI->db->select($col.' as id ,'.$col.' as label, '.$col.' as value',false)->like($col,$zone)->get('districts');
+	return $q->result_array();
+}
+
+function ajax_find_buyer($zone,$col = 'fullname',$idcol = 'id'){
+	$CI =& get_instance();
+	$group_id = user_group_id('buyer');
+	$q = $CI->db->select($idcol.' as id ,'.$col.' as label, '.$col.' as value, email as email, concat_ws(\',\',street,district,province,city,country) as shipping, phone as phone',false)
+		->like('fullname',$zone)
+		->or_like('merchantname',$zone)
+		->or_like('username',$zone)
+		->or_like('email',$zone)
+		->where('group_id',$group_id)
+		->distinct()
+		->get('members');
+	return $q->result_array();
+}
+
+function ajax_find_buyer_email($zone,$col = 'fullname',$idcol = 'id'){
+	$CI =& get_instance();
+	$group_id = user_group_id('buyer');
+
+	$q = $CI->db->select($idcol.' as id ,email as label, email as value, fullname as fullname, concat_ws(\',\',street,district,province,city,country) as shipping,phone as phone',false)
+		->like('email',$zone)
+		->where('group_id',$group_id)
+		->distinct()
+		->get('members');
+	return $q->result_array();
+}
+
 function get_option($key){
 	$CI =& get_instance();
 
