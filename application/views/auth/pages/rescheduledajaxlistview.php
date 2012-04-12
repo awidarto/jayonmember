@@ -255,7 +255,7 @@
 			modal: true,
 			buttons: {
 				Print: function(){
-					var pframe = document.getElementById('print_frame');
+					var pframe = document.getElementById('view_frame');
 					var pframeWindow = pframe.contentWindow;
 					pframeWindow.print();
 				}, 
