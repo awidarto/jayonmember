@@ -112,7 +112,7 @@
 			var popup = 'working day';
 			
 			//console.log(indate);
-			console.log(window.dateBlock);
+			//console.log(window.dateBlock);
 			if(window.dateBlock[indate] == 'weekend'){
 				select = 0;
 				css = 'weekend';
