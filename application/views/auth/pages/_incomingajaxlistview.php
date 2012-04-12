@@ -1,12 +1,6 @@
 <script>
 	var asInitVals = new Array();
 	var dateBlock = <?php print getdateblock();?>;
-	/*
-	$.post('<?php print site_url('ajax/getdateblock');?>',{'month':1}, function(data) {
-		dateBlock = data;
-		console.log(dateBlock);
-	},'json');
-	*/
 	
 	$(document).ready(function() {
 
@@ -84,8 +78,6 @@
 			showButtonPanel: true,
 			dateFormat:'yy-mm-dd',
 			onSelect:function(dateText, inst){
-				
-				//console.log(dateBlock);
 				if(dateBlock[dateText] == 'weekend'){
 					alert('no delivery on weekend');
 				}else{
@@ -111,8 +103,6 @@
 			var css = 'open';
 			var popup = 'working day';
 			
-			//console.log(indate);
-			//console.log(window.dateBlock);
 			if(window.dateBlock[indate] == 'weekend'){
 				select = 0;
 				css = 'weekend';
