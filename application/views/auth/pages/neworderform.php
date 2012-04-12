@@ -716,7 +716,7 @@
                             </tr>
                             <tr>
                                 <td>Store Detail:</td>
-                                <td class="editable" id="application_id">
+                                <td id="application_id">
                                     <?php print $appselect;?>
                                 </td>
                             </tr>
