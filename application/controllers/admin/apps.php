@@ -163,13 +163,13 @@ class Apps extends Application
 		$this->form_validation->set_rules('owner_id','Owner ID','trim');
 		$this->form_validation->set_rules('merchant_id','Merchant ID','trim');
 		$this->form_validation->set_rules('domain','Application Domain','required|trim|xss_clean');
-		$this->form_validation->set_rules('application_name','Application Name','requiredtrim|xss_clean');
-		$this->form_validation->set_rules('callback_url','Callback URL','required|trim|xss_clean');
-		$this->form_validation->set_rules('fetch_detail_url','Fetch Detail URL','required|trim|xss_clean');
-		$this->form_validation->set_rules('fetch_method','Fetch Method','required|trim|xss_clean');
-		$this->form_validation->set_rules('application_description','Application Description','required|trim|xss_clean');
-		$this->form_validation->set_rules('logo_url','Logo URL','required|trim|xss_clean');
-		$this->form_validation->set_rules('signature','Signature','required|trim|xss_clean');
+		$this->form_validation->set_rules('application_name','Application Name','required|trim|xss_clean');
+		$this->form_validation->set_rules('callback_url','Callback URL','trim|xss_clean');
+		$this->form_validation->set_rules('fetch_detail_url','Fetch Detail URL','trim|xss_clean');
+		$this->form_validation->set_rules('fetch_method','Fetch Method','trim|xss_clean');
+		$this->form_validation->set_rules('application_description','Application Description','trim|xss_clean');
+		$this->form_validation->set_rules('logo_url','Logo URL','trim|xss_clean');
+		$this->form_validation->set_rules('signature','Signature','trim|xss_clean');
 
 		$this->form_validation->set_rules('reply_to', 'Reply To', 'trim|xss_clean');
 		$this->form_validation->set_rules('cc_to', 'CC', 'trim|xss_clean');
@@ -248,12 +248,12 @@ class Apps extends Application
 
 		$this->form_validation->set_rules('domain','Application Domain','required|trim|xss_clean');
 		$this->form_validation->set_rules('application_name','Application Name','requiredtrim|xss_clean');
-		$this->form_validation->set_rules('callback_url','Callback URL','required|trim|xss_clean');
-		$this->form_validation->set_rules('fetch_detail_url','Fetch Detail URL','required|trim|xss_clean');
-		$this->form_validation->set_rules('fetch_method','Fetch Method','required|trim|xss_clean');
-		$this->form_validation->set_rules('application_description','Application Description','required|trim|xss_clean');
-		$this->form_validation->set_rules('logo_url','Logo URL','required|trim|xss_clean');
-		$this->form_validation->set_rules('signature','Signature','required|trim|xss_clean');
+		$this->form_validation->set_rules('callback_url','Callback URL','trim|xss_clean');
+		$this->form_validation->set_rules('fetch_detail_url','Fetch Detail URL','trim|xss_clean');
+		$this->form_validation->set_rules('fetch_method','Fetch Method','trim|xss_clean');
+		$this->form_validation->set_rules('application_description','Application Description','trim|xss_clean');
+		$this->form_validation->set_rules('logo_url','Logo URL','trim|xss_clean');
+		$this->form_validation->set_rules('signature','Signature','trim|xss_clean');
 
 		$this->form_validation->set_rules('reply_to', 'Reply To', 'trim|xss_clean');
 		$this->form_validation->set_rules('cc_to', 'CC', 'trim|xss_clean');
@@ -270,6 +270,7 @@ class Apps extends Application
 		$this->form_validation->set_rules('mobile', 'Mobile Number', 'trim|xss_clean');
 
 		//$this->form_validation->set_rules('notify_on_new_buyer','Send notification on new member', 'trim|xss_clean');
+		//$this->form_validation->set_rules('notify_on_new_member','Send notification on new member', 'trim|xss_clean');
 		$this->form_validation->set_rules('notify_on_new_order','Send notification on new order', 'trim|xss_clean');
 		//$this->form_validation->set_rules('notify_on_reschedule,','Send notification on rescheduled order', 'trim|xss_clean');
 		//$this->form_validation->set_rules('notify_on_revoked','Send notification on revoked order', 'trim|xss_clean');
