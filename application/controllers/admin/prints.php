@@ -139,7 +139,7 @@ class Prints extends Application
 
 			$qr_data = $delivery_id."|".$data['main_info']['merchant_trans_id'];
 
-			$this->gc_qrcode->size(200)
+			$this->gc_qrcode->size(150)
                 ->data($qr_data)
                 ->output_encoding('UTF-8')
                 ->error_correction_level('L')
@@ -243,21 +243,31 @@ class Prints extends Application
 				'&nbsp;',		
 				'&nbsp;',		
 				'Total Price',		
-				number_format($gt,2,',','.')
+				array('data'=>number_format($gt,2,',','.'),
+					'class'=>'editable',
+					'id'=>'total_price'
+				)		
+
 			);
 
 				$this->table->add_row(
 					'&nbsp;',		
 					'&nbsp;',		
-					'Total Discount',		
-					number_format($dsc,2,',','.')
+					'Total Discount',
+					array('data'=>number_format($dsc,2,',','.'),
+						'class'=>'editable',
+						'id'=>'total_discount'
+					)		
 				);
 
 				$this->table->add_row(
 					'&nbsp;',		
 					'&nbsp;',		
 					'Total Tax',		
-					number_format($tax,2,',','.')
+					array('data'=>number_format($tax,2,',','.'),
+						'class'=>'editable',
+						'id'=>'total_tax'
+					)		
 				);
 
 
@@ -271,7 +281,10 @@ class Prints extends Application
 						'&nbsp;',		
 						'&nbsp;',		
 						'COD Charges',		
-						number_format($cod,2,',','.')
+						array('data'=>number_format($cod,2,',','.'),
+							'class'=>'editable',
+							'id'=>'cod_cost'
+						)		
 					);
 				}
 
@@ -279,7 +292,11 @@ class Prints extends Application
 					'&nbsp;',		
 					'&nbsp;',		
 					'Total Charges',		
-					number_format($chg,2,',','.')
+					array('data'=>number_format($chg,2,',','.'),
+						'class'=>'editable',
+						'id'=>'total_charges'
+					)		
+
 				);
 
 			$data['grand_total'] = $gt;
@@ -287,7 +304,7 @@ class Prints extends Application
 
 			$qr_data = $delivery_id."|".$data['main_info']['merchant_trans_id'];
 
-			$this->gc_qrcode->size(200)
+			$this->gc_qrcode->size(100)
                 ->data($qr_data)
                 ->output_encoding('UTF-8')
                 ->error_correction_level('L')
@@ -309,6 +326,19 @@ class Prints extends Application
 				$this->load->view('print/deliveryview',$data); // Load the view
 			}
 		}
+
+	public function reconciliation($from, $to ,$merchant_id,$pdf = false){
+
+
+		if($pdf){
+			$html = $this->load->view('print/reconsiliation',$data,true);
+			//print $html; // Load the view
+			pdf_create($html, $delivery_id.'.pdf','A4','landscape', true); 
+		}else{
+			$this->load->view('print/reconciliation',$data); // Load the view
+		}
+
+	}
 
 
 }
