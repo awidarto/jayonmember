@@ -348,4 +348,75 @@ function statusaction($status){
 	return sprintf('<span class="%s">%s</span>',$class,$status);
 }
 
+
+function getmonthlydatacountarray($year,$month,$where = null,$filter = null){
+	$CI =& get_instance();
+
+	$series = array();
+	$num = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+	$data = array();
+	for($i = 1 ; $i <= $num;$i++){
+
+		if($i > 9){
+			$day = $i;
+		}else{
+			$day = '0'.$i;
+		}
+
+		//print $day."\r\n";
+
+		$date = $year.'-'.$month.'-'.$day;
+
+		/*
+		if(is_null($where)){
+			$CI->db->like('ordertime', $date, 'after');
+		}else{
+			if($where['status'] == 'confirmed' || $where['status'] == 'pending'){
+				$CI->db->like('buyerdeliverytime', $date, 'after');
+				$CI->db->where($where);
+			}else{
+				$CI->db->like('assignment_date', $date, 'after');
+				$CI->db->where($where);
+			}
+		}
+		*/
+
+		$CI->db->like('ordertime', $date, 'after');		
+
+		if(!is_null($where)){
+			$CI->db->where($where);
+		}
+
+		if(!is_null($filter)){
+			if(is_array($filter)){
+				foreach($filter as $key=>$val){
+					$CI->db->where($key,$val);
+				}
+			}
+		}
+		
+		/*
+		if(!is_null($merchant_id)){
+			$CI->db->where('merchant_id', $merchant_id);
+		}
+		*/
+
+		$CI->db->from($CI->config->item('incoming_delivery_table'));
+
+		$count = $CI->db->count_all_results();
+
+		//print $CI->db->last_query();
+
+		//$timestamp = strtotime($date);
+		//$timestamp = (double)$timestamp;
+		$series[] = array($day,$count);
+	}
+
+	//$series = str_replace('"', '', json_encode($series)) ;
+	return $series;
+}
+
+
+
 ?>

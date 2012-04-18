@@ -12,6 +12,12 @@ class Admin extends Application
 		if(logged_in())
 		{
 			$this->breadcrumb->add_crumb('Home','admin/dashboard');
+
+			$year = date('Y',time());
+			$month = date('m',time());
+
+			$page['period'] = ' - '.date('M Y',time());
+
 			$page['page_title'] = 'Dashboard';
 			$this->ag_auth->view('dashboard',$page);
 		}

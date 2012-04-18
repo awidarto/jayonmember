@@ -19,7 +19,7 @@
 .stat_box{
 	height:140px;
 	width:100%;
-	border:thin solid #ccc;
+	border:0px solid #ccc;
 	margin-bottom:10px;
 }
 
@@ -34,15 +34,35 @@ td {
 		<tr>
 			<td>
 				<h3>Last 5 Positions</h3>
-				<div id="map" style="width:600px;height:600px;display:block;"></div>
+				<div id="map" style="width:600px;height:950px;display:block;"></div>
 			</td>
 			<td style="width:100%;height:100%;vertical-align:top;">
 				<h3>Statistics</h3>
 				<div id="statistics"  style="width:100%;height:100%;">
-					<div id="incoming_monthly" class="stat_box"></div>
-					<div id="delivered_monthly" class="stat_box"></div>
-					<div id="rescheduled_monthly" class="stat_box"></div>
-					<div id="revoked_monthly" class="stat_box"></div>
+					<span>Total Incoming <?php print $period;?></span>
+					<div id="incoming_monthly" class="stat_box">
+						<img src="<?php print base_url();?>admin/graphs/monthlystackedgraph" alt="monthly_all" />
+					</div>
+					<span>Delivered <?php print $period;?></span>
+					<div id="delivered_monthly" class="stat_box">
+						<img src="<?php print base_url();?>admin/graphs/monthlystackedgraph/delivered" alt="monthly_all" />
+					</div>
+					<span>Rescheduled <?php print $period;?></span>
+					<div id="rescheduled_monthly" class="stat_box">
+						<img src="<?php print base_url();?>admin/graphs/monthlystackedgraph/rescheduled" alt="monthly_all" />
+					</div>
+					<span>Revoked <?php print $period;?></span>
+					<div id="revoked_monthly" class="stat_box">
+						<img src="<?php print base_url();?>admin/graphs/monthlystackedgraph/revoked" alt="monthly_all" />
+					</div>
+					<span>No Show <?php print $period;?></span>
+					<div id="noshow_monthly" class="stat_box">
+						<img src="<?php print base_url();?>admin/graphs/monthlystackedgraph/noshow" alt="monthly_all" />
+					</div>
+					<span>Archived <?php print $period;?></span>
+					<div id="noshow_monthly" class="stat_box">
+						<img src="<?php print base_url();?>admin/graphs/monthlystackedgraph/archived" alt="monthly_all" />
+					</div>
 				</div>
 			</td>
 		</tr>

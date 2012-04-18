@@ -131,43 +131,59 @@ class Users extends Application
 		
 	} // public function register()
 
-	public function edit($id)
+	public function edit()
 	{
+		$id = $this->session->userdata('userid');
+
+		//print_r($this->session->userdata);
+		//print $id;		
+		$this->form_validation->set_rules('username', 'Username', 'required|min_length[6]');
 		$this->form_validation->set_rules('email', 'Email Address', 'required|min_length[6]|valid_email');
-		$this->form_validation->set_rules('group_id', 'Group', 'trim');
-		$this->form_validation->set_rules('fullname', 'Full Name', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('fullname', 'Full Name', 'required|trim|xss_clean');	
+		$this->form_validation->set_rules('street', 'Street', 'required|trim|xss_clean');	
+		$this->form_validation->set_rules('district', 'District', 'required|trim|xss_clean');  
+		$this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean');	
+		$this->form_validation->set_rules('province', 'Province', 'required|trim|xss_clean');	
+		$this->form_validation->set_rules('country', 'Country', 'required|trim|xss_clean');	
+		$this->form_validation->set_rules('zip', 'ZIP', 'required|trim|xss_clean');		
+		$this->form_validation->set_rules('phone', 'Phone Number', 'required|trim|xss_clean');   
 		$this->form_validation->set_rules('mobile', 'Mobile Number', 'required|trim|xss_clean');
-		
+
+
 		$user = $this->get_user($id);
 		$data['user'] = $user;
 				
 		if($this->form_validation->run() == FALSE)
 		{
 			$data['groups'] = $this->get_group();
-			$data['page_title'] = 'Edit User';
+			$data['page_title'] = 'Edit Personal Profile';
 			$this->ag_auth->view('users/edit',$data);
 		}
 		else
 		{
-			$dataset['email'] = set_value('email');
-			$dataset['group_id'] = set_value('group_id');
+			$dataset['username'] = set_value('username');
 			$dataset['fullname'] = set_value('fullname');
-			$dataset['mobile'] = set_value('mobile');
-			
+			$dataset['street'] = set_value('street'); 
+			$dataset['district'] = set_value('district');
+			$dataset['province'] = set_value('province');
+			$dataset['city'] = set_value('city');
+			$dataset['country'] = set_value('country');
+			$dataset['zip'] = set_value('zip');
+			$dataset['phone'] = set_value('phone');
+			$dataset['mobile'] = set_value('mobile'); 
+			$dataset['email'] = set_value('email');
 			
 			if($this->update_user($id,$dataset) === TRUE)
 			{
-				$data['message'] = "The user account has now updated.";
-				$data['page_title'] = 'Edit User';
-				$this->ag_auth->view('message', $data);
+				$this->oi->add_success('Personal profile updated successfully.');
 				
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
-				$data['message'] = "The user account failed to update.";
-				$data['page_title'] = 'Edit User';
-				$this->ag_auth->view('message', $data);
+				$this->oi->add_error('Failed to update personal profile');
 			}
+
+			redirect('admin/dashboard');
 
 		} // if($this->form_validation->run() == FALSE)
 		
