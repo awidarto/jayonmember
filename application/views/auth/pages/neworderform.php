@@ -564,6 +564,7 @@
                         $('#loader').hide();
                         if(data.status == 'OK:ORDERPOSTED'){
                             //alert('Transaction Success');
+                            $('#trx_result').html('Transaction Success');
                             $('#neworder_dialog').dialog( "close" );
                         }
                     },'json');
