@@ -278,6 +278,7 @@
     </style>
 
     <?php echo $this->ag_asset->load_css('jquery-ui-1.8.16.custom.css','jquery-ui/flick');?>
+    <?php echo $this->ag_asset->load_css('jquery.ui.timepicker.css');?>
 
     <?php echo $this->ag_asset->load_script('jquery-1.7.1.min.js');?>
     <?php echo $this->ag_asset->load_script('jquery.datatables.min.js','jquery-datatables');?>
@@ -285,6 +286,7 @@
     <?php echo $this->ag_asset->load_script('jquery-ui-1.8.16.custom.min.js','jquery-ui');?>
     <?php echo $this->ag_asset->load_script('jquery-ui-timepicker-addon.js','jquery-ui');?>
     <?php echo $this->ag_asset->load_script('jquery.jeditable.mini.js');?>
+    <?php echo $this->ag_asset->load_script('jquery.ui.timepicker.js');?>
 
     
     <script>
@@ -304,7 +306,7 @@
     $(document).ready(function() {
         $('.editable').editable('<?php print base_url();?>ajax/editdetail');
 
-        $('#buyerdeliverytime').datetimepicker({
+        $('#buyerdeliverydate').datepicker({
             numberOfMonths: 2,
             showButtonPanel: true,
             dateFormat:'yy-mm-dd',
@@ -320,6 +322,28 @@
             },
             beforeShowDay:getBlocking
         });
+
+        $('#buyerdeliverytime').timepicker({
+            hours: { starts: 8, ends: 22 },
+            minutes: { interval: 60 },
+            rows: 2,
+            showMinutes:false,
+            showPeriodLabels: false,
+            minuteText: 'Min',
+            defaultTime: '08:00',
+            onHourShow:OnHourShowCallback,
+            onSelect: function(time, inst) {
+                //console.log('onSelect triggered with time : ' + time + ' for instance id : ' + inst.id);
+                $('#'+ inst.id).val(time + ':00');
+            }
+        });
+
+        function OnHourShowCallback(hour) {
+            if (hour == 13 || hour == 18) {
+                return false; // not valid
+            }
+            return true; // valid
+        }
 
         function getBlocking(d){
             /*
@@ -490,7 +514,7 @@
             pdata.shipping_address = $('#shipping_address').val();
             pdata.buyerdeliveryzone = $('#buyerdeliveryzone').val();
             pdata.buyerdeliverycity = $('#buyerdeliverycity').val();
-            pdata.buyerdeliverytime = $('#buyerdeliverytime').val();
+            pdata.buyerdeliverytime = $('#buyerdeliverydate').val() + ' ' +$('#buyerdeliverytime').val();
             pdata.direction = $('#direction').val();
             pdata.auto_confirm = true; //true
             pdata.email = $('#buyer_email').val();
@@ -733,6 +757,12 @@
                             <tr>
                                 <td>Delivery Date:</td>
                                 <td>
+                                    <input type="text" id="buyerdeliverydate" name="buyerdeliverydate" value="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Delivery Time:</td>
+                                <td>
                                     <input type="text" id="buyerdeliverytime" name="buyerdeliverytime" value="" />
                                 </td>
                             </tr>
@@ -792,7 +822,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>Direction:</td>
+                                <td>How to Get There:</td>
                                 <td>
                                     <textarea id="direction"></textarea>
                                 </td>
