@@ -83,6 +83,8 @@ class Admin extends Application
 			$mobile= set_value('mobile'); 
 			$email = set_value('email');
 			$group_id = set_value('group_id');
+
+			$group_id = ($group_id == 0)?group_id('buyer'):$group_id;
 			
 			$dataset = array(
 				'username'=>$username,
