@@ -51,14 +51,12 @@
 			</li>
 			<li class="<?php print set_hilite('admin\/reports')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports', 'Reports'); } ?>
 				<ul>
-					<li class="<?php print set_hilite('admin\/reports\/weekly')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/daily', 'Daily'); } ?></li>
-					<li class="<?php print set_hilite('admin\/reports\/daily')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/weekly', 'Weekly'); } ?></li>
-					<li class="<?php print set_hilite('admin\/reports\/mothly')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/monthly', 'Monthly'); } ?></li>
+					<li class="<?php print set_hilite('admin\/reports\/reconciliation')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/reconciliation', 'Reconciliation'); } ?></li>
 				</ul>
 			</li>
-			<li class="<?php print set_hilite('admin\/merchant')?>" ><?php if(user_group('merchant')) { echo anchor('admin/merchant', 'Merchant Info'); } ?>
+			<li class="<?php print set_hilite('admin\/merchant')?>" ><?php if(user_group('merchant')) { echo anchor('admin/merchant', 'User Profiles'); } ?>
 				<ul>
-					<li class="<?php print set_hilite('admin\/merchant\/edit')?>" ><?php if(user_group('merchant')) { echo anchor('admin/merchant/edit', 'Edit Merchant Info'); } ?></li>
+					<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/merchant\/edit')?>" ><?php if(user_group('merchant')) { echo anchor('admin/merchant/edit', 'Edit Merchant Info'); } ?></li><?php endif;?>
 					<li class="<?php print set_hilite('admin\/apps')?>" ><?php if(user_group('merchant')) { echo anchor('admin/apps/manage', 'Application Keys'); } ?></li>
 				</ul>
 			</li>
