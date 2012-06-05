@@ -241,6 +241,11 @@
 
         td.item_form{
             text-align:center;
+            vertical-align:top;
+        }
+
+        td.item_form button{
+            float:right;
         }
 
         tr#detail_row td{
@@ -322,6 +327,8 @@
                     alert('no delivery on weekend');
                 }else if(dateBlock[dateText] == 'full'){
                     alert('time slot is full');
+                }else if(dateBlock[dateText] == 'holiday'){
+                    alert('date is holiday');
                 }else{
                     $('#rescheduled_deliverytime').val(dateText);
                 }
@@ -484,7 +491,7 @@
                 row += '<td><input type="text" class="item_unit_price" name="unit_price" value="'+ $('#unit_price').val() +'"  /></td>';
                 row += '<td class="item_form"><input type="text" class="item_pct_disc orange" name="unit_pct_disc" value="'+ $('#unit_percent_discount').val() +'" /></td>';
                 row += '<td><input type="text" class="item_nom_disc orange" name="unit_nom_disc" value="'+ $('#unit_nominal_discount').val() +'"  /></td>';
-                row += '<td><input type="text" class="item_total" name="unit_total" value="'+ $('#unit_total').val() +'"  /><button name="add_item" type="button" id="remove_item" onClick="removeRow(\'trx_'+ sequence+'\');" >-</button></td>';
+                row += '<td><input type="text" class="item_total" name="unit_total" value="'+ $('#unit_total').val() +'"  /><button name="add_item" type="button" id="remove_item" onClick="removeRow(\'trx_'+ sequence+'\');" >Del</button></td>';
                 row += '</tr>';
 
             $('#calc_data').before(row);
@@ -665,7 +672,11 @@
                 return [false,'Height Unspecified'];
             }
 
-            if($('#package_length').val() === 'undefined' || $('#package_length').val() == '' || $('#package_length').val() == 0 || $('#package_length').val() == null || $('#package_length').val() === 'NaN'){
+            if($('#package_length').val() === 'undefined' || $('#phone').val() == '' || $('#phone').val() == 0 || $('#phone').val() == null || $('#phone').val() === 'NaN'){
+                return [false,'COntact Number / Phone Unspecified'];
+            }
+
+            if($('#phone').val() === 'undefined' || $('#package_length').val() == '' || $('#package_length').val() == 0 || $('#package_length').val() == null || $('#package_length').val() === 'NaN'){
                 return [false,'Length Unspecified'];
             }
 
@@ -822,13 +833,13 @@
                             <tr>
                                 <td>Delivery Date:</td>
                                 <td>
-                                    <input type="text" id="buyerdeliverydate" name="buyerdeliverydate" value="" />
+                                    <input type="text" id="buyerdeliverydate" name="buyerdeliverydate" value="" readonly="true" />
                                 </td>
                             </tr>
                             <tr>
                                 <td>Delivery Time:</td>
                                 <td>
-                                    <input type="text" id="buyerdeliverytime" name="buyerdeliverytime" value="" />
+                                    <input type="text" id="buyerdeliverytime" name="buyerdeliverytime" value="" readonly="true" />
                                 </td>
                             </tr>
                             <tr>
@@ -938,7 +949,9 @@
                                 <td class='item_form'><input type="text" name="unit_price" value="" id="unit_price"  /></td>
                                 <td class='item_form'><input type="text" name="unit_percent_discount" value="" id="unit_percent_discount" class="orange" /></td>
                                 <td class='item_form'><input type="text" name="unit_nominal_discount" value="" id="unit_nominal_discount" class="orange" /></td>
-                                <td class='item_form' style="text-align:left;"><input type="text" name="unit_total" value="" id="unit_total"  /><button name="add_item" type="button" id="add_item" >+</button></td>
+                                <td class='item_form' style="text-align:left;"><input type="text" name="unit_total" value="" id="unit_total"  /><br />
+                                    <button name="add_item" type="button" id="add_item" >Click to Add</button>
+                                </td>
                             </tr>
                             <tr id="calc_data">
                                 <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Total Price ( before discount )</td><td class='sums'><input type="text" name="total_price" value="" id="total_price" class="sum_input"  /></td>
