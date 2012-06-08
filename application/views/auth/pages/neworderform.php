@@ -322,7 +322,10 @@
             showButtonPanel: true,
             dateFormat:'yy-mm-dd',
             timeFormat: 'hh:mm:ss',
-            onSelect:function(dateText, inst){                
+            onSelect:function(dateText, inst){            
+
+                var time = $('#buyerdeliverytime').val();
+
                 if(dateBlock[dateText] == 'weekend'){
                     alert('no delivery on weekend');
                 }else if(dateBlock[dateText] == 'full'){
@@ -332,6 +335,22 @@
                 }else{
                     $('#rescheduled_deliverytime').val(dateText);
                 }
+
+                var now = new Date();
+                var then = new Date(dateText + ' ' + time + ':00');
+                //console.log('now : ' + now.getTime());
+                //console.log('then : ' + then.getTime());
+
+                var leeway = then.getTime() - now.getTime();
+                if(leeway < 0){
+                    alert('Please do not specify past date');
+                }else{
+                    if(leeway < lastorder){
+                        $('#' + inst.id).val('');
+                        alert('Specified delivery time is less than <?php print get_option('auto_lock_hours');?> hours from now. Please select another date & time.');
+                    }
+                }
+
             },
             beforeShowDay:getBlocking
         });
