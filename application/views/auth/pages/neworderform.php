@@ -318,6 +318,8 @@
         $('.editable').editable('<?php print base_url();?>ajax/editdetail');
 
         $('#buyerdeliverydate').datepicker({
+            showOn:'button',
+            buttonText: 'Pick date',
             numberOfMonths: 2,
             showButtonPanel: true,
             dateFormat:'yy-mm-dd',
@@ -356,6 +358,8 @@
         });
 
         $('#buyerdeliverytime').timepicker({
+            showOn:'button',
+            button: '#btn_trigger_timepicker',
             hours: { starts: 8, ends: 22 },
             minutes: { interval: 60 },
             rows: 2,
@@ -651,6 +655,8 @@
                             //alert('Transaction Success');
                             $('#trx_result').html('Transaction Success');
                             $('#neworder_dialog').dialog( "close" );
+                        }else if(data.status == 'ERR:LOCKTIME'){
+                            alert('Specified delivery time is less than <?php print get_option('auto_lock_hours');?> hours from now. Please select another time.');
                         }
                     },'json');
             }else{
@@ -852,13 +858,16 @@
                             <tr>
                                 <td>Delivery Date:</td>
                                 <td>
-                                    <input type="text" id="buyerdeliverydate" name="buyerdeliverydate" value="" readonly="true" />
+                                    <div id="buyerdeliverydate_html"></div>
+                                    <input type="text" id="buyerdeliverydate" name="buyerdeliverydate" value="" readonly="true" disabled="disabled" />
                                 </td>
                             </tr>
                             <tr>
                                 <td>Delivery Time:</td>
                                 <td>
                                     <input type="text" id="buyerdeliverytime" name="buyerdeliverytime" value="" readonly="true" />
+                                    <button class="timepicker_button_trigger" id="btn_trigger_timepicker">Pick time</button>
+                                    <span id="buyerdeliverytime_html"></span>
                                 </td>
                             </tr>
                             <tr>
