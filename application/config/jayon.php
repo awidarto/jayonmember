@@ -40,6 +40,9 @@ $config['location_log_table'] = 'location_log';
 $config['sequence_table'] = 'applications';
 $config['device_assignment_table'] = 'device_assignment';
 
+$config['jayon_delivery_fee_table'] = 'weight_tariff';
+$config['jayon_cod_fee_table'] = 'cod_surcharge';
+
 
 $config['jayon_members_table'] = 'members';
 $config['jayon_couriers_table'] = 'couriers';

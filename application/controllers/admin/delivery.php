@@ -34,6 +34,10 @@ class Delivery extends Application
 			'merchant',
 			'buyer',
 			'shipping_address',
+			'delivery_type',
+			'delivery_cost',
+			'cod_cost',
+			'weight',
 			'phone',
 			'status'
 			);
@@ -150,6 +154,10 @@ class Delivery extends Application
 
 			$deliveryidfield = ($key['status'] == $this->config->item('trans_status_canceled'))?$key['delivery_id']:form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
 
+			$deliverytypefield = '<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_type'].'</span>';
+
+			$weightfield = ($key['weight'] == 0)?'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">unspecified</span>':get_weight_range($key['weight']);
+
 			$aadata[] = array(
 				//date('Y-m-d h:i:s',$key['created']),	
 				$key['ordertime'],
@@ -163,7 +171,11 @@ class Delivery extends Application
 				//$app['domain'],
 				$key['buyer'],
 				$key['shipping_address'],
-				$key['phone'],
+				$deliverytypefield,
+				$key['delivery_cost'],
+				$key['cod_cost'],
+				$weightfield,
+				//$key['phone'],
 				colorizestatus($key['status']),
 				$reference,
 				($key['status'] == 'canceled')?'':$reschedule
@@ -200,7 +212,11 @@ class Delivery extends Application
 			//'App Domain',
 			'Buyer',
 			'Shipping Address',
-			'Phone',
+			'Type',
+			'Delivery Charge',
+			'COD Surcharge',
+			'Weight',
+			//'Phone',
 			'Status',
 			'Reference',
 			//'Reschedule Ref',

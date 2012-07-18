@@ -160,6 +160,68 @@
         }
 
     </style>
+    <?php echo $this->ag_asset->load_script('jquery-1.7.1.min.js');?>
+
+    <script>
+        $(document).ready(function() {
+            $('#set_weight').click(function(){
+                $('#weight_option').show();
+            });
+
+            $('#save_weight').click(function(){
+                $('#loader').show();
+                $.post('<?php print site_url('ajax/saveweight');?>',
+                { delivery_id: $('#delivery_id').val(),weight_tariff:$('#package_weight').val()},
+                function(data) {
+                    $('#loader').hide();
+                    if(data.status == 'OK'){
+                        $('#weight').html(data.weight_range);
+                        $('#weight_option').hide();
+                        $('#delivery_cost').html(data.delivery_cost);
+                        $('#total_charges').html(data.total_charges);
+                        alert('Weight info updated.')
+                    }else if(data.status == 'ERR'){
+                        $('#weight_option').hide();
+                        alert('Failed to update weight info.')
+                    }
+                },'json');
+            });
+
+            $('#cancel_weight').click(function(){
+                $('#weight_option').hide();                
+            });
+
+            $('#set_delivery').click(function(){
+                $('#delivery_option').show();
+            });
+
+            $('#save_delivery').click(function(){
+                $('#loader').show();
+                $.post('<?php print site_url('ajax/savedeliverytype');?>',
+                { delivery_id: $('#delivery_id').val(),delivery_type:$('#delivery_type_select').val()},
+                function(data) {
+                    $('#loader').hide();
+                    if(data.status == 'OK'){
+                        $('#delivery_type').html(data.delivery_type);
+                        $('#delivery_option').hide();
+                        $('#cod_cost').html(data.cod_cost);
+                        $('#total_charges').html(data.total_charges);
+                        alert('Delivery type updated.')
+                    }else if(data.status == 'ERR'){
+                        $('#delivery_option').hide();
+                        alert('Failed to update delivery type.')
+                    }
+                },'json');
+            });
+
+            $('#cancel_delivery').click(function(){
+                $('#delivery_option').hide();                
+            });
+
+
+        });
+    </script>
+
 </head>
 <body>
 <div id="wrapper">
@@ -223,7 +285,9 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                             </tr>
                             <tr>
                                 <td class="row_label">Delivery Number:</td>
-                                <td><?php print $main_info['delivery_id'];?></td>
+                                <td><?php print $main_info['delivery_id'];?>
+                                    <input type="hidden" id="delivery_id" value="<?php print $main_info['delivery_id']?>" />
+                                </td>
                             </tr>
                             <tr>
                                 <td>Delivery Date:</td>
@@ -231,6 +295,16 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                             </tr>
                             <tr>
                                 <td colspan="2"><strong>Order Detail</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="row_label">Delivery Type:</td>
+                                <td><span id="delivery_type"><?php print $main_info['delivery_type'];?></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span id="set_delivery" style="cursor:pointer;text-decoration: underline;">set delivery type</span>
+                                    <div id="delivery_option" style="display:none">
+                                        <?php print $typeselect; ?>&nbsp;&nbsp;&nbsp;&nbsp;<span id="save_delivery" style="cursor:pointer;text-decoration: underline;">save</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span id="cancel_delivery" style="cursor:pointer;text-decoration: underline;">cancel</span>
+                                    </div>
+                                </td>
                             </tr>
 
                             <tr>
@@ -254,10 +328,20 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                                 <td><?php print $main_info['width'].' cm x '.$main_info['height'].' cm x '.$main_info['length'].' cm';?></td>
                             </tr>
 
+                            <tr>
+                                <td class="row_label">Weight:</td>
+                                <td><?php print ($main_info['weight'] == 0)?'<span id="weight">Unspecified</span>':'<span id="weight">'.get_weight_range($main_info['weight']).'</span>';?>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span id="set_weight" style="cursor:pointer;text-decoration: underline;">set weight</span>
+                                    <div id="weight_option" style="display:none">
+                                        <?php print $weightselect; ?>&nbsp;&nbsp;&nbsp;&nbsp;<span id="save_weight" style="cursor:pointer;text-decoration: underline;">save</span>&nbsp;&nbsp;&nbsp;&nbsp;<span id="cancel_weight" style="cursor:pointer;text-decoration: underline;">cancel</span>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
 
-                    <?php echo $this->table->generate(); ?>
+                    <?php //echo $this->table->generate(); ?>
+                    <?php print $detail_table->generate(); ?>
                 </td>
             </tr>
         </tbody>

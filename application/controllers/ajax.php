@@ -53,6 +53,107 @@ class Ajax extends Application
 		print getdateblock($month);
 	}
 
+	public function getzoneselect(){
+		$city = $this->input->post('city');
+
+		$this->db->where(array('city'=>$city));
+		$zones = $this->db->get($this->config->item('jayon_zones_table'));
+
+		if($zones->num_rows() > 0){
+			$zone[0] = 'Select delivery zone';
+			foreach ($zones->result() as $r) {
+				$zone[$r->district] = $r->district;
+			}
+		}else{
+			$zone[0] = 'Select delivery zone';
+		}
+
+		$select = form_dropdown('buyerdeliveryzone',$zone,null,'id="buyerdeliveryzone"');
+
+		print json_encode(array('result'=>'ok','data'=>$select));
+	}
+
+	public function saveweight(){
+		$delivery_id = $this->input->post('delivery_id');
+        $delivery_cost = $this->input->post('weight_tariff');
+
+			$order = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('incoming_delivery_table'));
+			$order = $order->row_array();
+
+			$total = str_replace(array(',','.'), '', $order['total_price']);
+			$dsc = str_replace(array(',','.'), '', $order['total_discount']);
+			$tax = str_replace(array(',','.'), '',$order['total_tax']);
+
+			$dc = str_replace(array(',','.'), '',$delivery_cost);
+			$cod = str_replace(array(',','.'), '',$order['cod_cost']);
+
+			$total = (int)$total;
+			$dsc = (int)$dsc;
+			$tax = (int)$tax;
+			$dc = (int)$dc;
+			$cod = (int)$cod;
+
+			$chg = ($total - $dsc) + $tax + $dc + $cod;
+
+			$newdata = array(
+				'delivery_cost'=>$delivery_cost,
+				'weight'=>$delivery_cost
+			);
+
+		$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('delivery_cost'=>$delivery_cost,'weight'=>$delivery_cost));
+
+		if($this->db->affected_rows() > 0){
+
+			print json_encode(array('status'=>'OK','delivery_cost'=>number_format($delivery_cost,2,',','.'),'weight_range'=>get_weight_range($delivery_cost),'total_charges'=>number_format($chg,2,',','.')));
+		}else{
+			print json_encode(array('status'=>'ERR','delivery_cost'=>0));
+		}
+
+	}
+
+	public function savedeliverytype(){
+		$delivery_id = $this->input->post('delivery_id');
+        $delivery_type = $this->input->post('delivery_type');
+
+			$order = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('incoming_delivery_table'));
+			$order = $order->row_array();
+
+			$total = str_replace(array(',','.'), '', $order['total_price']);
+			$dsc = str_replace(array(',','.'), '', $order['total_discount']);
+			$tax = str_replace(array(',','.'), '',$order['total_tax']);
+
+			$dc = str_replace(array(',','.'), '',$order['delivery_cost']);
+			$cod = str_replace(array(',','.'), '',$order['cod_cost']);
+
+			$total = (int)$total;
+			$dsc = (int)$dsc;
+			$tax = (int)$tax;
+			$dc = (int)$dc;
+
+			if($delivery_type == 'COD'){
+				$cod = get_cod_tariff(($total - $dsc) + $tax);
+			}else{
+				$cod = 0;
+			}
+
+			$chg = ($total - $dsc) + $tax + $dc + $cod;
+
+			$newdata = array(
+				'cod_cost'=>$cod,
+				'delivery_type'=>$delivery_type
+			);
+
+
+		$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$newdata);
+
+		if($this->db->affected_rows() > 0){
+			print json_encode(array('status'=>'OK','delivery_type'=>$delivery_type,'cod_cost'=>number_format($cod,2,',','.'),'total_charges'=>number_format($chg,2,',','.')));
+		}else{
+			print json_encode(array('status'=>'ERR','delivery_type'=>0));
+		}
+
+	}
+
 	public function neworder(){
 
 		$this->load->library('curl');
@@ -99,6 +200,7 @@ class Ajax extends Application
 			'total_discount'=>$this->input->post('total_discount'),
 			'total_tax'=>$this->input->post('total_tax'),
 			'chargeable_amount'=>$this->input->post('chargeable_amount'),
+			'delivery_cost' => $this->input->post('delivery_cost'), 		
 			'cod_cost' => $this->input->post('cod_cost'), 		
 			'currency' => $this->input->post('currency'), 	
 			'status'=>$this->input->post('status'),
@@ -107,7 +209,10 @@ class Ajax extends Application
 			'trx_detail'=>$trx_detail,
 			'width' => $this->input->post('width'),
 			'height' => $this->input->post('height'),
-			'length' => $this->input->post('length')
+			'length' => $this->input->post('length'),
+			'weight' => $this->input->post('weight'),
+			'delivery_type' => $this->input->post('delivery_type')
+
 		);
 
 		$trx['transaction_id'] = 'TRX_'.$merchant_id.'_'.str_replace(array(' ','.'), '', microtime());

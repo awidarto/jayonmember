@@ -9,6 +9,11 @@
             font-size: 12px;
         }
 
+        hr{
+            border:0px;
+            border-bottom:thin solid #aaa;
+        }
+
         #wrapper{
             width:850px;
             margin:5px;
@@ -201,7 +206,7 @@
         }
 
         td#order_details input[type="text"].item_total{
-            width:150px;
+            width:130px;
             text-align:right;
         }
 
@@ -211,7 +216,7 @@
         }
 
         td#order_details input[type="text"]{
-            width:150px;
+            width:130px;
         }
 
         input[type="text"]{
@@ -231,7 +236,7 @@
         }
 
         .sum_input, #recalc{
-            margin-right:30px;
+            margin-right:0px;
             text-align:right;
         }
 
@@ -284,6 +289,24 @@
             width:35px;
         }
 
+        table.tariff thead tr th{
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        table.tariff * td{
+            text-align: left;            
+        }
+
+        table.tariff{
+            width:100%;
+        }
+
+        .fine{
+            font-size: 11px;
+        }        
+
     </style>
 
     <?php echo $this->ag_asset->load_css('jquery-ui-1.8.16.custom.css','jquery-ui/flick');?>
@@ -313,6 +336,8 @@
     var percent_tax = 0;
 
     var lastorder = <?php print get_option('auto_lock_hours')*60*60*1000;?>;
+
+    var cod_surcharge_table = <?php print $codhash; ?>;
 
     $(document).ready(function() {
         $('.editable').editable('<?php print base_url();?>ajax/editdetail');
@@ -401,7 +426,7 @@
         });
 
         function OnHourShowCallback(hour) {
-            if (hour == 13 || hour == 18) {
+            if (hour == 13 || hour >= 16) {
                 return false; // not valid
             }
             return true; // valid
@@ -511,10 +536,10 @@
             var row = '<tr id="trx_'+ sequence+'">';
                 row += '<td class="item_form"><input type="text" class="item_desc" name="description" value="'+ $('#description').val() +'" /></td>';
                 row += '<td class="item_form"><input type="text" class="item_qty" name="quantity" value="'+ $('#quantity').val() +'" /></td>';
-                row += '<td><input type="text" class="item_unit_price" name="unit_price" value="'+ $('#unit_price').val() +'"  /></td>';
+                row += '<td class="item_form"><input type="text" class="item_unit_price" name="unit_price" value="'+ $('#unit_price').val() +'"  /></td>';
                 row += '<td class="item_form"><input type="text" class="item_pct_disc orange" name="unit_pct_disc" value="'+ $('#unit_percent_discount').val() +'" /></td>';
-                row += '<td><input type="text" class="item_nom_disc orange" name="unit_nom_disc" value="'+ $('#unit_nominal_discount').val() +'"  /></td>';
-                row += '<td><input type="text" class="item_total" name="unit_total" value="'+ $('#unit_total').val() +'"  /><button name="add_item" type="button" id="remove_item" onClick="removeRow(\'trx_'+ sequence+'\');" >Del</button></td>';
+                row += '<td class="item_form"><input type="text" class="item_nom_disc orange" name="unit_nom_disc" value="'+ $('#unit_nominal_discount').val() +'"  /></td>';
+                row += '<td><input type="text" class="item_total" name="unit_total" value="'+ $('#unit_total').val() +'"  /></td><td><button name="add_item" type="button" id="remove_item" onClick="removeRow(\'trx_'+ sequence+'\');" >Del</button></td>';
                 row += '</tr>';
 
             $('#calc_data').before(row);
@@ -557,6 +582,56 @@
             $('#createuser_dialog').dialog('open');
         });
 
+        $('#buyerdeliverycity').change(function(){
+            //alert($('#buyerdeliverycity').val());
+            var city = $('#buyerdeliverycity').val();
+
+            if(city != 0){
+                $('#zone_select').html('Loading zones...');
+                $.post('<?php print site_url('ajax/getzoneselect');?>',
+                    { city: city }, 
+                    function(data) {
+                        $('#zone_select').html(data.data);
+                    },'json');
+            }
+
+        });
+
+        $('#delivery_type').change(function(){
+
+            var delivery_type = $('#delivery_type').val();
+            var cod_cost = $('#cod_cost').val();
+            if(delivery_type == 'COD'){
+                if(isNaN(cod_cost)){
+                    $('#cod_cost').val(0);
+                    $('#cod_cost_txt').html(0);
+                }
+                $('#cod_line').show();
+                $('#cod_tab').show();
+            }else{
+                $('#cod_line').hide();
+                $('#cod_tab').hide();
+                $('#cod_cost').val(0);
+                $('#cod_cost_txt').html(0);
+                $('#cod_cost').val(0);
+            }
+            calculate();
+        });
+
+        $('#package_weight').change(function(){
+            var delivery_fee = $('#package_weight').val();
+            $('#delivery_cost_txt').html(delivery_fee);
+            $('#delivery_cost').val(delivery_fee);
+            calculate();
+        });
+
+        function getzone(city){
+            $.post('<?php print site_url('ajax/getzoneselect');?>',
+                { city: city }, 
+                function(data) {
+                    $('#zone_select').html(data.data);
+                },'json');
+        }
 
     });
 
@@ -587,11 +662,14 @@
             pdata.total_tax = $('#total_tax').val();
             pdata.chargeable_amount = $('#total_charges').val();
             pdata.cod_cost = $('#cod_cost').val();     /* cod_cost 0 if absorbed in price of goods sold, otherwise specify the amount here*/
+            pdata.delivery_cost = $('#delivery_cost').val();
+            pdata.delivery_type = $('#delivery_type').val();
             pdata.currency = $('#currency').val();   /* currency in 3 digit codes*/
             pdata.status = 'confirmed'; /* status can be : pending or confirm, depending on merchant's workflow */
             pdata.width = $('#package_width').val();
             pdata.height = $('#package_height').val();
             pdata.length = $('#package_length').val();
+            pdata.weight = $('#package_weight').val();
 
 
             var udescs = [];
@@ -676,6 +754,21 @@
         sequence--;
     }
 
+    function getCODcharge(total_price){
+        var curr;
+
+        if(total_price == 0){
+            return 0;
+        }
+
+        for( i = 0; i < cod_surcharge_table.length;i++){
+            curr = cod_surcharge_table[i];
+            if(curr.from_price < total_price && total_price < curr.to_price){
+                return curr.surcharge;
+            }
+        }
+    }
+
     function validate(){
             if($('#merchant_id').val() === 'undefined' || $('#merchant_id').val() == '' || $('#merchant_id').val() == 0 || $('#merchant_id').val() == null || $('#merchant_id').val() === 'NaN'){
                 return [false,'Merchant Unspecified'];
@@ -687,6 +780,22 @@
             */
             if($('#app_id').val() == 0){
                 return [false, 'Application Domain Invalid'];
+            }
+
+            if($('#buyerdeliverycity').val() == 0){
+                return [false, 'Please specify City'];
+            }
+
+            if($('#buyerdeliveryzone').val() === 'undefined' || $('#buyerdeliveryzone').val() == '' || $('#buyerdeliveryzone').val() == 0 || $('#buyerdeliveryzone').val() == null || $('#buyerdeliveryzone').val() === 'NaN'){
+                return [false,'Please specify Zone'];
+            }
+
+            if($('#package_weight').val() == 0){
+                return [false, 'Weight Unspecified'];
+            }
+
+            if($('#delivery_type').val() == 0){
+                return [false, 'Please specify Delivery Type'];
             }
 
             if($('#package_width').val() === 'undefined' || $('#package_width').val() == '' || $('#package_width').val() == 0 || $('#package_width').val() == null || $('#package_width').val() === 'NaN'){
@@ -704,7 +813,6 @@
             if($('#phone').val() === 'undefined' || $('#package_length').val() == '' || $('#package_length').val() == 0 || $('#package_length').val() == null || $('#package_length').val() === 'NaN'){
                 return [false,'Length Unspecified'];
             }
-
 
             if($('#package_width').val() > <?php print get_option('max_width');?>){
                 return [false,'Max Width Exceeded'];
@@ -811,8 +919,23 @@
             total_discount = parseInt($('#total_discount').val());
         }
 
-        total_charges = (total_price - total_discount) + total_tax + cod_cost;
+        delivery_cost = ($('#package_weight').val() == 0)?0:parseInt($('#delivery_cost').val());
 
+        total_value = (total_price - total_discount) + total_tax;
+
+        cod_cost = parseInt(getCODcharge(total_value));
+
+        total_charges = (total_price - total_discount) + total_tax + delivery_cost;
+
+        if($('#delivery_type').val() == 'COD'){
+            total_charges += cod_cost;
+        }else{
+            cod_cost = 0;
+        }
+
+        $('#cod_cost_txt').html(cod_cost);
+
+        $('#cod_cost').val(cod_cost);
         $('#total_price').val(total_price);
         $('#total_discount').val(total_discount);
         $('#total_charges').val(total_charges);        
@@ -836,7 +959,7 @@
                             </tr>
 
                             <tr>
-                                <td>Online Store:</td>
+                                <td>Online Store<hr /><span class="fine">Nama Toko</span></td>
                                 <td>
                                     Merchant ID : <span id="merchant_id_txt"><?php print $merchant_id?></span><br />
                                     <span id="merchant_name_txt"><?php print $merchantname?></span><br />
@@ -847,7 +970,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>Store Detail:</td>
+                                <td>Store Detail<hr /><span class="fine">Detail Toko</span></td>
                                 <td id="application_id">
                                     <?php print $appselect;?>
                                 </td>
@@ -856,14 +979,14 @@
                                 <td colspan="2"><strong>Delivery Info</strong></td>
                             </tr>
                             <tr>
-                                <td>Delivery Date:</td>
+                                <td>Delivery Date<hr /><span class="fine">Tanggal Pengiriman</span></td>
                                 <td>
                                     <div id="buyerdeliverydate_html"></div>
                                     <input type="text" id="buyerdeliverydate" name="buyerdeliverydate" value="" readonly="true" disabled="disabled" />
                                 </td>
                             </tr>
                             <tr>
-                                <td>Delivery Time:</td>
+                                <td>Delivery Time<hr /><span class="fine">Waktu Pengiriman</span></td>
                                 <td>
                                     <input type="text" id="buyerdeliverytime" name="buyerdeliverytime" value="" readonly="true" />
                                     <button class="timepicker_button_trigger" id="btn_trigger_timepicker">Pick time</button>
@@ -871,21 +994,32 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="row_label">Delivery City:</td>
-                                <td>
-                                    <input type="text" id="buyerdeliverycity" name="buyerdeliverycity" value="" />
+                                <td class="row_label">Delivery City<hr /><span class="fine">Kota</span></td>
+                                <td id="city_select">
+                                    <?php print $cityselect;?>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="row_label">ZIP:</td>
+                                <td class="row_label">ZIP<hr /><span class="fine">Kode Pos</span></td>
                                 <td>
                                     <input type="text" id="buyerdeliveryzip" name="buyerdeliveryzip" value="" />
                                 </td>
                             </tr>
                             <tr>
-                                <td class="row_label">Delivery Zone:</td>
+                                <td class="row_label">Delivery Zone<hr /><span class="fine">Zona / Kecamatan</span></td>
+                                <td id="zone_select">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Delivery Tariff<hr /><span class="fine">Tarif Pengiriman</span></td>
                                 <td>
-                                    <input type="text" id="buyerdeliveryzone" name="buyerdeliveryzone" value="" />
+                                    <?php print $weighttable;?>
+                                </td>
+                            </tr>
+                            <tr id="cod_tab" style="display:none">
+                                <td>COD Surcharge<hr /><span class="fine">Tarif Jasa COD</span></td>
+                                <td>
+                                    <?php print $codtable;?>
                                 </td>
                             </tr>
                         </tbody>
@@ -897,9 +1031,14 @@
                             <tr>
                                 <td colspan="2"><strong>Order Detail</strong></td>
                             </tr>
-
                             <tr>
-                                <td class="row_label">Buyer Name:</td>
+                                <td class="row_label">Delivery Type<hr /><span class="fine">Jenis Pengiriman</span></td>
+                                <td id="type_select">
+                                    <?php print $typeselect;?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="row_label">Buyer Name<hr /><span class="fine">Nama Pembeli</span></td>
                                 <td>
                                     Buyer ID : <span id="buyer_id_txt"></span><br />
                                     <input type="hidden" value="" id="buyer_id" name="buyer_id" />
@@ -907,42 +1046,48 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="row_label">Buyer Email:</td>
+                                <td class="row_label">Buyer Email<hr /><span class="fine">Alamat Email Pembeli</span></td>
                                 <td>
                                     <input type="text" id="buyer_email" name="buyer_email" value="" />
                                     <?php // print form_button(array('name'=>'add_buyer','content'=>'Create New Buyer','id'=>'create_user'));?>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="row_label">Delivered To:</td>
+                                <td class="row_label">Delivered To<hr /><span class="fine">Nama Penerima</span></td>
                                 <td>
                                     <input type="text" id="recipient_name" name="recipient_name" value="" />
                                 </td>
                             </tr>
                             <tr>
-                                <td>Shipping Address:</td>
+                                <td>Shipping Address<hr /><span class="fine">Alamat Pengiriman</span></td>
                                 <td>
                                     <textarea id="shipping_address"></textarea>
                                 </td>
                             </tr>
                             <tr>
-                                <td>How to Get There / Petunjuk Jalan:</td>
+                                <td>How to Get There<hr /><span class="fine">Petunjuk Jalan</span></td>
                                 <td>
                                     <textarea id="direction"></textarea>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Phone:</td>
+                                <td>Phone<hr /><span class="fine">Telepon</span></td>
                                 <td>
                                     <input type="text" id="phone" name="phone" value="" />
                                 </td>
                             </tr>
                             <tr>
-                                <td>Package Dimension:</td>
+                                <td>Package Dimension<hr /><span class="fine">Dimensi Paket</span></td>
                                 <td>
                                     Width / Lebar : <input class="short" type="text" id="package_width" name="package_width" value="" /> cm ( max <?php print get_option('max_width');?> cm )<br />
                                     Height / Tinggi : <input class="short" type="text" id="package_height" name="package_height" value="" /> cm ( max <?php print get_option('max_height');?> cm )<br />
                                     Length / Panjang : <input class="short" type="text" id="package_length" name="package_length" value="" /> cm ( max <?php print get_option('max_length');?> cm ) 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Package Weight<hr /><span class="fine">Berat Paket</span></td>
+                                <td>
+                                    <?php print $weightselect; ?>
                                 </td>
                             </tr>
                         </tbody>
@@ -958,7 +1103,7 @@
                                 <th rowspan="2">Quantity</th>
                                 <th rowspan="2">Unit Price</th>
                                 <th rowspan="1" colspan="2">Unit Discount</th>
-                                <th rowspan="2">Total<br />
+                                <th rowspan="2" colspan="2">Total<br />
                                     <select name="currency" id="currency" >
                                         <option value="IDR">IDR</option>
                                         <option value="USD">USD</option>
@@ -977,24 +1122,27 @@
                                 <td class='item_form'><input type="text" name="unit_price" value="" id="unit_price"  /></td>
                                 <td class='item_form'><input type="text" name="unit_percent_discount" value="" id="unit_percent_discount" class="orange" /></td>
                                 <td class='item_form'><input type="text" name="unit_nominal_discount" value="" id="unit_nominal_discount" class="orange" /></td>
-                                <td class='item_form' style="text-align:left;"><input type="text" name="unit_total" value="" id="unit_total"  /><br />
-                                    <button name="add_item" type="button" id="add_item" >Click to Add</button>
+                                <td class='item_form' style="text-align:left;"><input type="text" name="unit_total" value="" id="unit_total"  /></td><td>
+                                    <button name="add_item" type="button" id="add_item" >Add</button>
                                 </td>
                             </tr>
                             <tr id="calc_data">
-                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Total Price ( before discount )</td><td class='sums'><input type="text" name="total_price" value="" id="total_price" class="sum_input"  /></td>
+                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Total Price ( before discount )</td><td class='sums'><input type="text" name="total_price" value="" id="total_price" class="sum_input"  /></td><td>&nbsp;</td
                             </tr>
                             <tr class="detail_row">
-                                <td>&nbsp;</td><td colspan="2" id="trx_result">&nbsp;</td><td>&nbsp;</td><td class='lsums'>Total Discount<br /><input type="checkbox" id="fixed_discount">Set Fixed</td><td class='sums'><input type="text" name="total_discount" value="" id="total_discount"  class="sum_input orange" /></td>
+                                <td>&nbsp;</td><td colspan="2" id="trx_result">&nbsp;</td><td>&nbsp;</td><td class='lsums'>Total Discount<br /><input type="checkbox" id="fixed_discount">Set Fixed</td><td class='sums'><input type="text" name="total_discount" value="" id="total_discount"  class="sum_input orange" /></td><td>&nbsp;</td
                             </tr>
                             <tr>
-                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Tax <input type="text" name="percent_tax" value="" id="percent_tax" class="sum_input" style="width:40px;margin-right:2px;" />% Total Tax </td><td class='sums'><input type="text" name="total_tax" value="" id="total_tax" class="sum_input"  /></td>
+                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Tax <input type="text" name="percent_tax" value="" id="percent_tax" class="sum_input" style="width:40px;margin-right:2px;" />% Total Tax </td><td class='sums'><input type="text" name="total_tax" value="" id="total_tax" class="sum_input"  /></td><td>&nbsp;</td
                             </tr>
                             <tr class="detail_row">
-                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>COD Charges</td><td class='sums'><input type="text" name="cod_cost" value="" id="cod_cost" class="sum_input"  /></td>
+                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Delivery Charge</td><td class='sums' style="text-align:right"><span id="delivery_cost_txt"></span><input type="hidden" name="delivery_cost" value="" id="delivery_cost" class="sum_input"  /><input type="hidden" name="cod_cost" value="0" id="cod_cost" class="sum_input"  /></td><td>&nbsp;</td>
+                            </tr>
+                            <tr class="detail_row" id="cod_line" style="display:none">
+                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>COD Surcharge</td><td class='sums'  style="text-align:right"><span id="cod_cost_txt">0</span></td><td>&nbsp;</td>
                             </tr>
                             <tr>
-                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>&nbsp;</td><td class='lsums'>Total Charges</td><td class='sums'><input type="text" name="total_charges" value="" id="total_charges" class="sum_input"  /></td>
+                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>&nbsp;</td><td class='lsums'>Total Charges</td><td class='sums'><input type="text" name="total_charges" value="" id="total_charges" class="sum_input"  /></td><td>&nbsp;</td
                             </tr>
                         </tbody>
                     </table>
