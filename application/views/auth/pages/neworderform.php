@@ -337,7 +337,10 @@
 
     var lastorder = <?php print get_option('auto_lock_hours')*60*60*1000;?>;
 
-    var cod_surcharge_table = <?php print $codhash; ?>;
+    var cod_surcharge_table = <?php print $codhash; ?>;    
+
+    var current_app = 0;
+    var delivery_fee = 0;
 
     $(document).ready(function() {
         $('.editable').editable('<?php print base_url();?>ajax/editdetail');
@@ -618,12 +621,56 @@
             calculate();
         });
 
-        $('#package_weight').change(function(){
-            var delivery_fee = $('#package_weight').val();
-            $('#delivery_cost_txt').html(delivery_fee);
-            $('#delivery_cost').val(delivery_fee);
+        $('#application_id').change(function(e){
+            var val = $(e.target).val();
+            current_app = val;
+            getweightandcod();
             calculate();
         });
+
+        $('#weight_selection').change(function(e){
+            delivery_fee = $(e.target).val();
+            $('#delivery_cost_txt').html(delivery_fee);
+            $('#delivery_cost').val(delivery_fee);
+            calculate();            
+        });
+
+        $('#delivery_type').change(function(){
+            getweightandcod();
+            calculate();
+        });
+
+        function getweightandcod(){
+            var delivery_type = $('#delivery_type').val();
+
+            console.log(current_app);
+
+            if(delivery_type == 'COD'){
+                $.post('<?php print site_url('ajax/getcoddata');?>',
+                    { app_key: current_app }, 
+                    function(data) {
+                        $('#cod_tab_data').html(data.data.table);
+                        cod_surcharge_table = $.parseJSON(data.data.codhash);
+                        calculate();
+                    },'json');
+
+                $('#cod_line').show();
+                $('#cod_tab').show();
+            }else{
+                $('#cod_line').hide();
+                $('#cod_tab').hide();
+                $('#cod_cost_txt').html(0);
+                $('#cod_cost').val(0);
+            }
+
+            $.post('<?php print site_url('ajax/getweightdata');?>',
+                { app_key: current_app }, 
+                function(data) {
+                    $('#delivery_tab_data').html(data.data.table);
+                    $('#weight_selection').html(data.data.selector);
+                },'json');
+        }
+
 
         function getzone(city){
             $.post('<?php print site_url('ajax/getzoneselect');?>',
@@ -770,8 +817,12 @@
     }
 
     function validate(){
+
+            var validisplay = '';
+
             if($('#merchant_id').val() === 'undefined' || $('#merchant_id').val() == '' || $('#merchant_id').val() == 0 || $('#merchant_id').val() == null || $('#merchant_id').val() === 'NaN'){
-                return [false,'Merchant Unspecified'];
+                validisplay += 'Merchant Unspecified\r\n';
+                //return [false,'Merchant Unspecified'];
             }
             /*
             if($('#buyer_id').val() === 'undefined' || $('#buyer_id').val() == '' || $('#buyer_id').val() == 0 || $('#buyer_id').val() == null || $('#buyer_id').val() === 'NaN'){
@@ -779,58 +830,75 @@
             }
             */
             if($('#app_id').val() == 0){
-                return [false, 'Application Domain Invalid'];
+                validisplay += 'Invalid Store ID\r\n';
+                //return [false, 'Application Domain Invalid'];
             }
 
             if($('#buyerdeliverycity').val() == 0){
-                return [false, 'Please specify City'];
+                validisplay += 'City Unspecified\r\n';
+                //return [false, 'Please specify City'];
             }
 
             if($('#buyerdeliveryzone').val() === 'undefined' || $('#buyerdeliveryzone').val() == '' || $('#buyerdeliveryzone').val() == 0 || $('#buyerdeliveryzone').val() == null || $('#buyerdeliveryzone').val() === 'NaN'){
-                return [false,'Please specify Zone'];
+                validisplay += 'Zone Unspecified\r\n';
+                //return [false,'Please specify Zone'];
             }
 
             if($('#package_weight').val() == 0){
-                return [false, 'Weight Unspecified'];
+                validisplay += 'Weight Unspecified\r\n';
+                //return [false, 'Weight Unspecified'];
             }
 
             if($('#delivery_type').val() == 0){
-                return [false, 'Please specify Delivery Type'];
+                validisplay += 'Delivery Type Unspecified\r\n';
+                //return [false, 'Please specify Delivery Type'];
             }
 
             if($('#package_width').val() === 'undefined' || $('#package_width').val() == '' || $('#package_width').val() == 0 || $('#package_width').val() == null || $('#package_width').val() === 'NaN'){
-                return [false,'Width Unspecified'];
+                validisplay += 'Width Unspecified\r\n';
+                //return [false,'Width Unspecified'];
             }
 
             if($('#package_height').val() === 'undefined' || $('#package_height').val() == '' || $('#package_height').val() == 0 || $('#package_height').val() == null || $('#package_height').val() === 'NaN'){
-                return [false,'Height Unspecified'];
+                validisplay += 'Height Unspecified\r\n';
+                //return [false,'Height Unspecified'];
             }
 
             if($('#package_length').val() === 'undefined' || $('#phone').val() == '' || $('#phone').val() == 0 || $('#phone').val() == null || $('#phone').val() === 'NaN'){
-                return [false,'COntact Number / Phone Unspecified'];
+                validisplay += 'Contact Number / Phone Unspecified\r\n';
+                //return [false,'Contact Number / Phone Unspecified'];
             }
 
             if($('#phone').val() === 'undefined' || $('#package_length').val() == '' || $('#package_length').val() == 0 || $('#package_length').val() == null || $('#package_length').val() === 'NaN'){
-                return [false,'Length Unspecified'];
+                validisplay += 'Length Unspecified\r\n';
+                //return [false,'Length Unspecified'];
             }
 
             if($('#package_width').val() > <?php print get_option('max_width');?>){
-                return [false,'Max Width Exceeded'];
+                validisplay += 'Max Width Exceeded\r\n';
+                //return [false,'Max Width Exceeded'];
             }
 
             if($('#package_height').val() > <?php print get_option('max_height');?>){
-                return [false,'Max Height Exceeded'];
+                validisplay += 'Max Height Exceeded\r\n';
+                //return [false,'Max Height Exceeded'];
             }
 
             if($('#package_length').val() > <?php print get_option('max_length');?>){
-                return [false,'Max Length Exceeded'];
+                validisplay += 'Max Length Exceeded\r\n';
+                //return [false,'Max Length Exceeded'];
             }
 
             if($('#direction').val() === 'undefined' || $('#direction').val() == '' || $('#direction').val() == 0 || $('#direction').val() == null || $('#direction').val() === 'NaN'){
-                return [false,'Direction Unspecified'];
+                validisplay += 'Direction Unspecified\r\n';
+                //return [false,'Direction Unspecified'];
             }
 
-            return [true,''];
+            if(validisplay == ''){
+                return [true,''];
+            }else{
+                return [false,validisplay];
+            }
     }
 
     function calculate(){
@@ -919,23 +987,23 @@
             total_discount = parseInt($('#total_discount').val());
         }
 
-        delivery_cost = ($('#package_weight').val() == 0)?0:parseInt($('#delivery_cost').val());
+        delivery_cost = ($('#package_weight').val() == 0)?0:parseInt(delivery_fee);
 
-        total_value = (total_price - total_discount) + total_tax;
+        total_value = (parseInt(total_price) - parseInt(total_discount)) + parseInt(total_tax);
 
-        cod_cost = parseInt(getCODcharge(total_value));
 
-        total_charges = (total_price - total_discount) + total_tax + delivery_cost;
+        total_charges = (parseInt(total_price) - parseInt(total_discount)) + parseInt(total_tax) + parseInt(delivery_cost);
 
         if($('#delivery_type').val() == 'COD'){
+            cod_cost = parseInt(getCODcharge(parseInt(total_value)));
             total_charges += cod_cost;
         }else{
             cod_cost = 0;
         }
 
         $('#cod_cost_txt').html(cod_cost);
-
         $('#cod_cost').val(cod_cost);
+
         $('#total_price').val(total_price);
         $('#total_discount').val(total_discount);
         $('#total_charges').val(total_charges);        
@@ -1012,14 +1080,14 @@
                             </tr>
                             <tr>
                                 <td>Delivery Tariff<hr /><span class="fine">Tarif Pengiriman</span></td>
-                                <td>
-                                    <?php print $weighttable;?>
+                                <td id="delivery_tab_data">
+                                    <?php // print $weighttable;?>
                                 </td>
                             </tr>
                             <tr id="cod_tab" style="display:none">
                                 <td>COD Surcharge<hr /><span class="fine">Tarif Jasa COD</span></td>
-                                <td>
-                                    <?php print $codtable;?>
+                                <td id="cod_tab_data">
+                                    <?php //print $codtable;?>
                                 </td>
                             </tr>
                         </tbody>
@@ -1086,7 +1154,7 @@
                             </tr>
                             <tr>
                                 <td>Package Weight<hr /><span class="fine">Berat Paket</span></td>
-                                <td>
+                                <td id="weight_selection">
                                     <?php print $weightselect; ?>
                                 </td>
                             </tr>
