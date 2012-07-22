@@ -107,7 +107,7 @@
         }
 
         table#main_table{
-            width:840px;
+            width:860px;
             padding:0px;
             margin:0px;
         }
@@ -229,10 +229,12 @@
 
         td.sums{
             text-align:left;
+            vertical-align: top;
         }
 
         td.lsums{
             text-align:right;
+            vertical-align: top;
         }
 
         .sum_input, #recalc{
@@ -305,7 +307,11 @@
 
         .fine{
             font-size: 11px;
-        }        
+        }     
+
+        ol li{
+            margin-top: 3px;
+        }   
 
     </style>
 
@@ -654,11 +660,11 @@
                         calculate();
                     },'json');
 
-                $('#cod_line').show();
-                $('#cod_tab').show();
+                //$('#cod_line').show();
+                //$('#cod_tab').show();
             }else{
-                $('#cod_line').hide();
-                $('#cod_tab').hide();
+                //$('#cod_line').hide();
+                //$('#cod_tab').hide();
                 $('#cod_cost_txt').html(0);
                 $('#cod_cost').val(0);
             }
@@ -1121,13 +1127,13 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="row_label">Delivered To<hr /><span class="fine">Nama Penerima</span></td>
+                                <td class="row_label">Delivered To<hr /><span class="fine">Nama Penerima<br />harap sebutkan jabatan dan titel jika ada</span></td>
                                 <td>
                                     <input type="text" id="recipient_name" name="recipient_name" value="" />
                                 </td>
                             </tr>
                             <tr>
-                                <td>Shipping Address<hr /><span class="fine">Alamat Pengiriman</span></td>
+                                <td>Shipping Address<hr /><span class="fine">Alamat Pengiriman<br />harap sebutkan nama gedung dan lantai jika ada.</span></td>
                                 <td>
                                     <textarea id="shipping_address"></textarea>
                                 </td>
@@ -1195,22 +1201,44 @@
                                 </td>
                             </tr>
                             <tr id="calc_data">
-                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Total Price ( before discount )</td><td class='sums'><input type="text" name="total_price" value="" id="total_price" class="sum_input"  /></td><td>&nbsp;</td
+                                <td>&nbsp;</td><td colspan="2" id="trx_result">&nbsp;</td><td>&nbsp;</td><td class='lsums'>Total Price ( before discount )</td><td class='sums'><input type="text" name="total_price" value="" id="total_price" class="sum_input"  /></td><td>&nbsp;</td
                             </tr>
                             <tr class="detail_row">
-                                <td>&nbsp;</td><td colspan="2" id="trx_result">&nbsp;</td><td>&nbsp;</td><td class='lsums'>Total Discount<br /><input type="checkbox" id="fixed_discount">Set Fixed</td><td class='sums'><input type="text" name="total_discount" value="" id="total_discount"  class="sum_input orange" /></td><td>&nbsp;</td
+                                <td colspan="4" rowspan="5">
+                                    <ol>
+                                        <li>
+                                                Fill in item description, quantity, unit price and discount ( if any ) into the appropriate form field above, then click "Add" button<hr />
+                                            <span class="fine">
+                                                Masukkan nama barang, jumlah, harga per unit dan diskon ( jika ada ), kemudian klik "Add" untuk menambahkan ke daftar order 
+                                            </span>
+                                        </li>
+                                        <li>
+                                                Should there are any changes made thereafter, click "Recalculate" to get the correct price calculation<hr />
+                                            <span class="fine">
+                                                Jika ada perubahan terhadap data yang sudah ditambahkan, klik "Recalculate" untuk menghitung ulang harga dan biaya
+                                            </span>
+                                        </li>
+                                        <li>
+                                            
+                                                Deleting a row of item can be done by clicking "Del" button, and will automatically recalculate the price<hr />
+                                            <span class="fine">
+                                                Untuk menghapus barang dari daftar order, klik "Del" di bagian paling kanan baris yang barang bersangkutan, dan secara otomatis akan dilakukan perhitungan ulang
+                                            </span>
+                                        </li>
+                                    </ol>
+                                </td><td class='lsums'>Total Discount<br /><input type="checkbox" id="fixed_discount">Set Fixed</td><td class='sums'><input type="text" name="total_discount" value="" id="total_discount"  class="sum_input orange" /></td><td>&nbsp;</td
                             </tr>
                             <tr>
-                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Tax <input type="text" name="percent_tax" value="" id="percent_tax" class="sum_input" style="width:40px;margin-right:2px;" />% Total Tax </td><td class='sums'><input type="text" name="total_tax" value="" id="total_tax" class="sum_input"  /></td><td>&nbsp;</td
+                                <td class='lsums'>Tax <input type="text" name="percent_tax" value="" id="percent_tax" class="sum_input" style="width:40px;margin-right:2px;" />% Total Tax </td><td class='sums'><input type="text" name="total_tax" value="" id="total_tax" class="sum_input"  /></td><td>&nbsp;</td
                             </tr>
                             <tr class="detail_row">
-                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>Delivery Charge</td><td class='sums' style="text-align:right"><span id="delivery_cost_txt"></span><input type="hidden" name="delivery_cost" value="" id="delivery_cost" class="sum_input"  /><input type="hidden" name="cod_cost" value="0" id="cod_cost" class="sum_input"  /></td><td>&nbsp;</td>
+                                <td class='lsums'>Delivery Charge</td><td class='sums' style="text-align:right"><span id="delivery_cost_txt"></span><input type="hidden" name="delivery_cost" value="" id="delivery_cost" class="sum_input"  /><input type="hidden" name="cod_cost" value="0" id="cod_cost" class="sum_input"  /></td><td>&nbsp;</td>
                             </tr>
-                            <tr class="detail_row" id="cod_line" style="display:none">
-                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>COD Surcharge</td><td class='sums'  style="text-align:right"><span id="cod_cost_txt">0</span></td><td>&nbsp;</td>
+                            <tr class="detail_row" id="cod_line">
+                                <td class='lsums'>COD Surcharge</td><td class='sums'  style="text-align:right"><span id="cod_cost_txt">0</span></td><td>&nbsp;</td>
                             </tr>
                             <tr>
-                                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td class='lsums'>&nbsp;</td><td class='lsums'>Total Charges</td><td class='sums'><input type="text" name="total_charges" value="" id="total_charges" class="sum_input"  /></td><td>&nbsp;</td
+                                <td class='lsums'>Total Charges</td><td class='sums'><input type="text" name="total_charges" value="" id="total_charges" class="sum_input"  /></td><td>&nbsp;</td
                             </tr>
                         </tbody>
                     </table>
