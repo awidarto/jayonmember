@@ -28,6 +28,65 @@ class Reports extends Application
 		$this->ag_auth->view('reports/index',$page); // Load the view
 	}
 
+	public function reconciliation(){
+		$this->breadcrumb->add_crumb('Reconciliations','admin/reports/reconciliation');
+
+		$this->table->set_heading(
+			'Year',
+			'Week',
+			'From',
+			'To',
+			'Action'
+			); // Setting headings for the table
+
+		$page['ajaxurl'] = 'admin/reports/ajaxreconsiliation';
+		$page['page_title'] = 'Reconciliations';
+		$this->ag_auth->view('reconajaxlistview',$page); // Load the view
+		
+	}
+
+	public function ajaxreconsiliation(){
+
+		$weekfrom = date('W',strtotime($this->session->userdata('created')));
+
+		$week = date('W',time());
+		$year = date('Y',time());
+
+		$aadata = array();
+
+		for($i = $week; $i > $weekfrom; $i--)
+		{
+
+			$from =	date('d-m-Y', strtotime('1 Jan '.$year.' +'.($i - 1).' weeks'));
+			$to = date('d-m-Y', strtotime('1 Jan '.$year.' +'.$i.' weeks - 1 day'));
+
+			$generate = anchor("admin/reports/globalreport/".$from."/".$to, "Global"); // Build actions links
+			$merchantlist = anchor("admin/reports/merchants/".$from."/".$to, "By Merchant"); // Build actions links
+			$courierlist = anchor("admin/reports/couriers/".$from."/".$to, "By Courier"); // Build actions links
+			$printrecon = '<span class="printslip" id="'.$from."_".$to.'" style="cursor:pointer;text-decoration:underline;" >View</span>';
+			$aadata[] = array(
+				$year,
+				$i,
+				date('d-m-Y', strtotime('1 Jan '.$year.' +'.($i - 1).' weeks')),
+				date('d-m-Y', strtotime('1 Jan '.$year.' +'.$i.' weeks - 1 day')),
+				$printrecon
+			); // Adding row to table
+		}
+
+		$count_all = count($aadata);
+
+		$count_display_all = count($aadata);
+
+		$result = array(
+			'sEcho'=> $this->input->post('sEcho'),
+			'iTotalRecords'=>$count_all,
+			'iTotalDisplayRecords'=> $count_display_all,
+			'aaData'=>$aadata
+		);
+
+		print json_encode($result); // Load the view
+	}
+
 	public function daily(){
 
 		$this->breadcrumb->add_crumb('Daily Report','admin/reports/daily');
