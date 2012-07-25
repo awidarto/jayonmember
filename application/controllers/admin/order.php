@@ -110,6 +110,7 @@ class Order extends Application
 		$data['appselect'] = $select;
 		$data['cityselect'] = $cityselect;
 		$data['typeselect'] = $typeselect;
+		$data['slotselect'] = get_slot_select();
 		$data['weightselect'] = $weightselect;
 		$data['weighttable'] = $weighttable;
 		$data['codtable'] = $codtable;

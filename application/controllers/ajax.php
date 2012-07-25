@@ -57,6 +57,7 @@ class Ajax extends Application
 		$city = $this->input->post('city');
 
 		$this->db->where(array('city'=>$city));
+		$this->db->where(array('is_on'=>1));
 		$zones = $this->db->get($this->config->item('jayon_zones_table'));
 
 		if($zones->num_rows() > 0){
@@ -248,6 +249,7 @@ class Ajax extends Application
 			'buyerdeliveryzone'=>$this->input->post('buyerdeliveryzone'),
 			'buyerdeliverycity'=>$this->input->post('buyerdeliverycity'),
 			'buyerdeliverytime'=>$this->input->post('buyerdeliverytime'),
+			'buyerdeliveryslot'=>$this->input->post('buyerdeliveryslot'),
 			'directions'=>$this->input->post('direction'),
 			'auto_confirm'=>$this->input->post('auto_confirm'),
 			'email'=>$this->input->post('email'),

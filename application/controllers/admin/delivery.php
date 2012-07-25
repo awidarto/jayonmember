@@ -74,7 +74,6 @@ class Delivery extends Application
 			$search = true;
 		}
 
-
 		if($this->input->post('sSearch_1') != ''){
 			$this->db->like($this->config->item('incoming_delivery_table').'.buyerdeliveryzone',$this->input->post('sSearch_1'));
 			$search = true;
@@ -162,6 +161,7 @@ class Delivery extends Application
 				//date('Y-m-d h:i:s',$key['created']),	
 				$key['ordertime'],
 				'<span id="'.$key['delivery_id'].'"><input type="hidden" value="'.$key['buyerdeliverytime'].'" id="cd_'.$key['delivery_id'].'">'.$reqdate.'</span>',
+				get_slot_range($key['buyerdeliveryslot']),
 				$key['buyerdeliveryzone'],
 				$key['buyerdeliverycity'],
 				$deliveryidfield,
@@ -203,6 +203,7 @@ class Delivery extends Application
 		$this->table->set_heading(
 			'Timestamp',
 			'Requested Delivery Date',
+			'Requested Time Slot',
 			'Zone',
 			'City',
 			'Delivery ID',
@@ -227,6 +228,7 @@ class Delivery extends Application
 		$this->table->set_footing(
 			'',
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
+			'',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
 			'<input type="text" name="search_city" id="search_city" value="Search city" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
@@ -235,7 +237,7 @@ class Delivery extends Application
 			form_button('do_cancel','Cancel Selection','id="doCancel"')
 			);
 
-		$page['sortdisable'] = '';
+		$page['sortdisable'] = '2';
 		$page['ajaxurl'] = 'admin/delivery/ajaxincoming';
 		$page['page_title'] = 'Incoming Delivery Orders';
 		$this->ag_auth->view('incomingajaxlistview',$page); // Load the view

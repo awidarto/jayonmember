@@ -649,7 +649,7 @@
         function getweightandcod(){
             var delivery_type = $('#delivery_type').val();
 
-            console.log(current_app);
+            //console.log(current_app);
 
             if(delivery_type == 'COD'){
                 $.post('<?php print site_url('ajax/getcoddata');?>',
@@ -704,7 +704,8 @@
             pdata.shipping_address = $('#shipping_address').val();
             pdata.buyerdeliveryzone = $('#buyerdeliveryzone').val();
             pdata.buyerdeliverycity = $('#buyerdeliverycity').val();
-            pdata.buyerdeliverytime = $('#buyerdeliverydate').val() + ' ' +$('#buyerdeliverytime').val();
+            pdata.buyerdeliverytime = $('#buyerdeliverydate').val();
+            pdata.buyerdeliveryslot = $('#buyerdeliverytime').val();
             pdata.direction = $('#direction').val();
             pdata.auto_confirm = true; //true
             pdata.email = $('#buyer_email').val();
@@ -816,7 +817,7 @@
 
         for( i = 0; i < cod_surcharge_table.length;i++){
             curr = cod_surcharge_table[i];
-            if(curr.from_price < total_price && total_price < curr.to_price){
+            if(curr.from_price <= total_price && total_price <= curr.to_price){
                 return curr.surcharge;
             }
         }
@@ -1062,9 +1063,12 @@
                             <tr>
                                 <td>Delivery Time<hr /><span class="fine">Waktu Pengiriman</span></td>
                                 <td>
-                                    <input type="text" id="buyerdeliverytime" name="buyerdeliverytime" value="" readonly="true" />
-                                    <button class="timepicker_button_trigger" id="btn_trigger_timepicker">Pick time</button>
-                                    <span id="buyerdeliverytime_html"></span>
+                                    <?php print $slotselect;?>
+                                    <?php
+                                        //<input type="text" id="buyerdeliverytime" name="buyerdeliverytime" value="" readonly="true" />
+                                        //<button class="timepicker_button_trigger" id="btn_trigger_timepicker">Pick time</button>
+                                        //<span id="buyerdeliverytime_html"></span>
+                                    ?>
                                 </td>
                             </tr>
                             <tr>
