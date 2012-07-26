@@ -134,6 +134,15 @@ function get_slot_range($slot){
 	}
 }
 
+function get_slot_count(){
+	$CI =& get_instance();
+
+	$CI->db->where('is_on',1);
+	$slots = $CI->db->count_all_results($CI->config->item('jayon_timeslots_table'));
+
+	return $slots;
+}
+
 
 function get_app_id_from_key($key){
 	$CI =& get_instance();
@@ -234,6 +243,8 @@ function getdateblock($month = null){
 					$blocking[$date] = 'weekend';
 				}else if(in_array($date, $holidays) && !$holiday_on){
 					$blocking[$date] = 'holiday';
+				}else if(overquota($date)){
+					$blocking[$date] = 'overquota';
 				}else{
 					$blocking[$date] = 'open';
 				}
@@ -241,6 +252,37 @@ function getdateblock($month = null){
 		}
 	}
 	return json_encode($blocking);
+}
+
+function overquota($date){
+	$CI =& get_instance();
+
+	$devcount = $CI->db->count_all($CI->config->item('jayon_devices_table'));
+	$slots = get_slot_count();
+	$shifts = (int) get_option('daily_shifts');
+
+	$dailyquota = $devcount * $slots * $shifts;
+
+	/*
+	$CI->db->like('buyerdeliverytime',$date);
+	$CI->db->where('assignment_date','0000-00-00');
+	$CI->db->or_where('assignment_date',$date);
+	$CI->db->from($CI->config->item('incoming_delivery_table'));
+	$quota = $CI->db->count_all_results();
+	*/
+	
+	$sqlf = "SELECT COUNT( * ) AS  numrows FROM %s WHERE  (buyerdeliverytime LIKE  '%s%%' AND  assignment_date =  '%s') OR  assignment_date =  '%s'";
+	$sql = sprintf($sqlf,$CI->config->item('incoming_delivery_table'),$date,'0000-00-00',$date);
+	$quota = $CI->db->query($sql);
+	$quota = $quota->row()->numrows;
+	
+	//print $CI->db->last_query();
+
+	if($dailyquota >= $quota){
+		return false;
+	}else{
+		return true;
+	}	
 }
 
 function getholidays(){
