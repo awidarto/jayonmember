@@ -378,7 +378,7 @@ class Prints extends Application
 
 
 		if($pdf){
-			$html = $this->load->view('print/reconsiliation',$data,true);
+			$html = $this->load->view('print/reconciliation',$data,true);
 			//print $html; // Load the view
 			pdf_create($html, $delivery_id.'.pdf','A4','landscape', true); 
 		}else{
