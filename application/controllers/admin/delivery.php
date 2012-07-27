@@ -1912,6 +1912,7 @@ class Delivery extends Application
 				$key['merchant_trans_id'],
 				$key['courier'],
 				$key['shipping_address'],
+				get_thumbnail($key['delivery_id']),
 				$key['phone'],
 				colorizestatus($key['status']),
 				$key['reschedule_ref'],
@@ -1943,6 +1944,7 @@ class Delivery extends Application
 			'Merchant Trans ID',
 			'Courier',
 			'Shipping Address',
+			'Addressee',
 			'Phone',
 			'Status',
 			'Reschedule Ref',
@@ -2074,6 +2076,7 @@ class Delivery extends Application
 				$key['merchant_trans_id'],
 				$key['courier'],
 				$key['shipping_address'],
+				get_thumbnail($key['delivery_id']),
 				$key['phone'],
 				colorizestatus($key['status']),
 				$proceed.' '.$cancel
@@ -2107,6 +2110,7 @@ class Delivery extends Application
 			'Merchant Trans ID',
 			'Courier',
 			'Shipping Address',
+			'Reciever',
 			'Phone',
 			'Status',
 			'Action'
