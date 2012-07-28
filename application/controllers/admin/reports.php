@@ -39,31 +39,33 @@ class Reports extends Application
 			'Action'
 			); // Setting headings for the table
 
-		$page['ajaxurl'] = 'admin/reports/ajaxreconsiliation';
+		$page['ajaxurl'] = 'admin/reports/ajaxreconciliation';
 		$page['page_title'] = 'Reconciliations';
 		$this->ag_auth->view('reconajaxlistview',$page); // Load the view
 		
 	}
 
-	public function ajaxreconsiliation(){
+	public function ajaxreconciliation($type = null){
 
-		$weekfrom = date('W',strtotime($this->session->userdata('created')));
+		$merchant_id = $this->session->userdata('userid');
 
 		$week = date('W',time());
 		$year = date('Y',time());
 
 		$aadata = array();
 
-		for($i = $week; $i > $weekfrom; $i--)
+		for($i = $week; $i > 0; $i--)
 		{
 
 			$from =	date('d-m-Y', strtotime('1 Jan '.$year.' +'.($i - 1).' weeks'));
 			$to = date('d-m-Y', strtotime('1 Jan '.$year.' +'.$i.' weeks - 1 day'));
 
+			$printrecon = '<span class="printrecon" id="'.$from.'_'.$to.'_'.$merchant_id.'" title="Merchant" style="cursor:pointer;text-decoration:underline;" >View</span>';
+
+
 			$generate = anchor("admin/reports/globalreport/".$from."/".$to, "Global"); // Build actions links
 			$merchantlist = anchor("admin/reports/merchants/".$from."/".$to, "By Merchant"); // Build actions links
 			$courierlist = anchor("admin/reports/couriers/".$from."/".$to, "By Courier"); // Build actions links
-			$printrecon = '<span class="printslip" id="'.$from."_".$to.'" style="cursor:pointer;text-decoration:underline;" >View</span>';
 			$aadata[] = array(
 				$year,
 				$i,

@@ -282,9 +282,10 @@ class Prints extends Application
 			$chg = ($gt - $dsc) + $tax + $dc + $cod;
 
 			$this->table->add_row(
-				'&nbsp;',		
-				'&nbsp;',		
-				'Total Price',		
+					array('data'=>'Total Price',
+						'colspan'=>3,
+						'class'=>'lsums'
+						),	
 				array('data'=>number_format($gt,2,',','.'),
 					'class'=>'editable',
 					'id'=>'total_price'
@@ -293,9 +294,10 @@ class Prints extends Application
 			);
 
 				$this->table->add_row(
-					'&nbsp;',		
-					'&nbsp;',		
-					'Total Discount',
+					array('data'=>'Total Discount',
+						'colspan'=>3,
+						'class'=>'lsums'
+						),	
 					array('data'=>number_format($dsc,2,',','.'),
 						'class'=>'editable',
 						'id'=>'total_discount'
@@ -303,9 +305,10 @@ class Prints extends Application
 				);
 
 				$this->table->add_row(
-					'&nbsp;',		
-					'&nbsp;',		
-					'Total Tax',		
+					array('data'=>'Total Tax',
+						'colspan'=>3,
+						'class'=>'lsums'
+						),		
 					array('data'=>number_format($tax,2,',','.'),
 						'class'=>'editable',
 						'id'=>'total_tax'
@@ -313,9 +316,10 @@ class Prints extends Application
 				);
 
 				$this->table->add_row(
-					'&nbsp;',		
-					'&nbsp;',		
-					'Delivery Charge',		
+					array('data'=>'Delivery Charge',
+						'colspan'=>3,
+						'class'=>'lsums'
+						),		
 					array('data'=>number_format($dc,2,',','.'),
 						'class'=>'editable',
 						'id'=>'delivery_cost'
@@ -323,9 +327,10 @@ class Prints extends Application
 				);
 
 				$this->table->add_row(
-					'&nbsp;',		
-					'&nbsp;',		
-					'COD Surcharge',		
+					array('data'=>'COD Surcharge',
+						'colspan'=>3,
+						'class'=>'lsums'
+						),			
 					array('data'=>number_format($cod,2,',','.'),
 						'class'=>'editable',
 						'id'=>'cod_cost'
@@ -333,9 +338,10 @@ class Prints extends Application
 				);
 
 				$this->table->add_row(
-					'&nbsp;',		
-					'&nbsp;',		
-					'Total Charges',		
+					array('data'=>'Total Charges',
+						'colspan'=>3,
+						'class'=>'lsums'
+						),	
 					array('data'=>number_format($chg,2,',','.'),
 						'class'=>'editable',
 						'id'=>'total_charges'
@@ -374,8 +380,11 @@ class Prints extends Application
 			}
 		}
 
-	public function reconciliation($from, $to ,$merchant_id,$pdf = false){
-
+	public function reconciliation($from, $to ,$type,$id,$pdf = false){
+		$data['type'] = $type;
+		$data['type_name'] = $id;
+		$data['period'] = $from.' s/d '.$to;
+		$data['bank_account'] = 'xxxxxx';
 
 		if($pdf){
 			$html = $this->load->view('print/reconciliation',$data,true);

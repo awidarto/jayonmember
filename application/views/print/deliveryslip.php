@@ -125,7 +125,7 @@
 
 		table#signBox{
 			font-size: 11px;
-			width:300px;
+			width:200px;
 		}
 
 		#mainInfo tr td:last-child, #orderInfo tr td:last-child{
@@ -172,6 +172,10 @@
 
 		.fine{
 			font-size: 11px;
+		}
+
+		td.lsums{
+			text-align: right;
 		}
 
 	</style>
