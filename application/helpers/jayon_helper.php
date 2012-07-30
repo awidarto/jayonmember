@@ -88,6 +88,7 @@ function get_delivery_charge_table($app_id){
 	$CI =& get_instance();
 
 	$CI->db->where('app_id',$app_id);
+	$CI->db->order_by('seq','asc');
 	$result = $CI->db->get($CI->config->item('jayon_delivery_fee_table'));
 
 	if($result->num_rows() > 0){

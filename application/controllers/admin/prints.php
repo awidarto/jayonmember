@@ -96,12 +96,12 @@ class Prints extends Application
 
 			$chg = ($gt - $dsc) + $tax + $dc + $cod;
 
-			$this->table->add_row(
-				'&nbsp;',		
-				'&nbsp;',		
-				'Total Price',		
-				number_format($gt,2,',','.')
-			);
+				$this->table->add_row(
+					'&nbsp;',		
+					'&nbsp;',		
+					'Total Price',		
+					number_format($gt,2,',','.')
+				);
 
 				$this->table->add_row(
 					'&nbsp;',		
@@ -534,7 +534,7 @@ class Prints extends Application
 
 		$this->table->set_heading(
 			array('data'=>'Delivery Details',
-				'colspan'=>'7'
+				'colspan'=>'13'
 			)	
 		);
 
@@ -546,9 +546,16 @@ class Prints extends Application
 			'Merchant Name',
 			'Store',
 			'Delivery Date',
-			'Status',		
-			'Value'		
+			'Status',
+			'Goods Price',
+			'Disc',
+			'Tax',
+			'Delivery Chg',
+			'COD Surchg',		
+			'Payable Value'		
 		); // Setting headings for the table
+
+
 
 		$seq = 1;
 		$total_billing = 0;
@@ -556,6 +563,38 @@ class Prints extends Application
 		//print_r($rows->result());
 
 		foreach($rows->result() as $r){
+
+			$total = str_replace(array(',','.'), '', $r->total_price);
+			$dsc = str_replace(array(',','.'), '', $r->total_discount);
+			$tax = str_replace(array(',','.'), '',$r->total_tax);
+			$dc = str_replace(array(',','.'), '',$r->delivery_cost);
+			$cod = str_replace(array(',','.'), '',$r->cod_cost);
+
+			$total = (int)$total;
+			$dsc = (int)$dsc;
+			$tax = (int)$tax;
+			$dc = (int)$dc;
+			$cod = (int)$cod;
+
+			$payable = 0;
+
+
+			if($r->status == $this->config->item('trans_status_mobile_delivered')){
+				if($type == 'Merchant' || $type == 'Global'){
+					$payable = ($total - $dsc) + $tax;
+					// + $dc + $cod;				
+				}else if($type == 'Courier'){
+					$payable = ($dc + $cod) * 0.1;
+				}
+				$total_billing += (int)str_replace('.','',$payable);
+			}else if(
+				$r->status == $this->config->item('trans_status_mobile_revoked') ||
+				$r->status == $this->config->item('trans_status_mobile_rescheduled') ||
+				$r->status == $this->config->item('trans_status_mobile_noshow'))
+			{
+				//TBA	
+			}
+
 			$this->table->add_row(
 				$seq,		
 				$r->merchant_trans_id,		
@@ -564,24 +603,26 @@ class Prints extends Application
 				$r->app_name.'<hr />'.$r->domain,
 				$r->assignment_date,
 				$r->status,
-				number_format((int)str_replace('.','',$r->total_price),2,',','.')
+				number_format((int)str_replace('.','',$total),2,',','.'),
+				number_format((int)str_replace('.','',$dsc),2,',','.'),
+				number_format((int)str_replace('.','',$tax),2,',','.'),
+				number_format((int)str_replace('.','',$dc),2,',','.'),			
+				number_format((int)str_replace('.','',$cod),2,',','.'),
+				number_format((int)str_replace('.','',$payable),2,',','.')
 			);
 
-			if($r->status == $this->config->item('trans_status_mobile_delivered')){
-				$total_billing += (int)str_replace('.','',$r->total_price);
-			}
 			$seq++;
 		}
 
 		$this->table->add_row(
-			array('data'=>'Total','colspan'=>7),
+			array('data'=>'Total','colspan'=>12),
 			number_format($total_billing,2,',','.')
 		);
 
 		$this->table->add_row(
 			'Terbilang',
 			array('data'=>$this->number_words->to_words($total_billing).' rupiah',
-				'colspan'=>7)
+				'colspan'=>12)
 		);
 
 		$recontab = $this->table->generate();
