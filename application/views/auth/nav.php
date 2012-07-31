@@ -50,9 +50,13 @@
 				</ul>
 			</li>
 			<li class="<?php print set_hilite('admin\/reports')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports', 'Reports'); } ?>
+
+			<?php
+			/*
 				<ul>
 					<li class="<?php print set_hilite('admin\/reports\/reconciliation')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/reconciliation', 'Reconciliation'); } ?></li>
 				</ul>
+			*/?>
 			</li>
 			<li class="<?php print set_hilite('admin\/merchant')?>" ><?php if(user_group('merchant')) { echo anchor('admin/merchant', 'User Profiles'); } ?>
 				<ul>
