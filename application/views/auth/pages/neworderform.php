@@ -313,6 +313,15 @@
             margin-top: 3px;
         }   
 
+        .overquota, .full{
+            background-color: orange;
+        }
+
+        .holiday, .weekend{
+            background-color: red;
+        }
+
+
     </style>
 
     <?php echo $this->ag_asset->load_css('jquery-ui-1.8.16.custom.css','jquery-ui/flick');?>
@@ -482,11 +491,11 @@
                 popup = 'zero time slot';
             }else if(window.dateBlock[indate] == 'full'){
                 select = 0;
-                css = 'blocked';
+                css = 'full';
                 popup = 'zero time slot';
             }else if(window.dateBlock[indate] == 'overquota'){
                 select = 0;
-                css = 'blocked';
+                css = 'overquota';
                 popup = 'daily capacity exceeded';
             }else{
                 select = 1;
