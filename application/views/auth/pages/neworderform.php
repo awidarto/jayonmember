@@ -315,10 +315,12 @@
 
 
         td.overquota .ui-state-default, td.full .ui-state-default{
+            background-image: none;
             background-color: orange;
         }
 
         td.holiday .ui-state-default, td.weekend .ui-state-default{
+            background-image: none;
             background-color: red;
         }
 
