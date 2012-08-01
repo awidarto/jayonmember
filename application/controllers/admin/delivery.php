@@ -158,7 +158,7 @@ class Delivery extends Application
 			$weightfield = ($key['weight'] == 0)?'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">unspecified</span>':get_weight_range($key['weight']);
 
 			$aadata[] = array(
-				//date('Y-m-d h:i:s',$key['created']),	
+				//date('Y-m-d H:i:s',$key['created']),	
 				$key['ordertime'],
 				'<span id="'.$key['delivery_id'].'"><input type="hidden" value="'.$key['buyerdeliverytime'].'" id="cd_'.$key['delivery_id'].'">'.$reqdate.'</span>',
 				get_slot_range($key['buyerdeliveryslot']),
@@ -428,8 +428,8 @@ class Delivery extends Application
 				$this->db->where('delivery_id',$d)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_canceled'),'change_actor'=>$actor));
 
 				$data = array(
-						'timestamp'=>date('Y-m-d h:i:s',time()),
-						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'timestamp'=>date('Y-m-d H:i:s',time()),
+						'report_timestamp'=>date('Y-m-d H:i:s',time()),
 						'delivery_id'=>$d,
 						'device_id'=>'',
 						'courier_id'=>'',
@@ -447,8 +447,8 @@ class Delivery extends Application
 			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_canceled'),'change_actor'=>$actor));
 
 			$data = array(
-					'timestamp'=>date('Y-m-d h:i:s',time()),
-					'report_timestamp'=>date('Y-m-d h:i:s',time()),
+					'timestamp'=>date('Y-m-d H:i:s',time()),
+					'report_timestamp'=>date('Y-m-d H:i:s',time()),
 					'delivery_id'=>$delivery_id,
 					'device_id'=>'',
 					'courier_id'=>'',
@@ -486,8 +486,8 @@ class Delivery extends Application
 				$buyeremail[] = $this->do_reschedule($d,$buyerdeliverytime,$this->config->item('trans_status_rescheduled'),$condition);
 
 				$data = array(
-						'timestamp'=>date('Y-m-d h:i:s',time()),
-						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'timestamp'=>date('Y-m-d H:i:s',time()),
+						'report_timestamp'=>date('Y-m-d H:i:s',time()),
 						'delivery_id'=>$d,
 						'device_id'=>'',
 						'courier_id'=>'',
@@ -506,8 +506,8 @@ class Delivery extends Application
 			$buyeremail = $this->do_reschedule($delivery_id,$buyerdeliverytime,$this->config->item('trans_status_rescheduled'),$condition);
 
 				$data = array(
-						'timestamp'=>date('Y-m-d h:i:s',time()),
-						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'timestamp'=>date('Y-m-d H:i:s',time()),
+						'report_timestamp'=>date('Y-m-d H:i:s',time()),
 						'delivery_id'=>$delivery_id,
 						'device_id'=>'',
 						'courier_id'=>'',
@@ -580,7 +580,7 @@ class Delivery extends Application
         unset($old['undersign']);
         unset($old['latitude']);
         unset($old['longitude']);
-        $old['ordertime'] = date('Y-m-d h:i:s',time());
+        $old['ordertime'] = date('Y-m-d H:i:s',time());
         $old['buyerdeliverytime'] = ($buyerdeliverytime == '')?$old['buyerdeliverytime']:$buyerdeliverytime;
         $old['recipient_name'] = ($recipient_name == '')?$old['recipient_name']:$recipient_name;
         $old['shipping_address'] =($shipping_address == '')?$old['shipping_address']:$shipping_address;
@@ -620,8 +620,8 @@ class Delivery extends Application
 		//do log
 
 		$data = array(
-			'timestamp'=>date('Y-m-d h:i:s',time()),
-			'report_timestamp'=>date('Y-m-d h:i:s',time()),
+			'timestamp'=>date('Y-m-d H:i:s',time()),
+			'report_timestamp'=>date('Y-m-d H:i:s',time()),
 			'delivery_id'=>$delivery_id,
 			'device_id'=>'',
 			'courier_id'=>'',
@@ -652,8 +652,8 @@ class Delivery extends Application
 				$this->db->where('delivery_id',$d)->update($this->config->item('incoming_delivery_table'),array('status'=>'revoked','change_actor'=>$actor));
 				$buyeremail[] = $this->do_revoke($d,null,$this->config->item('trans_status_revoked'),'incoming');
 				$data = array(
-						'timestamp'=>date('Y-m-d h:i:s',time()),
-						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'timestamp'=>date('Y-m-d H:i:s',time()),
+						'report_timestamp'=>date('Y-m-d H:i:s',time()),
 						'delivery_id'=>$d,
 						'device_id'=>'',
 						'courier_id'=>'',
@@ -672,8 +672,8 @@ class Delivery extends Application
 			$buyeremail = $this->do_revoke($delivery_id,null,$this->config->item('trans_status_revoked'),'incoming');
 
 				$data = array(
-						'timestamp'=>date('Y-m-d h:i:s',time()),
-						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'timestamp'=>date('Y-m-d H:i:s',time()),
+						'report_timestamp'=>date('Y-m-d H:i:s',time()),
 						'delivery_id'=>$delivery_id,
 						'device_id'=>'',
 						'courier_id'=>'',
@@ -703,8 +703,8 @@ class Delivery extends Application
 				$this->db->where('delivery_id',$d)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_purged'),'change_actor'=>$actor));
 
 					$data = array(
-						'timestamp'=>date('Y-m-d h:i:s',time()),
-						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'timestamp'=>date('Y-m-d H:i:s',time()),
+						'report_timestamp'=>date('Y-m-d H:i:s',time()),
 						'delivery_id'=>$d,
 						'device_id'=>'',
 						'courier_id'=>'',
@@ -722,8 +722,8 @@ class Delivery extends Application
 			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_purged'),'change_actor'=>$actor));
 
 				$data = array(
-						'timestamp'=>date('Y-m-d h:i:s',time()),
-						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'timestamp'=>date('Y-m-d H:i:s',time()),
+						'report_timestamp'=>date('Y-m-d H:i:s',time()),
 						'delivery_id'=>$delivery_id,
 						'device_id'=>'',
 						'courier_id'=>'',
@@ -753,8 +753,8 @@ class Delivery extends Application
 				$this->db->where('delivery_id',$d)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_archived'),'change_actor'=>$actor));
 
 				$data = array(
-						'timestamp'=>date('Y-m-d h:i:s',time()),
-						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'timestamp'=>date('Y-m-d H:i:s',time()),
+						'report_timestamp'=>date('Y-m-d H:i:s',time()),
 						'delivery_id'=>$d,
 						'device_id'=>'',
 						'courier_id'=>'',
@@ -772,8 +772,8 @@ class Delivery extends Application
 			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_archived'),'change_actor'=>$actor));
 
 				$data = array(
-						'timestamp'=>date('Y-m-d h:i:s',time()),
-						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'timestamp'=>date('Y-m-d H:i:s',time()),
+						'report_timestamp'=>date('Y-m-d H:i:s',time()),
 						'delivery_id'=>$delivery_id,
 						'device_id'=>'',
 						'courier_id'=>'',
@@ -800,8 +800,8 @@ class Delivery extends Application
 			foreach ($delivery_id as $d) {
 				$this->db->where('delivery_id',$d)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_confirmed'),'change_actor'=>$actor));
 					$data = array(
-						'timestamp'=>date('Y-m-d h:i:s',time()),
-						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'timestamp'=>date('Y-m-d H:i:s',time()),
+						'report_timestamp'=>date('Y-m-d H:i:s',time()),
 						'delivery_id'=>$d,
 						'device_id'=>'',
 						'courier_id'=>'',
@@ -819,8 +819,8 @@ class Delivery extends Application
 			$this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),array('status'=>$this->config->item('trans_status_confirmed'),'change_actor'=>$actor));
 
 			$data = array(
-					'timestamp'=>date('Y-m-d h:i:s',time()),
-					'report_timestamp'=>date('Y-m-d h:i:s',time()),
+					'timestamp'=>date('Y-m-d H:i:s',time()),
+					'report_timestamp'=>date('Y-m-d H:i:s',time()),
 					'delivery_id'=>$delivery_id,
 					'device_id'=>'',
 					'courier_id'=>'',
@@ -867,8 +867,8 @@ class Delivery extends Application
 						'courier_id'=>$assignment_courier_id));
 
 					$data = array(
-						'timestamp'=>date('Y-m-d h:i:s',time()),
-						'report_timestamp'=>date('Y-m-d h:i:s',time()),
+						'timestamp'=>date('Y-m-d H:i:s',time()),
+						'report_timestamp'=>date('Y-m-d H:i:s',time()),
 						'delivery_id'=>'',
 						'device_id'=>$assignment_device_id,
 						'courier_id'=>$assignment_courier_id,
@@ -896,8 +896,8 @@ class Delivery extends Application
 		foreach($delivery_ids as $did){
 			$this->do_zone_assignment($did,$assignment_device_id,$assignment_zone,$assignment_city,$assignment_timeslot);
 			$data = array(
-				'timestamp'=>date('Y-m-d h:i:s',time()),
-				'report_timestamp'=>date('Y-m-d h:i:s',time()),
+				'timestamp'=>date('Y-m-d H:i:s',time()),
+				'report_timestamp'=>date('Y-m-d H:i:s',time()),
 				'delivery_id'=>$did,
 				'device_id'=>'',
 				'courier_id'=>'',
@@ -2397,7 +2397,7 @@ class Delivery extends Application
 		$dataset['change_actor']= $this->input->post('actor').':'.$this->session->userdata('userid');
 
 		if($dataset['status'] == $this->config->item('trans_status_mobile_delivered')){
-			$dataset['deliverytime'] = date('Y-m-d h:i:s', time());
+			$dataset['deliverytime'] = date('Y-m-d H:i:s', time());
 		}
 
 		if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
@@ -2410,8 +2410,8 @@ class Delivery extends Application
 		}
 
 				$data = array(
-					'timestamp'=>date('Y-m-d h:i:s',time()),
-					'report_timestamp'=>date('Y-m-d h:i:s',time()),
+					'timestamp'=>date('Y-m-d H:i:s',time()),
+					'report_timestamp'=>date('Y-m-d H:i:s',time()),
 					'delivery_id'=>$delivery_id,
 					'device_id'=>'',
 					'courier_id'=>'',
@@ -2482,7 +2482,7 @@ class Delivery extends Application
 		unset($dataset['id']);
 		*/
 		$dataset['status'] = $this->config->item('trans_status_admin_dated');
-		$dataset['assigntime'] = date('Y-m-d h:i:s',time());
+		$dataset['assigntime'] = date('Y-m-d H:i:s',time());
 		$dataset['assignment_date'] = $assignment_date;
 
 		if($this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$dataset) === TRUE)
@@ -2495,8 +2495,8 @@ class Delivery extends Application
 		}
 
 			$data = array(
-				'timestamp'=>date('Y-m-d h:i:s',time()),
-				'report_timestamp'=>date('Y-m-d h:i:s',time()),
+				'timestamp'=>date('Y-m-d H:i:s',time()),
+				'report_timestamp'=>date('Y-m-d H:i:s',time()),
 				'delivery_id'=>$delivery_id,
 				'device_id'=>'',
 				'courier_id'=>'',
@@ -2519,7 +2519,7 @@ class Delivery extends Application
 		//unset($dataset['id']);
 		$dataset['device_id'] = $device_id;
 		$dataset['status'] = $this->config->item('trans_status_admin_devassigned');
-		//$dataset['assigntime'] = date('Y-m-d h:i:s',time());
+		//$dataset['assigntime'] = date('Y-m-d H:i:s',time());
 		$dataset['assignment_zone'] = $assignment_zone;
 		$dataset['assignment_city'] = $assignment_city;
 		$dataset['assignment_timeslot'] = $assignment_timeslot;
@@ -2534,8 +2534,8 @@ class Delivery extends Application
 		}
 
 			$data = array(
-				'timestamp'=>date('Y-m-d h:i:s',time()),
-				'report_timestamp'=>date('Y-m-d h:i:s',time()),
+				'timestamp'=>date('Y-m-d H:i:s',time()),
+				'report_timestamp'=>date('Y-m-d H:i:s',time()),
 				'delivery_id'=>$delivery_id,
 				'device_id'=>'',
 				'courier_id'=>'',
@@ -2586,8 +2586,8 @@ class Delivery extends Application
 			$order_exist = $fullorder;
 
 			$data = array(
-				'timestamp'=>date('Y-m-d h:i:s',time()),
-				'report_timestamp'=>date('Y-m-d h:i:s',time()),
+				'timestamp'=>date('Y-m-d H:i:s',time()),
+				'report_timestamp'=>date('Y-m-d H:i:s',time()),
 				'delivery_id'=>$delivery_id,
 				'device_id'=>'',
 				'courier_id'=>'',
@@ -2657,8 +2657,8 @@ class Delivery extends Application
 			$order_exist = 'ORDER_UPDATED';
 
 			$data = array(
-				'timestamp'=>date('Y-m-d h:i:s',time()),
-				'report_timestamp'=>date('Y-m-d h:i:s',time()),
+				'timestamp'=>date('Y-m-d H:i:s',time()),
+				'report_timestamp'=>date('Y-m-d H:i:s',time()),
 				'delivery_id'=>$delivery_id,
 				'device_id'=>'',
 				'courier_id'=>'',
