@@ -922,10 +922,14 @@
 
                 var now = new Date();
                 var then = new Date(delidate);
+
                 //console.log('now : ' + now.getTime());
                 //console.log('then : ' + then.getTime());
 
                 var leeway = then.getTime() - now.getTime();
+
+                //alert(now + ' - ' + then + ' - ' + leeway);
+
                 if(leeway < 0){
                     validisplay += 'Please do not specify past date\r\n';                
                 }else{
