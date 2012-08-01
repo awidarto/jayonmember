@@ -314,16 +314,22 @@
         }   
 
 
-        td.overquota .ui-state-default, td.full .ui-state-default{
+        td.overquota, td.overquota .ui-state-default, td.full .ui-state-default{
             background-image: none;
             background-color: orange;
             color:white;
+            opacity: 1;
         }
 
-        td.holiday .ui-state-default, td.weekend .ui-state-default{
+        td.holiday, td.holiday .ui-state-default, td.weekend .ui-state-default{
             background-image: none;
             background-color: maroon;
             color:white;
+            opacity: 1;
+        }
+
+        td.holiday, td.overquota{
+            padding:2px;
         }
 
 
@@ -1287,6 +1293,16 @@
                                             <span class="fine">
                                                 Untuk menghapus barang dari daftar order, klik "Del" di bagian paling kanan baris yang barang bersangkutan, dan secara otomatis akan dilakukan perhitungan ulang
                                             </span>
+                                        </li>
+                                        <li>Date Selector Color Legend :
+                                            <table>
+                                                <tr>
+                                                    <td class="holiday">Holiday & Weekends</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="overquota">Capacity Exceeded</td>
+                                                </tr>
+                                            </table>
                                         </li>
                                     </ol>
                                 </td><td class='lsums'>Total Discount<br /><input type="checkbox" id="fixed_discount">Set Fixed</td><td class='sums'><input type="text" name="total_discount" value="" id="total_discount"  class="sum_input orange" /></td><td>&nbsp;</td
