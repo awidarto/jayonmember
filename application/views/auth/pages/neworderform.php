@@ -313,11 +313,12 @@
             margin-top: 3px;
         }   
 
-        td.overquota, td.full{
+
+        td.overquota .ui-state-default, td.full .ui-state-default{
             background-color: orange;
         }
 
-        td.holiday, td.weekend{
+        td.holiday .ui-state-default, td.weekend .ui-state-default{
             background-color: red;
         }
 
