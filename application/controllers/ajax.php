@@ -76,10 +76,21 @@ class Ajax extends Application
 
 	public function getweightdata(){
 		$app_key = $this->input->post('app_key');
-		if($app_key == 0){
+
+		if($app_key == '0'){
 			$dctable = false;
+			$app_id = 0;
 		}else{
-			$app_id = get_app_id_from_key($app_key);
+			$app_id = get_app_id_from_key(trim($app_key));
+			/*	
+			$this->db->select('id');
+			$this->db->where('key',$app_key);
+			$result = $this->db->get($CI->config->item('applications_table'));
+
+			print $this->db->last_query();
+
+			$app_id = $result->row()->id;
+			*/
 			$dctable = get_delivery_charge_table($app_id);
 		}
 
@@ -101,13 +112,14 @@ class Ajax extends Application
 		$weightselect = form_dropdown('package_weight',$weight,null,'id="package_weight"');
 		$weighttable = $this->table->generate();
 
-		print json_encode(array('result'=>'ok','data'=>array('selector'=>$weightselect,'table'=>$weighttable)));
+		print json_encode(array('app_id'=>$app_id,'result'=>'ok','data'=>array('selector'=>$weightselect,'table'=>$weighttable)));
 	}
 
 	public function getcoddata(){
 		$app_key = $this->input->post('app_key');
-		if($app_key == 0){
+		if($app_key == '0'){
 			$dctable = false;
+			$app_id = 0;
 		}else{
 			$app_id = get_app_id_from_key($app_key);
 			$dctable = get_cod_table($app_id);
@@ -128,7 +140,7 @@ class Ajax extends Application
 		$codselect = $dctable;
 		$codtable = $this->table->generate();
 
-		print json_encode(array('result'=>'ok','data'=>array('selector'=>$codselect,'codhash'=>$codhash,'table'=>$codtable)));		
+		print json_encode(array('app_id'=>$app_id,'result'=>'ok','data'=>array('selector'=>$codselect,'codhash'=>$codhash,'table'=>$codtable)));		
 	}	
 
 	public function saveweight(){
