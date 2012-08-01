@@ -293,6 +293,7 @@ class Ajax extends Application
 
 		$url = $this->config->item('api_url').'post/'.$api_key.'/'.$trx_id;
 
+		/*
 		$lessday = ((strtotime($this->input->post('buyerdeliverytime')) - time()) < (get_option('auto_lock_hours')*60*60))?true:false;
 		$lessday = ($this->input->post('buyerdeliverytime') === '0000-00-00 00:00:00')?false:$lessday;
 
@@ -304,6 +305,8 @@ class Ajax extends Application
 		}else{
 			$result = $this->curl->simple_post($url,array('transaction_detail'=>json_encode($trx)));			
 		}
+		*/
+		$result = $this->curl->simple_post($url,array('transaction_detail'=>json_encode($trx)));			
 
 		print $result;
 
