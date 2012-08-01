@@ -1889,7 +1889,7 @@ class Delivery extends Application
 
 		$data = $this->db	
 			->limit($limit_count, $limit_offset)
-			->order_by('deliverytime','desc')
+			->order_by($this->config->item('delivered_delivery_table').'.deliverytime','desc')
 			->get($this->config->item('delivered_delivery_table'));
 
 		$result = $data->result_array();
