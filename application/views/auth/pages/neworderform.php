@@ -323,7 +323,7 @@
 
         td.holiday, td.holiday .ui-state-default, td.weekend .ui-state-default{
             background-image: none;
-            background-color: maroon;
+            background-color: red;
             color:#eee;
             opacity: 1;
         }
