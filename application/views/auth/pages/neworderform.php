@@ -375,7 +375,7 @@
                 }
 
                 var now = new Date();
-                var then = new Date(dateText + ' ' + time + ':00');
+                var then = new Date(dateText);
                 //console.log('now : ' + now.getTime());
                 //console.log('then : ' + then.getTime());
 
@@ -410,13 +410,15 @@
                 
                 var buyerdate = $('#buyerdeliverydate').val();
 
+                alert(buyerdate);
+
                 //console.log(buyerdate);
                 if(buyerdate === undefined || buyerdate == ''){
                     $('#'+ inst.id).val('');
                     alert('Please pick a date first');
                 }else{
                     var now = new Date();
-                    var then = new Date(buyerdate +' '+time + ':00');
+                    var then = new Date(buyerdate + ' ' + time + ':00');
                     //console.log('now : ' + now.getTime());
                     //console.log('then : ' + then.getTime());
 
