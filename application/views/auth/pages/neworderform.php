@@ -376,8 +376,11 @@
                     $('#rescheduled_deliverytime').val(dateText);
                 }
 
+                var tslot = slotmax[timeslot];
+                var delidate = dateText + ' ' + tslot;
+
                 var now = new Date();
-                var then = new Date(dateText);
+                var then = new Date(delidate);
                 //console.log('now : ' + now.getTime());
                 //console.log('then : ' + then.getTime());
 
@@ -390,6 +393,7 @@
                         alert('Specified delivery time is less than <?php print get_option('auto_lock_hours');?> hours from now. Please select another date & time.');
                     }
                 }
+                
 
             },
             beforeShowDay:getBlocking
@@ -411,6 +415,7 @@
                 //console.log('onSelect triggered with time : ' + time + ' for instance id : ' + inst.id);
                 
                 var buyerdate = $('#buyerdeliverydate').val();
+
 
                 alert(buyerdate);
 
