@@ -112,6 +112,7 @@ class Order extends Application
 		$data['cityselect'] = $cityselect;
 		$data['typeselect'] = $typeselect;
 		$data['slotselect'] = get_slot_select();
+		$data['slotmax'] = json_encode(get_slot_max());
 		$data['weightselect'] = $weightselect;
 		$data['weighttable'] = $weighttable;
 		$data['codtable'] = $codtable;

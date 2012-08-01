@@ -331,6 +331,8 @@
 
     var dateBlock = <?php print getdateblock();?>;
 
+    var slotmax = <?php print $slotmax;?>;
+
     var sequence = 0;
 
     var total_price = 0;
@@ -908,6 +910,32 @@
                 validisplay += 'Direction Unspecified\r\n';
                 //return [false,'Direction Unspecified'];
             }
+
+            var timeslot = $('#buyerdeliverytime').val();
+
+            var tslot = slotmax[timeslot];
+
+            if(tslot == 0){
+                validisplay += 'Time Slot Unspecified\r\n';                
+            }else{
+                var delidate = $('#buyerdeliverydate').val() + ' ' + tslot;
+
+                var now = new Date();
+                var then = new Date(delidate);
+                //console.log('now : ' + now.getTime());
+                //console.log('then : ' + then.getTime());
+
+                var leeway = then.getTime() - now.getTime();
+                if(leeway < 0){
+                    validisplay += 'Please do not specify past date\r\n';                
+                }else{
+                    if(leeway < lastorder){
+                        validisplay += 'Specified delivery time is less than <?php print get_option('auto_lock_hours');?> hours from now. Please select another date & time.\r\n';
+                    }
+                }
+
+            }
+
 
             if(validisplay == ''){
                 return [true,''];
