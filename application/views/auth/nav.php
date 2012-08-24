@@ -51,6 +51,8 @@
 			</li>
 			<li class="<?php print set_hilite('admin\/reports\/revenue')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/revenue', 'Report'); } ?>
 				<ul>
+					<li class="<?php print set_hilite('admin\/reports\/revenue')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/revenue', 'Merchant Report'); } ?></li>
+					<li class="<?php print set_hilite('admin\/reports\/statistics')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/statistics', 'Statistics'); } ?></li>
 					<?php
 						/*
 						<li class="<?php print set_hilite('admin\/reports\/revenue')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/revenue', 'Merchant Report'); } ?></li>

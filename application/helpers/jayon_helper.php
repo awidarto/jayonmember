@@ -767,9 +767,17 @@ function getrangedatacountarray($year,$from,$to,$where = null,$merchant_id = nul
 			}
 		}
 		*/
+		if(isset($where['status']) && $where['status'] == 'all'){
+			unset($where['status']);
+		}
 
+		if(isset($where['status']) && $where['status'] == 'incoming'){
+			$column = 'ordertime';
+			unset($where['status']);
+		}else{
+			$column = 'assignment_date';
+		}
 
-		$column = 'ordertime';
 		//$daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $from, $to);
 
 		//$CI->db->where($daterange, null, false);
