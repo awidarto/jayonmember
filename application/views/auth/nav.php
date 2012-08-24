@@ -49,15 +49,27 @@
 					<li class="<?php print set_hilite('admin\/location\/tracker')?>" ><?php if(user_group('admin')) { echo anchor('admin/location/tracker', 'Location Tracker'); } ?></li>
 				</ul>
 			</li>
-			<li class="<?php print set_hilite('admin\/reports')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports', 'Reports'); } ?>
+			<li class="<?php print set_hilite('admin\/reports\/revenue')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/revenue', 'Report'); } ?>
+				<ul>
+					<?php
+						/*
+						<li class="<?php print set_hilite('admin\/reports\/revenue')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/revenue', 'Merchant Report'); } ?></li>
+						<li class="<?php print set_hilite('admin\/reports\/statistics')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/statistics', 'Statistics'); } ?></li>
+						<li class="<?php print set_hilite('admin\/reports\/dist')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/dist', 'Distributions'); } ?></li>
+						<li class="<?php print set_hilite('admin\/reports\/merchantrecon')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/merchantrecon', 'Merchant Reconciliation'); } ?></li>
+						*/
+					?>
+				</ul>
+			</li>
 
 			<?php
 			/*
+			<li class="<?php print set_hilite('admin\/reports')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports', 'Reports'); } ?>
 				<ul>
 					<li class="<?php print set_hilite('admin\/reports\/reconciliation')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/reconciliation', 'Reconciliation'); } ?></li>
 				</ul>
-			*/?>
 			</li>
+			*/?>
 			<li class="<?php print set_hilite('admin\/merchant')?>" ><?php if(user_group('merchant')) { echo anchor('admin/merchant', 'User Profiles'); } ?>
 				<ul>
 					<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/merchant\/edit')?>" ><?php if(user_group('merchant')) { echo anchor('admin/merchant/edit', 'Edit Merchant Info'); } ?></li><?php endif;?>

@@ -79,6 +79,29 @@ function ajax_find_buyer_email($zone,$col = 'fullname',$idcol = 'id'){
 	return $q->result_array();
 }
 
+
+function get_merchant($id = null,$flatten = true){
+	$CI =& get_instance();
+	if(!is_null($id)){
+		 $CI->db->where('id',$id);	
+	}
+
+	$CI->db->where('group_id',user_group_id('merchant'));	
+
+	$q = $CI->db->select(array('id','fullname','merchantname'))->get('members');
+	if($flatten){
+		foreach($q->result_array() as $val){
+			$result[$val['id']] = $val['fullname'];
+		}
+		return $result;
+	}if(!is_null($id)){
+		return $q->row_array();
+	}else{
+		return $q->result_array();
+	}
+}
+
+
 function get_cod_table($app_id){
 	$CI =& get_instance();
 
@@ -198,6 +221,21 @@ function get_option($key){
 	return $row->val;
 }
 
+
+function get_city_status(){
+	$CI =& get_instance();
+	$CI->db->select('city');
+	$CI->db->where('is_on',1);
+	$CI->db->distinct('city');
+	$q = $CI->db->get('districts');
+
+	$res = array();
+	foreach($q->result_array() as $r){
+		$res[] = $r['city'];
+	}
+
+	return $res;
+}
 function user_group_id($group)
 {
 	$CI =& get_instance();
@@ -644,6 +682,123 @@ function getmonthlydatacountarray($year,$month,$where = null,$filter = null){
 	return $series;
 }
 
+function getmonthlydatacount($year,$month,$where = null,$merchant_id = null){
+	$CI =& get_instance();
 
+	$series = array();
+	$num = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+	$data = array();
+	for($i = 1 ; $i <= $num;$i++){
+
+		if($i > 9){
+			$day = $i;
+		}else{
+			$day = '0'.$i;
+		}
+
+		//print $day."\r\n";
+
+		$date = $year.'-'.$month.'-'.$day;
+
+		$CI->db->like('assignment_date', $date);
+		if(!is_null($merchant_id)){
+			$CI->db->where('merchant_id', $merchant_id);
+		}
+		if(!is_null($where)){
+			$CI->db->where($where);
+		}
+		$CI->db->from($CI->config->item('incoming_delivery_table'));
+
+		$count = $CI->db->count_all_results();
+
+		//print $CI->db->last_query();
+
+		$timestamp = strtotime($date);
+		$timestamp = (double)$timestamp;
+		$series[] = array('x'=>$timestamp,'y'=>$count);
+	}
+
+	$series = str_replace('"', '', json_encode($series)) ;
+	return $series;
+}
+
+function getrangedatacountarray($year,$from,$to,$where = null,$merchant_id = null){
+	$CI =& get_instance();
+
+	$series = array();
+	//$num = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+	$start = strtotime($from);
+	$end = strtotime($to);
+
+	if($start == $end){
+		$num = 1;
+	}else{
+		$num = ceil(abs($end - $start) / 86400);
+	}
+
+
+	$data = array();
+	for($i = 1 ; $i <= $num;$i++){
+
+		if($i > 9){
+			$day = $i;
+		}else{
+			$day = '0'.$i;
+		}
+
+		//print $day."\r\n";
+
+		//$date = $year.'-'.$month.'-'.$day;
+
+		$date = date('Y-m-d',$start + ( $i * 86400));
+
+		/*
+		if(is_null($where)){
+			$CI->db->like('ordertime', $date, 'after');
+		}else{
+			if($where['status'] == 'confirmed' || $where['status'] == 'pending'){
+				$CI->db->like('buyerdeliverytime', $date, 'after');
+				$CI->db->where($where);
+			}else{
+				$CI->db->like('assignment_date', $date, 'after');
+				$CI->db->where($where);
+			}
+		}
+		*/
+
+
+		$column = 'ordertime';
+		//$daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $from, $to);
+
+		//$CI->db->where($daterange, null, false);
+		$CI->db->like($column,$date,'after');
+		$CI->db->where($column.' != ','0000-00-00');
+
+		//$CI->db->like('ordertime', $date, 'after');		
+
+		if(!is_null($where)){
+			$CI->db->where($where);
+		}
+
+		if(!is_null($merchant_id)){
+			$CI->db->where('merchant_id', $merchant_id);
+		}
+
+		$CI->db->from($CI->config->item('incoming_delivery_table'));
+
+		$count = $CI->db->count_all_results();
+
+		//print $CI->db->last_query();
+
+		//$timestamp = strtotime($date);
+		//$timestamp = (double)$timestamp;
+		$series[] = array($date,$count);
+	}
+
+	//$series = str_replace('"', '', json_encode($series)) ;
+	return $series;
+}
 
 ?>
