@@ -1676,7 +1676,7 @@ class Delivery extends Application
 			'Merchant Trans ID',
 			'Courier',
 			'Shipping Address',
-			'Reciever',
+			'Receiver',
 			'Phone',
 			'Status',
 			'Reschedule Ref',
@@ -2110,7 +2110,7 @@ class Delivery extends Application
 			'Merchant Trans ID',
 			'Courier',
 			'Shipping Address',
-			'Reciever',
+			'Receiver',
 			'Phone',
 			'Status',
 			'Action'
