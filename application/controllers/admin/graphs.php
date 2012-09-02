@@ -54,7 +54,7 @@ class Graphs extends Application
 
 		$id = $this->session->userdata('userid');
 
-		$lineplot = $this->plot->plot(520,300);
+		$lineplot = $this->plot->plot(600,300);
 
 		$year = date('Y',time());
 		$month = date('m',time());
