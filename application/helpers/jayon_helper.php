@@ -614,14 +614,26 @@ function statusaction($status){
 }
 
 
-function getmonthlydatacountarray($year,$month,$where = null,$filter = null){
+function getmonthlydatacountarray($year,$month,$where = null,$filter = null,$span = 'full'){
 	$CI =& get_instance();
 
 	$series = array();
-	$num = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-
 	$data = array();
-	for($i = 1 ; $i <= $num;$i++){
+	$now = date('d',time());
+	$num = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+	$start = 1;
+
+	if($span == 'half'){
+		$num = $num/2;
+		if($now < 15){
+			$start = 1;
+		}else{
+			$start = 15;
+		}
+	}
+
+
+	for($i = $start ; $i <= $num;$i++){
 
 		if($i > 9){
 			$day = $i;
@@ -798,11 +810,31 @@ function getrangedatacountarray($year,$from,$to,$where = null,$merchant_id = nul
 
 		$count = $CI->db->count_all_results();
 
+		// COD count
+		$CI->db->like($column,$date,'after');
+		$CI->db->where($column.' != ','0000-00-00');
+
+		//$CI->db->like('ordertime', $date, 'after');		
+
+		if(!is_null($where)){
+			$CI->db->where($where);
+		}
+
+		if(!is_null($merchant_id)){
+			$CI->db->where('merchant_id', $merchant_id);
+		}
+
+		$CI->db->where('delivery_type','COD');
+
+		$CI->db->from($CI->config->item('incoming_delivery_table'));
+
+		$countcod = $CI->db->count_all_results();
+
 		//print $CI->db->last_query();
 
 		//$timestamp = strtotime($date);
 		//$timestamp = (double)$timestamp;
-		$series[] = array($date,$count);
+		$series[] = array($date,$countcod,$count - $countcod);
 	}
 
 	//$series = str_replace('"', '', json_encode($series)) ;

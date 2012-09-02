@@ -22,8 +22,11 @@ class Graphs extends Application
 		$series = getmonthlydatacountarray($year,$month,$status,null);
 		//$series = getmonthlydatacountarray($year,$month,$status,null);
 
-		$lineplot->SetPlotType('bars');
+		//print_r($series);
+
+		$lineplot->SetPlotType('stackedbars');
 		$lineplot->setShading(0);
+		$lineplot->SetDataType('text-data');
 		$lineplot->SetDataValues($series);
 
 		$lineplot->SetYDataLabelPos('plotin');
@@ -38,27 +41,31 @@ class Graphs extends Application
 		//Turn off X axis ticks and labels because they get in the way:
 		$lineplot->SetXTickLabelPos('none');
 		$lineplot->SetXTickPos('none');
+		$lineplot->SetYDataLabelPos('plotstack');
+		$lineplot->SetMarginsPixels(null,null,70,null);
+		$lineplot->SetLegendPosition(1, 0, 'image', 1,0,-5,5);
+		$lineplot->setLegendReverse(true);
 
 		//Draw it
-		$lineplot->DrawGraph();
+		//$lineplot->DrawGraph();
 	}
 
-	public function monthlystackedgraph($status = null){
+	public function monthlystackedgraph($status = null,$span = 'half'){
 
 		$id = $this->session->userdata('userid');
 
-		$lineplot = $this->plot->plot(520,130);
+		$lineplot = $this->plot->plot(520,300);
 
 		$year = date('Y',time());
 		$month = date('m',time());
 
-		if(is_null($status)){
+		if(is_null($status) || $status == 'all'){
 			$status = null;
 		}else{
 			$status = array('status'=>$status);
 		}
-		$buyerseries = getmonthlydatacountarray($year,$month,$status,array('buyer_id'=>$id));
-		$sellerseries = getmonthlydatacountarray($year,$month,$status,array('merchant_id'=>$id));
+		$buyerseries = getmonthlydatacountarray($year,$month,$status,array('buyer_id'=>$id),$span);
+		$sellerseries = getmonthlydatacountarray($year,$month,$status,array('merchant_id'=>$id),$span);
 
 		$series = array();
 
@@ -85,18 +92,20 @@ class Graphs extends Application
 		$lineplot->SetPrecisionY(0);
 
 		$lineplot->SetLegend(array('Buy', 'Sell'));
-		$lineplot->SetLegendPosition(1, 0, 'image', 1, 0, -2, 2);
 
 		//Turn off X axis ticks and labels because they get in the way:
 		$lineplot->SetXTickLabelPos('none');
 		$lineplot->SetXTickPos('none');
-
+		$lineplot->SetYDataLabelPos('plotstack');
+		$lineplot->SetMarginsPixels(null,null,70,null);
+		$lineplot->SetLegendPosition(1, 0, 'image', 1,0,-5,5);
+		$lineplot->setLegendReverse(true);
 		//Draw it
 		$lineplot->DrawGraph();
 	}
 
 	public function rangegraph($status = null,$from = null, $to = null){
-		$lineplot = $this->plot->plot(500,230);
+		$lineplot = $this->plot->plot(500,350);
 
 		$year = date('Y',time());
 		$month = date('m',time());
@@ -114,8 +123,9 @@ class Graphs extends Application
 
 		//print_r($series);
 
-		$lineplot->SetPlotType('bars');
+		$lineplot->SetPlotType('stackedbars');
 		$lineplot->setShading(0);
+		$lineplot->SetDataType('text-data');
 		$lineplot->SetDataValues($series);
 
 		$lineplot->SetYDataLabelPos('plotin');
@@ -126,11 +136,16 @@ class Graphs extends Application
 
 		$lineplot->SetYTickIncrement(1);
 		$lineplot->SetPrecisionY(0);
+		$lineplot->SetLegend(array('COD','Delivery Only'));
 
 		//Turn off X axis ticks and labels because they get in the way:
 		$lineplot->SetXTickLabelPos('none');
 		$lineplot->SetXTickPos('none');
 		$lineplot->SetXDataLabelAngle(90);
+		$lineplot->SetYDataLabelPos('plotstack');
+		$lineplot->SetMarginsPixels(null,null,70,null);
+		$lineplot->SetLegendPosition(1, 0, 'image', 1,0,-5,5);
+		$lineplot->setLegendReverse(true);
 
 		//Draw it
 		$lineplot->DrawGraph();

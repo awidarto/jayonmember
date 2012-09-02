@@ -17,7 +17,7 @@
 </script>
 <style>
 .stat_box{
-	height:140px;
+	height:300px;
 	width:100%;
 	border:0px solid #ccc;
 	margin-bottom:10px;
@@ -47,6 +47,10 @@ td {
 					<div id="delivered_monthly" class="stat_box">
 						<img src="<?php print base_url();?>admin/graphs/monthlystackedgraph/delivered" alt="monthly_all" />
 					</div>
+					<span>No Show <?php print $period;?></span>
+					<div id="noshow_monthly" class="stat_box">
+						<img src="<?php print base_url();?>admin/graphs/monthlystackedgraph/noshow" alt="monthly_all" />
+					</div>
 					<span>Rescheduled <?php print $period;?></span>
 					<div id="rescheduled_monthly" class="stat_box">
 						<img src="<?php print base_url();?>admin/graphs/monthlystackedgraph/rescheduled" alt="monthly_all" />
@@ -54,10 +58,6 @@ td {
 					<span>Revoked <?php print $period;?></span>
 					<div id="revoked_monthly" class="stat_box">
 						<img src="<?php print base_url();?>admin/graphs/monthlystackedgraph/revoked" alt="monthly_all" />
-					</div>
-					<span>No Show <?php print $period;?></span>
-					<div id="noshow_monthly" class="stat_box">
-						<img src="<?php print base_url();?>admin/graphs/monthlystackedgraph/noshow" alt="monthly_all" />
 					</div>
 					<span>Archived <?php print $period;?></span>
 					<div id="noshow_monthly" class="stat_box">
