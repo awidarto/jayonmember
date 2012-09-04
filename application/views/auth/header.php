@@ -8,6 +8,7 @@
 
 		<?php echo $this->ag_asset->load_css('style.css');?>
 		<?php echo $this->ag_asset->load_css('menu.css');?>
+		<?php echo $this->ag_asset->load_css('jquery.fancybox.css');?>
 
 		<?php echo $this->ag_asset->load_css('datatables_page.css','jquery-datatables');?>
 		<?php echo $this->ag_asset->load_css('datatables_table.css','jquery-datatables');?>
@@ -16,6 +17,7 @@
 		
 		<?php echo $this->ag_asset->load_script('jquery-1.7.1.min.js');?>
 		<?php echo $this->ag_asset->load_script('jquery.datatables.min.js','jquery-datatables');?>
+		<?php echo $this->ag_asset->load_script('jquery.fancybox.pack.js','fancybox');?>
 
 		<?php echo $this->ag_asset->load_script('jquery-ui-1.8.16.custom.min.js','jquery-ui');?>
 		<?php echo $this->ag_asset->load_script('jquery-ui-timepicker-addon.js','jquery-ui');?>
@@ -26,6 +28,15 @@
 			$(document).ready(function() {
 
 				$('#flash_message').delay(1500).slideUp('slow');
+
+				function openPhoto(delivery_id,title){
+					$.fancybox.open([
+					        {
+					            href : '<?php print base_url();?>public/receiver/' + delivery_id + '.jpg',                
+					            title : title
+					        }
+					    ]);
+				}				
 
 			});
 		</script>
