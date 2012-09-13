@@ -937,6 +937,11 @@
                 //return [false,'Max Length Exceeded'];
             }
 
+            if( $('#show_merchant').is(':checked') == false && $('#show_shop').is(':checked') == false ){
+                validisplay += 'One or both Merchant name and Store name must be shown\r\n';
+                //return [false,'Max Length Exceeded'];
+            }
+
             if($('#direction').val() === 'undefined' || $('#direction').val() == '' || $('#direction').val() == 0 || $('#direction').val() == null || $('#direction').val() === 'NaN'){
                 validisplay += 'Direction Unspecified\r\n';
                 //return [false,'Direction Unspecified'];
