@@ -27,12 +27,12 @@ class Order extends Application
 		$apps = $this->db->get($this->config->item('applications_table'));
 
 		if($apps->num_rows() > 0){
-			$app[0] = 'Select application domain';
+			$app[0] = 'Select store name';
 			foreach ($apps->result() as $r) {
 				$app[$r->key] = $r->application_name;
 			}
 		}else{
-			$app[0] = 'Select application domain';
+			$app[0] = 'Select store name';
 		}
 
 		$select = form_dropdown('app_id',$app,null,'id="app_id"');

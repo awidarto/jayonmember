@@ -763,6 +763,9 @@
             pdata.length = $('#package_length').val();
             pdata.weight = $('#package_weight').val();
 
+            pdata.show_shop = ($('#show_shop').is(':checked'))?1:0;
+            pdata.show_merchant = ($('#show_merchant').is(':checked'))?1:0;
+
 
             var udescs = [];
             var uqtys = [];
@@ -1102,10 +1105,11 @@
                             </tr>
 
                             <tr>
-                                <td>Online Store<hr /><span class="fine">Nama Toko</span></td>
+                                <td>Merchant Name<hr /><span class="fine">Nama Merchant</span></td>
                                 <td>
-                                    Merchant ID : <span id="merchant_id_txt"><?php print $merchant_id?></span><br />
                                     <span id="merchant_name_txt"><?php print $merchantname?></span><br />
+                                    <span class="fine">ID : </span><span class="fine" id="merchant_id_txt"><?php print $merchant_id?></span><br />
+                                    <span class="fine"><?php print form_checkbox(array('name'=>'show_merchant','id'=>'show_merchant','value'=>'show_merchant','checked'=>TRUE ));?> Show merchant name in delivery slip</span>
                                     <input type="hidden" id="merchant_name" name="merchant_name" value="<?php print $merchantname?>" />
                                     <input type="hidden" value="<?php print $merchant_id?>" id="merchant_id" name="merchant_id" />
                                     <input type="hidden" value="<?php print $merchantfullname?>" id="merchant_fullname" name="merchant_fullname" />
@@ -1113,9 +1117,10 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>Store Detail<hr /><span class="fine">Detail Toko</span></td>
+                                <td>Store Name<hr /><span class="fine">Nama Toko</span></td>
                                 <td id="application_id">
-                                    <?php print $appselect;?>
+                                    <?php print $appselect;?><br />
+                                    <span class="fine"><?php print form_checkbox(array('name'=>'show_shop','id'=>'show_shop','value'=>'show_shop','checked'=>TRUE ));?> Show store name in delivery slip</span>
                                 </td>
                             </tr>
                             <tr>
