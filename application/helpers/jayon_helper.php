@@ -625,10 +625,11 @@ function getmonthlydatacountarray($year,$month,$where = null,$filter = null,$spa
 	$start = 1;
 
 	if($span == 'half'){
-		$num = $num/2;
 		if($now < 15){
+			$num = $num/2;
 			$start = 1;
 		}else{
+			$num = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 			$start = 15;
 		}
 	}
