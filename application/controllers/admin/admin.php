@@ -18,6 +18,8 @@ class Admin extends Application
 
 			$page['period'] = ' - '.date('M Y',time());
 
+			//print_r($this->session->userdata);
+
 			$page['page_title'] = 'Dashboard';
 			$this->ag_auth->view('dashboard',$page);
 		}
