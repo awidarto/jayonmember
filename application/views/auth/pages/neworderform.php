@@ -892,7 +892,7 @@
                 //return [false,'Please specify Zone'];
             }
 
-            if($('#package_weight').val() == ''){
+            if($('#package_weight').val() == '' || $('#package_weight').val() == 0 || $('#package_weight').val() == '0'){
                 validisplay += 'Weight Unspecified\r\n';
                 //return [false, 'Weight Unspecified'];
             }
