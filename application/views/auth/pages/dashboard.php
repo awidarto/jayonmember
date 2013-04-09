@@ -117,7 +117,7 @@ td {
 	<table style="padding:0px;margin:0px;">
 		<tr>
 			<td>
-				<h3>Last 5 Positions</h3>
+				<h3>Positions</h3>
 				<div id="map" style="width:600px;height:950px;display:block;"></div>
 			</td>
 			<td style="width:100%;height:100%;vertical-align:top;">
