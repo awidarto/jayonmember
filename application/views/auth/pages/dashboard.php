@@ -12,6 +12,90 @@
 				}
 		});
 
+		function refreshMap(){
+			var currtime = new Date();
+			//console.log(currtime.getTime());
+
+			$.post('<?php print site_url('ajaxpos/getmapmarker');?>/' + currtime.getTime() ,
+				{
+					'device_identifier':$('#search_device').val(),
+					'timestamp':$('#search_deliverytime').val()
+				}, 
+				function(data) {
+					if(data.result == 'ok'){
+						$('#map').gmap3({
+							action:'clear'
+						});
+
+						$.each(data.paths,function(){
+							$('#map').gmap3({
+								action:'addPolyline',
+								options:{
+									strokeColor: this.color,
+									strokeOpacity: 1.0,
+									strokeWeight: 2
+								},
+								path: this.poly
+							});
+
+						});
+
+						$.each(data.locations,function(){
+							if(this.data.status == 'loc_update'){
+								icon =  null;
+							}else{
+								icon = new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png');								
+							}
+							$('#map').gmap3({
+								action:'addMarker',
+								latLng:[this.data.lat, this.data.lng],
+								marker: {
+									options: {
+										//icon:icon
+										//icon: new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/icon_green.png')
+									},
+									data:{identifier:this.data.identifier,timestamp:this.data.timestamp,status:this.data.status},
+									events:{
+										mouseover: function(marker,event,data){
+											//console.log(data);
+											$(this).gmap3(
+												{action:'clear',name:'overlay'},
+												{action:'addOverlay',
+													latLng:marker.getPosition(),
+													content:
+														'<div style="background-color:white;padding:3px;border:thin solid #aaa;width:150px;">' +
+															'<div class="bg"></div>' +
+															'<div class="text">' + data.identifier + '<br />' + data.timestamp + '<br />' + data.status + '</div>' +
+														'</div>',
+													offset: {
+														x:-46,
+														y:-73
+													}
+												}
+											);
+										},
+										mouseout: function(){
+											$(this).gmap3({action:'clear', name:'overlay'});
+										}
+									}
+								}								
+							});
+
+						});
+					}
+				},'json');
+
+		}
+
+		function refresh(){
+			refreshMap();
+			setTimeout(refresh, <?php print get_option('map_refresh_rate');?> * 1000);
+		}
+
+		refresh();		
+
+
+
 	});
 
 </script>

@@ -21,6 +21,7 @@ class Admin extends Application
 			//print_r($this->session->userdata);
 
 			$page['page_title'] = 'Dashboard';
+			$page['ajaxurl'] = 'ajaxpos/ajaxlog';
 			$this->ag_auth->view('dashboard',$page);
 		}
 		else
