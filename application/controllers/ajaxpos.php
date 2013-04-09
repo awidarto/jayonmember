@@ -15,26 +15,33 @@ class Ajaxpos extends CI_Controller
 		$timestamp = ($timestamp == 'Search timestamp')?'':$timestamp;
 
 		$todaydelivery = $this->db->distinct()
-				->select('device_id')
-				->from($this->config->item('incoming_delivery_table'))
+				->select('d.identifier as identifier')
+				->join('devices as d',$this->config->item('incoming_delivery_table').'.device_id=d.id','left')
 				->where($this->config->item('incoming_delivery_table').'.assignment_date',date('Y-m-d',time()))
-				->where($this->config->item('incoming_delivery_table').'.merchant_id',$this->session->userdata('id'))
-				->get();
+				->where($this->config->item('incoming_delivery_table').'.merchant_id',$this->session->userdata('userid'))
+				->get($this->config->item('incoming_delivery_table'));
 
 
-		print_r($todaydelivery->result());
+		//print_r($todaydelivery->result());
+
+		//print $this->db->last_query();
 
 
-
+		/* get devices
 		$this->db->distinct();
 		$this->db->select('identifier');
-
+		
+		// if particular device searched
 		if($device_name != ''){
 			$this->db->like('identifier',$device_name);
 		}
 
 		$devices = $this->db->get($this->config->item('location_log_table'))
 			->result();
+
+		*/
+
+		$devices = $todaydelivery->result();
 
 		$locations = array();
 
