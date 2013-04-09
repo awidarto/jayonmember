@@ -14,11 +14,12 @@ class Ajaxpos extends CI_Controller
 		$device_name = ($device_name == 'Search device')?'':$device_name;
 		$timestamp = ($timestamp == 'Search timestamp')?'':$timestamp;
 
-		$todaydelivery = $this->db->select('*')
-			->from($this->config->item('incoming_delivery_table'))
-			->where($this->config->item('incoming_delivery_table').'.assignment_date',date('Y-m-d',time()))
-			->where($this->config->item('incoming_delivery_table').'.merchant_id',$this->session->userdata('id'))
-			->get();
+		$todaydelivery = $this->db->distinct()
+				->select('device_id')
+				->from($this->config->item('incoming_delivery_table'))
+				->where($this->config->item('incoming_delivery_table').'.assignment_date',date('Y-m-d',time()))
+				->where($this->config->item('incoming_delivery_table').'.merchant_id',$this->session->userdata('id'))
+				->get();
 
 
 		print_r($todaydelivery->result());
