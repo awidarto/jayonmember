@@ -138,7 +138,7 @@
 		//$('#assign_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		
 		$('#neworder').click(function(){
-			var src = '<?php print base_url() ?>/admin/order/neworder';
+			var src = '<?php print base_url() ?>admin/order/neworder';
 
 			$('#neworder_frame').attr('src',src);
 			$('#neworder_dialog').dialog('open');
