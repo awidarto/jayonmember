@@ -152,16 +152,19 @@
 			border: thin solid #eee;
 			text-align:center;
 			font-weight: bold;
+			font-size: 11px;
+
 		}
 
 		tr.sign_space td{
+			font-size: 12px;
 			height:50px;
 			border: thin solid #eee;
 			text-align:center;
 		}
 
 		tr.sign_name td{
-			font-size: 14px;
+			font-size: 12px;
 			border: thin solid #eee;
 		}
 
@@ -203,7 +206,6 @@
 							<tr>
 								<td colspan="2"><strong>Merchant Info</strong></td>
 							</tr>
-
 							<?php if($main_info['show_merchant']):?>
 								<tr>
 									<td>Merchant Name<hr /><span class="fine">Nama Penjual</span></td>
@@ -221,7 +223,6 @@
 									</td>
 								</tr>
 							<?php endif;?>
-							
 							<tr>
 								<td>Transaction ID<hr /><span class="fine">Kode Transaksi</span></td>
 								<td><?php print $main_info['merchant_trans_id'];?></td>
@@ -269,7 +270,24 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 							</tr>
 							<tr>
 								<td class="row_label">Delivery Type</td>
-								<td><?php print $main_info['delivery_type'];?></td>
+								<td>
+									<?php print $main_info['delivery_type'];?> 
+									<?php if($main_info['delivery_type'] == 'CCOD'):?>
+										<?php if($main_info['ccod_method'] == '' || $main_info['ccod_method'] == 'full'): ?>
+											- Pembayaran Penuh
+										<?php elseif($main_info['ccod_method'] == 'installment'): ?>
+											- Cicilan
+										<?php endif;?>
+									<?php endif;?>
+
+									<?php if($main_info['delivery_type'] == 'COD'):?>
+										<?php if($main_info['cod_method'] == '' || $main_info['cod_method'] == 'cash'): ?>
+											- Tunai
+										<?php elseif($main_info['cod_method'] == 'debit'): ?>
+											- Debit
+										<?php endif;?>
+									<?php endif;?>
+								</td>
 							</tr>
 							<tr>
 								<td class="row_label">Delivery Number</td>
@@ -283,6 +301,18 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 								<td colspan="2"><strong>Order Detail</strong></td>
 							</tr>
 
+
+						<?php if($main_info['delivery_type'] == 'PS'):?>
+							<tr>
+								<td class="row_label">Picked Up From</td>
+								<td><?php print ($main_info['recipient_name'] == "")?$main_info['buyer_name']:$main_info['recipient_name'];?></td>
+							</tr>
+							<tr>
+								<td>Pick Up Address</td>
+								<td><?php print $main_info['shipping_address'];?></td>
+							</tr>
+						<?php else: ?>
+
 							<tr>
 								<td class="row_label">Delivered To</td>
 								<td><?php print ($main_info['recipient_name'] == "")?$main_info['buyer_name']:$main_info['recipient_name'];?></td>
@@ -291,6 +321,8 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 								<td>Shipping Address</td>
 								<td><?php print $main_info['shipping_address'];?></td>
 							</tr>
+
+						<?php endif; ?>
 							<tr>
 								<td>Phone</td>
 								<td><?php print $main_info['phone'];?></td>

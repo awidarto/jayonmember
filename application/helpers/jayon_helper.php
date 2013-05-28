@@ -314,6 +314,22 @@ function get_cod_tariff($total_price){
 
 }
 
+function get_pickup_charge_table($app_id){
+	$CI =& get_instance();
+
+	$CI->db->where('app_id',$app_id);
+	$CI->db->order_by('seq','asc');
+	$result = $CI->db->get($CI->config->item('jayon_pickup_fee_table'));
+
+	if($result->num_rows() > 0){
+		return $result->result();
+	}else{
+		return false;
+	}
+
+}
+
+
 function getdateblock($month = null){
 	$blocking = array();
 	$month = (is_null($month))?date('m',time()):$month;

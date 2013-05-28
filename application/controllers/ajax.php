@@ -116,6 +116,37 @@ class Ajax extends Application
 		print json_encode(array('app_id'=>$app_id,'result'=>'ok','data'=>array('selector'=>$weightselect,'table'=>$weighttable)));
 	}
 
+	public function getpickupdata(){
+		$app_key = $this->input->post('app_key');
+		if($app_key == '0'){
+			$dctable = false;
+			$app_id = 0;
+		}else{
+			$app_id = get_app_id_from_key($app_key);
+			$dctable = get_pickup_charge_table($app_id);
+		}
+
+		if($dctable == true){
+			$weight[0] = 'Select weight range';
+			foreach ($dctable as $r) {
+				$weight[$r->total] = $r->kg_from.' kg - '.$r->kg_to.' kg';
+				$this->table->add_row($r->kg_from.' kg - '.$r->kg_to.' kg', 'IDR '.number_format($r->total,2,',','.'));
+			}
+		}else{
+			$dctable = get_pickup_charge_table(0);
+			$weight[0] = 'Select weight range';
+			foreach ($dctable as $r) {
+				$weight[$r->total] = $r->kg_from.' kg - '.$r->kg_to.' kg';
+				$this->table->add_row($r->kg_from.' kg - '.$r->kg_to.' kg', 'IDR '.number_format($r->total,2,',','.'));
+			}
+		}
+
+		$weightselect = form_dropdown('package_weight',$weight,null,'id="package_weight"');
+		$weighttable = $this->table->generate();
+
+		print json_encode(array('result'=>'ok','data'=>array('app_id'=>$app_id,'selector'=>$weightselect,'table'=>$weighttable)));
+	}
+
 	public function getcoddata(){
 		$app_key = $this->input->post('app_key');
 		if($app_key == '0'){
@@ -301,9 +332,11 @@ class Ajax extends Application
 			'weight' => $this->input->post('weight'),
 			'delivery_type' => $this->input->post('delivery_type'),
 			'show_merchant' => $this->input->post('show_merchant'),
-			'show_shop' => $this->input->post('show_shop')
-
-
+			'show_shop' => $this->input->post('show_shop'),
+			'cod_bearer' => $this->input->post('bearer_cod'),
+			'delivery_bearer' => $this->input->post('bearer_delivery'),
+			'cod_method' => $this->input->post('cod_method'),
+			'ccod_method' => $this->input->post('ccod_method')
 		);
 
 		$trx['transaction_id'] = 'TRX_'.$merchant_id.'_'.str_replace(array(' ','.'), '', microtime());
