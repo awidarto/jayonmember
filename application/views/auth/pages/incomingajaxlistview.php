@@ -2,6 +2,12 @@
 	var asInitVals = new Array();
 	var dateBlock = <?php print getdateblock();?>;
 	var rescheduled_id = 0;
+
+	function closeOrder(){
+		alert('closing window');
+		$('#neworder_dialog').dialog('close');
+		return true;
+	}
 	
 	$(document).ready(function() {
 	    var oTable = $('.dataTable').dataTable(
@@ -132,11 +138,6 @@
 				popup = 'working day';
 			}
 			return [select,css,popup];
-		}
-		
-		function closeOrder(){
-			$('#neworder_dialog').dialog('close');
-			return true;
 		}
 
 		//$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
