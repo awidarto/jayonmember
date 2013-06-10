@@ -134,6 +134,11 @@
 			return [select,css,popup];
 		}
 		
+		function closeOrder(){
+			$('#neworder_dialog').dialog('close');
+			return true;
+		}
+
 		//$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		//$('#assign_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		
