@@ -867,17 +867,23 @@
             pdata.utotals = utotals;
 
             if($('#trx_result').html() != 'Transaction Success'){
-                $('#loader').show();
+                //$('#loader').show();
+                $('#sendingorder', window.parent.document).show();
                 $.post('<?php print site_url('ajax/neworder');?>',
                     pdata, 
                     function(data) {
-                        $('#loader').hide();
+                        //$('#loader').hide();
+                        $('#sendingorder', window.parent.document).hide();
                         if(data.status == 'OK:ORDERPOSTED'){
                             //alert('Transaction Success');
-                            $('#trx_result').html('Transaction Success');
-                            $('#neworder_dialog').dialog( "close" );
+                            $('#sendingstatus', window.parent.document).html('Transaction Success');
+                            $('#sendingstatus', window.parent.document).show();
+                            //$('#trx_result').html('Transaction Success');
+                            $('#neworder_dialog', window.parent.document).dialog( "close" );
                         }else if(data.status == 'ERR:LOCKTIME'){
                             alert('Specified delivery time is less than <?php print get_option('auto_lock_hours');?> hours from now. Please select another time.');
+                            $('#sendingstatus', window.parent.document).html('Transaction Failed');
+                            $('#sendingstatus', window.parent.document).show();
                         }
                     },'json');
             }else{
