@@ -879,7 +879,6 @@
                             $('#sendingstatus', window.parent.document).html('Transaction Success');
                             $('#sendingstatus', window.parent.document).show();
                             //$('#trx_result').html('Transaction Success');
-                            $(window.parent).closeOrder();
                             //$('#neworder_dialog', window.parent.document).dialog('close');
                         }else if(data.status == 'ERR:LOCKTIME'){
                             //alert('Specified delivery time is less than <?php print get_option('auto_lock_hours');?> hours from now. Please select another time.');
@@ -1136,7 +1135,7 @@
 
         total_charges = (parseInt(total_price) - parseInt(total_discount)) + parseInt(total_tax) + parseInt(delivery_cost);
 
-        if($('#delivery_type').val() == 'COD'){
+        if($('#delivery_type').val() == 'COD' || $('#delivery_type').val() == 'CCOD'){
             cod_cost = parseInt(getCODcharge(parseInt(total_value)));
             total_charges += cod_cost;
         }else{
