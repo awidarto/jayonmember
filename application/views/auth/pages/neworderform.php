@@ -879,7 +879,7 @@
                             $('#sendingstatus', window.parent.document).html('Transaction Success');
                             $('#sendingstatus', window.parent.document).show();
                             //$('#trx_result').html('Transaction Success');
-                            window.parent.document.closeOrder();
+                            $(window.parent.document).closeOrder();
                             //$('#neworder_dialog', window.parent.document).dialog('close');
                         }else if(data.status == 'ERR:LOCKTIME'){
                             //alert('Specified delivery time is less than <?php print get_option('auto_lock_hours');?> hours from now. Please select another time.');
