@@ -416,7 +416,7 @@
             timeFormat: 'hh:mm:ss',
             onSelect:function(dateText, inst){            
 
-                var time = $('#buyerdeliverytime').val();
+                var timeslot = $('#buyerdeliverytime').val();
 
                 if(dateBlock[dateText] == 'weekend'){
                     alert('no delivery on weekend');
@@ -879,9 +879,13 @@
                             $('#sendingstatus', window.parent.document).html('Transaction Success');
                             $('#sendingstatus', window.parent.document).show();
                             //$('#trx_result').html('Transaction Success');
-                            $('#neworder_dialog', window.parent.document).dialog( "close" );
+                            $(window.parent.document).find('#neworder_dialog').dialog('close');
                         }else if(data.status == 'ERR:LOCKTIME'){
-                            alert('Specified delivery time is less than <?php print get_option('auto_lock_hours');?> hours from now. Please select another time.');
+                            //alert('Specified delivery time is less than <?php print get_option('auto_lock_hours');?> hours from now. Please select another time.');
+                            
+                            $('#sendingstatus', window.parent.document).html('Invalid Order Time');
+                            $('#sendingstatus', window.parent.document).show();
+                        }else{
                             $('#sendingstatus', window.parent.document).html('Transaction Failed');
                             $('#sendingstatus', window.parent.document).show();
                         }

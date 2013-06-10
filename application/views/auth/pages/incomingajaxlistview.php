@@ -459,7 +459,8 @@
 				}
 			},
 			close: function() {
-				
+				$('#sendingorder').hide();
+				$('#sendingstatus').hide();				
 			}
 		});
 
