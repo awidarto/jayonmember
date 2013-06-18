@@ -809,8 +809,23 @@
             pdata.show_shop = ($('#show_shop').is(':checked'))?1:0;
             pdata.show_merchant = ($('#show_merchant').is(':checked'))?1:0;
 
+            /*
             pdata.bearer_cod = $('#cod_surcharge_bearer').val();
             pdata.bearer_delivery = $('#delivery_bearer').val();
+            */
+
+            if($('#cod_surcharge_bearer').is(':checked')){
+                pdata.bearer_cod = 'buyer';
+            }else{
+                pdata.bearer_cod = 'merchant';                
+            }
+
+            if($('#delivery_bearer').is(':checked')){
+                pdata.bearer_delivery = 'buyer';
+            }else{
+                pdata.bearer_delivery = 'merchant';
+            }
+
 
             pdata.cod_method = $('#sub_cod').val();
             pdata.ccod_method = $('#sub_ccod').val();
@@ -1228,16 +1243,10 @@
                                 <td>Cost Bearer<hr /><span class="fine">Ongkos Dibayar Oleh</span></td>
                                 <td>
                                     <label for"delivery_bearer">Delivery Fee :</label><br />
-                                    <select id="delivery_bearer">
-                                        <option value="merchant">Merchant</option>
-                                        <option value="buyer">Buyer</option>
-                                    </select>
+                                        <?php print form_checkbox(array('name'=>'delivery_bearer','id'=>'delivery_bearer','value'=>'buyer','checked'=>TRUE ));?> Bill buyer / tagihkan ke buyer
                                     <br />
                                     <label for="cod_surcharge_bearer">COD / CCOD Surcharges:</label><br />
-                                    <select id="cod_surcharge_bearer">
-                                        <option value="merchant">Merchant</option>
-                                        <option value="buyer">Buyer</option>
-                                    </select>
+                                        <?php print form_checkbox(array('name'=>'cod_surcharge_bearer','id'=>'cod_surcharge_bearer','value'=>'buyer','checked'=>TRUE ));?> Bill buyer / tagihkan ke buyer
                                 </td>
                             </tr>
                             <tr>
