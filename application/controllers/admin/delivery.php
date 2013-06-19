@@ -169,7 +169,7 @@ class Delivery extends Application
 				$app['application_name'],
 				$key['merchant'],
 				//$app['domain'],
-				$key['buyer'],
+				$key['buyer_name'],
 				$key['shipping_address'],
 				$deliverytypefield,
 				$key['delivery_cost'],
