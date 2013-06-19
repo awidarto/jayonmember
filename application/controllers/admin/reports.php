@@ -8,7 +8,7 @@ class Reports extends Application
 		parent::__construct();
 		$this->ag_auth->restrict('admin'); // restrict this controller to admins only
 		$this->table_tpl = array(
-			'table_open' => '<table border="0" cellpadding="4" cellspacing="0" class="dataTable">'
+			'table_open' => '<table border="0" cellpadding="4" cellspacing="0" class="reportTable">'
 		);
 		$this->table->set_template($this->table_tpl);
 
@@ -915,7 +915,9 @@ class Reports extends Application
 	public function merchantrecon($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
 
 		$type = (is_null($type))?'Global':$type;
-		$id = (is_null($type))?'noid':$type;
+		//$id = (is_null($type))?'noid':$type;
+
+		$id = $this->session->userdata('userid');
 
 		if(is_null($scope)){
 			$id = 'noid';
@@ -993,7 +995,7 @@ class Reports extends Application
 		$sto = date('Y-m-d',strtotime($to));
 
 		$this->db->distinct();
-		$this->db->select('assignment_date,status,cod_cost,delivery_cost,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost, sum(((total_price-total_discount)+total_tax)) as package_value');
+		$this->db->select('assignment_date,delivery_type,status,count(*) as count, sum(cod_cost) as cod_cost,sum(delivery_cost) as delivery_cost,sum(total_price) as total_price ,sum(total_discount) as total_discount , sum(total_tax) as total_tax,sum(((total_price-total_discount)+total_tax)) as package_value');
 		$this->db->from($this->config->item('delivered_delivery_table'));
 
 		$column = 'assignment_date';
@@ -1027,117 +1029,239 @@ class Reports extends Application
 		);
 
 
+
+		$trans = array();
+		foreach($rows->result_array() as $r){
+			//print_r($r);
+			$trans[$r['assignment_date']][$r['delivery_type']][$r['status']]['count'] = $r['count'];
+			$trans[$r['assignment_date']][$r['delivery_type']][$r['status']]['cod_cost'] = $r['cod_cost'];
+			$trans[$r['assignment_date']][$r['delivery_type']][$r['status']]['delivery_cost'] = $r['delivery_cost'];
+			$trans[$r['assignment_date']][$r['delivery_type']][$r['status']]['total_price'] = $r['total_price'];
+			$trans[$r['assignment_date']][$r['delivery_type']][$r['status']]['package_value'] = $r['package_value'];
+		}
+
+		$status_array = array(
+			$this->config->item('trans_status_mobile_delivered'),
+			$this->config->item('trans_status_mobile_revoked'),
+			$this->config->item('trans_status_mobile_noshow'),
+			$this->config->item('trans_status_mobile_rescheduled')
+		);
+
+		$type_array = array(
+			'COD',
+			'CCOD',
+			'Delivery Only',
+			'PS'
+		);
+
+		foreach ($trans as $key => $value) {
+
+			foreach($type_array as $t){
+
+				foreach($status_array as $s){
+
+					if(!isset($trans[$key][$t][$s])){
+						$trans[$key][$t][$s]['count'] = 0;
+						$trans[$key][$t][$s]['cod_cost'] = 0;
+						$trans[$key][$t][$s]['delivery_cost'] = 0;
+						$trans[$key][$t][$s]['total_price'] = 0;
+						$trans[$key][$t][$s]['package_value'] = 0;
+					}
+
+				}
+
+			}
+		}
+
+
+		//print_r($trans);
+
 		$this->table->set_heading(
+			'',		 	 	
+			'',
+			
+			array('data'=>'DO','colspan'=>'3'),		
+			array('data'=>'COD','colspan'=>'4'),		
+			array('data'=>'CCOD','colspan'=>'4'),		
+			array('data'=>'PS','colspan'=>'3'),		
+
+			array('data'=>'Status','colspan'=>'3'),		
+			
+			array('data'=>'Total','colspan'=>'2')	
+		); // Setting headings for the table			
+
+
+		$this->table->set_subheading(
 			'No.',		 	 	
 			'Date',
-			'Packet Value',
-			'COD Count',
-			'COD Packet Value',
-			'COD Surcharge',
-			'Delivery Only',
-			'Delivery Fee',
+			
+			'count',
+			'dcost',
+			'pval',
+
+			'count',
+			'dcost',
+			'sur',
+			'pval',
+
+			'count',
+			'dcost',
+			'sur',
+			'pval',
+
+			'count',
+			'pfee',
+			'pval',
+
 			'Delivered',
 			'No Show',
 			'Rescheduled',
-			'Delivery Count'
+
+			'Delivery Count',
+			'Package Value'
 		); // Setting headings for the table			
 
-		$seq = 0;
-		$rowdate = '';
-		$tarray = array();
-		foreach($rows->result() as $r){
-			if($rowdate == ''){
-				$rowdate = $r->assignment_date;
-				$tarray[$seq]['cod_package_value'] = 0;
-				$tarray[$seq]['package_value'] = 0;
-			}
+		$counter  = 1;
 
-			if($r->assignment_date != $rowdate){
-				$seq++;
-				$rowdate = $r->assignment_date;
-				$tarray[$seq]['cod_package_value'] = 0;
-				$tarray[$seq]['package_value'] = 0;
-			}
+		$total = array();
 
-			//print $seq.' '.$r->assignment_date.' '.$rowdate.' '.$r->count."\r\n";
-			$tarray[$seq]['assignment_date'] = $r->assignment_date;
-			$tarray[$seq][$r->status] = $r->count;
-			$tarray[$seq]['cod_count'] = ($r->cod_cost > 0 )?$r->count:0;
-			$tarray[$seq]['do_count'] = ($r->cod_cost > 0 )?0:$r->count;
+		$total['Delivery Only']['count'] = 0;
+		$total['Delivery Only']['dcost'] = 0;
+		$total['Delivery Only']['pval'] = 0; 
+		$total['COD']['count'] = 0; 
+		$total['COD']['dcost'] = 0; 
+		$total['COD']['sur'] = 0; 
+		$total['COD']['pval']  = 0;
+		$total['CCOD']['count']  = 0;
+		$total['CCOD']['dcost']  = 0;
+		$total['CCOD']['sur']  = 0;
+		$total['CCOD']['pval']  = 0;
+		$total['PS']['count']  = 0;
+		$total['PS']['pfee']  = 0;
+		$total['PS']['pval']  = 0;
+		$total['delivered']['count'] = 0;  
+		$total['noshow']['count']  = 0;
+		$total['rescheduled']['count']  = 0;
+		$total['total_delivery_count']  = 0;
+		$total['total_package_value']  = 0;
 
-			$tarray[$seq]['cod_cost'] = $r->cod_cost;
-			$tarray[$seq]['do_cost'] = $r->delivery_cost;
-			$tarray[$seq]['package_value'] += $r->package_value;
-			$tarray[$seq]['cod_package_value'] += ($r->cod_cost > 0 )?$r->package_value:0;
+		foreach($trans as $k=>$v){
 
-		}
-
-		$seq = 1;
-		$aseq = 0;
-
-
-		$tdl = 0;
-		$tns = 0;
-		$trs = 0;
-		$tcod = 0;
-		$tdo = 0;
-		$tcodc = 0;
-		$tdoc = 0;
-		$tpv = 0;
-		$tcpv = 0;
-
-		foreach ($tarray as $r) {
-
-			$dl = (isset($r['delivered']))?$r['delivered']:0;
-			$ns = (isset($r['noshow']))?$r['noshow']:0;
-			$rs = (isset($r['rescheduled']))?$r['rescheduled']:0;
-
-			$tdl += $dl;
-			$tns += $ns;
-			$trs += $rs;
-			$tcod += $r['cod_count'];
-			$tdo += $r['do_count'];
-
-			$tcodc += $r['cod_cost'];
-			$tdoc += $r['do_cost'];
-			$tpv += $r['package_value'];
-			$tcpv += $r['cod_package_value'];
+			$r = $this->_makerow($v);
 
 			$this->table->add_row(
-				$seq,		
-				date('d M Y',strtotime($r['assignment_date'])),		
-				array('data'=>number_format((int)str_replace('.','',$r['package_value']),2,',','.'),'class'=>'right'),
-				$r['cod_count'],
-				array('data'=>number_format((int)str_replace('.','',$r['cod_package_value']),2,',','.'),'class'=>'right'),
-				array('data'=>number_format((int)str_replace('.','',$r['cod_cost']),2,',','.'),'class'=>'right'),
-				$r['do_count'],
-				array('data'=>number_format((int)str_replace('.','',$r['do_cost']),2,',','.'),'class'=>'right'),
-				$dl,
-				$ns,
-				$rs,
-				$dl + $ns + $rs
-			);				
+				$counter,
+				date('d-m-Y',strtotime($k)),
 
-			$seq++;
-			$aseq++;
+				array('data'=>$r['Delivery Only']['count'],'class'=>'count'),
+				array('data'=>idr($r['Delivery Only']['dcost']),'class'=>'currency'),		
+				array('data'=>idr($r['Delivery Only']['pval']),'class'=>'currency'),		
+
+				array('data'=>$r['COD']['count'],'class'=>'count'),
+				array('data'=>idr($r['COD']['dcost']),'class'=>'currency'),
+				array('data'=>idr($r['COD']['sur']),'class'=>'currency'),
+				array('data'=>idr($r['COD']['pval']),'class'=>'currency'),
+
+				array('data'=>$r['CCOD']['count'],'class'=>'count'),
+				array('data'=>idr($r['CCOD']['dcost']),'class'=>'currency'),
+				array('data'=>idr($r['CCOD']['sur']),'class'=>'currency'),
+				array('data'=>idr($r['CCOD']['pval']),'class'=>'currency'),
+
+				array('data'=>$r['PS']['count'],'class'=>'count'),
+				array('data'=>idr($r['PS']['pfee']),'class'=>'currency'),
+				array('data'=>idr($r['PS']['pval']),'class'=>'currency'),
+
+				array('data'=>$r['delivered']['count'],'class'=>'count'),
+				array('data'=>$r['noshow']['count'],'class'=>'count'),
+				array('data'=>$r['rescheduled']['count'],'class'=>'count'),
+
+				array('data'=>$r['total_delivery_count'],'class'=>'count'),
+				array('data'=>idr($r['total_package_value']),'class'=>'currency')
+
+				/*
+				$r['Delivery Only']['count'],
+				idr($r['Delivery Only']['dcost']),
+				idr($r['Delivery Only']['pval']),
+
+				$r['COD']['count'],
+				$r['COD']['dcost'],
+				idr($r['COD']['sur']),
+				idr($r['COD']['pval']),
+
+				$r['CCOD']['count'],
+				$r['CCOD']['dcost'],
+				idr($r['CCOD']['sur']),
+				idr($r['CCOD']['pval']),
+
+				$r['PS']['count'],
+				idr($r['PS']['pfee']),
+				idr($r['PS']['pval']),
+
+				$r['delivered']['count'],
+				$r['noshow']['count'],
+				$r['rescheduled']['count'],
+
+				$r['total_delivery_count'],
+				idr($r['total_package_value'])
+
+				*/
+
+			);
+
+				$total['Delivery Only']['count'] +=	$r['Delivery Only']['count'];
+				$total['Delivery Only']['dcost'] +=	$r['Delivery Only']['dcost'];
+				$total['Delivery Only']['pval'] += $r['Delivery Only']['pval'];
+				$total['COD']['count'] += $r['COD']['count'];
+				$total['COD']['dcost'] += $r['COD']['dcost'];
+				$total['COD']['sur'] +=	$r['COD']['sur'];
+				$total['COD']['pval'] += $r['COD']['pval'];
+				$total['CCOD']['count'] += $r['CCOD']['count'];
+				$total['CCOD']['dcost'] += $r['CCOD']['dcost'];
+				$total['CCOD']['sur'] += $r['CCOD']['sur'];
+				$total['CCOD']['pval'] += $r['CCOD']['pval'];
+				$total['PS']['count'] += $r['PS']['count'];
+				$total['PS']['pfee'] +=	$r['PS']['pfee'];
+				$total['PS']['pval'] +=	$r['PS']['pval'];
+				$total['delivered']['count'] += $r['delivered']['count'];
+				$total['noshow']['count'] += $r['noshow']['count'];
+				$total['rescheduled']['count'] += $r['rescheduled']['count'];
+				$total['total_delivery_count'] += $r['total_delivery_count'];
+				$total['total_package_value'] += $r['total_package_value'];
+
+			$counter++;
 		}
 
-		$gt = $tdl + $tns + $trs;
+			$this->table->add_row(
+				'',
+				array('data'=>'Total','class'=>'total'),		
 
-		$this->table->add_row(
-			'',		
-			array('data'=>'Total','style'=>'border-top:thin solid grey'),		
-			array('data'=>number_format((int)str_replace('.','',$tpv),2,',','.'),'style'=>'border-top:thin solid grey','class'=>'right'),		
-			array('data'=>$tcod,'style'=>'border-top:thin solid grey'),		
-			array('data'=>number_format((int)str_replace('.','',$tcpv),2,',','.'),'style'=>'border-top:thin solid grey','class'=>'right'),		
-			array('data'=>number_format((int)str_replace('.','',$tcodc),2,',','.'),'style'=>'border-top:thin solid grey','class'=>'right'),		
-			array('data'=>$tdo,'style'=>'border-top:thin solid grey'),		
-			array('data'=>number_format((int)str_replace('.','',$tdoc),2,',','.'),'style'=>'border-top:thin solid grey','class'=>'right'),		
-			array('data'=>$tdl,'style'=>'border-top:thin solid grey'),		
-			array('data'=>$tns,'style'=>'border-top:thin solid grey'),		
-			array('data'=>$trs,'style'=>'border-top:thin solid grey'),		
-			array('data'=>$gt,'style'=>'border-top:thin solid grey')		
-		);				
+				array('data'=>$total['Delivery Only']['count'],'class'=>'total count'),
+				array('data'=>idr($total['Delivery Only']['dcost']),'class'=>'total currency'),		
+				array('data'=>idr($total['Delivery Only']['pval']),'class'=>'total currency'),		
+
+				array('data'=>$total['COD']['count'],'class'=>'total count'),
+				array('data'=>idr($total['COD']['dcost']),'class'=>'total currency'),
+				array('data'=>idr($total['COD']['sur']),'class'=>'total currency'),
+				array('data'=>idr($total['COD']['pval']),'class'=>'total currency'),
+
+				array('data'=>$total['CCOD']['count'],'class'=>'total count'),
+				array('data'=>idr($total['CCOD']['dcost']),'class'=>'total currency'),
+				array('data'=>idr($total['CCOD']['sur']),'class'=>'total currency'),
+				array('data'=>idr($total['CCOD']['pval']),'class'=>'total currency'),
+
+				array('data'=>$total['PS']['count'],'class'=>'total count'),
+				array('data'=>idr($total['PS']['pfee']),'class'=>'total currency'),
+				array('data'=>idr($total['PS']['pval']),'class'=>'total currency'),
+
+				array('data'=>$total['delivered']['count'],'class'=>'total count'),
+				array('data'=>$total['noshow']['count'],'class'=>'total count'),
+				array('data'=>$total['rescheduled']['count'],'class'=>'total count'),
+
+				array('data'=>$total['total_delivery_count'],'class'=>'total count'),
+				array('data'=>idr($total['total_package_value']),'class'=>'total currency')
+
+			);
+
 
 		$recontab = $this->table->generate();
 		$data['recontab'] = $recontab;
@@ -1161,6 +1285,41 @@ class Reports extends Application
 			$this->ag_auth->view('merchantrecon',$data); // Load the view
 		}		
 	}
+
+	private function _makerow($v){
+
+		$r = array();
+
+		$r['COD']['count'] = $v['COD']['delivered']['count'] + $v['COD']['revoked']['count'] + $v['COD']['noshow']['count'] + $v['COD']['rescheduled']['count'];
+		$r['CCOD']['count'] = $v['CCOD']['delivered']['count'] + $v['CCOD']['revoked']['count'] + $v['CCOD']['noshow']['count'] + $v['CCOD']['rescheduled']['count'];
+		$r['Delivery Only']['count'] = $v['Delivery Only']['delivered']['count'] + $v['Delivery Only']['revoked']['count'] + $v['Delivery Only']['noshow']['count'] + $v['Delivery Only']['rescheduled']['count'];
+		$r['PS']['count'] = $v['PS']['delivered']['count'] + $v['PS']['revoked']['count'] + $v['PS']['noshow']['count'] + $v['PS']['rescheduled']['count'];
+
+		$r['COD']['dcost'] = $v['COD']['delivered']['delivery_cost'] + $v['COD']['revoked']['delivery_cost'] + $v['COD']['noshow']['delivery_cost'] + $v['COD']['rescheduled']['delivery_cost'];
+		$r['CCOD']['dcost'] = $v['CCOD']['delivered']['delivery_cost'] + $v['CCOD']['revoked']['delivery_cost'] + $v['CCOD']['noshow']['delivery_cost'] + $v['CCOD']['rescheduled']['delivery_cost'];
+		
+		$r['COD']['sur'] = $v['COD']['delivered']['cod_cost'] + $v['COD']['revoked']['cod_cost'] + $v['COD']['noshow']['cod_cost'] + $v['COD']['rescheduled']['cod_cost'];
+		$r['CCOD']['sur'] = $v['CCOD']['delivered']['cod_cost'] + $v['CCOD']['revoked']['cod_cost'] + $v['CCOD']['noshow']['cod_cost'] + $v['CCOD']['rescheduled']['cod_cost'];
+		$r['COD']['pval'] = $v['COD']['delivered']['package_value'] + $v['COD']['revoked']['package_value'] + $v['COD']['noshow']['package_value'] + $v['COD']['rescheduled']['package_value'];
+		$r['CCOD']['pval'] = $v['CCOD']['delivered']['package_value'] + $v['CCOD']['revoked']['package_value'] + $v['CCOD']['noshow']['package_value'] + $v['CCOD']['rescheduled']['package_value'];
+
+		$r['Delivery Only']['pval'] = $v['Delivery Only']['delivered']['package_value'] + $v['Delivery Only']['revoked']['package_value'] + $v['Delivery Only']['noshow']['package_value'] + $v['Delivery Only']['rescheduled']['package_value'];
+		$r['PS']['pval'] = $v['PS']['delivered']['package_value'] + $v['PS']['revoked']['package_value'] + $v['PS']['noshow']['package_value'] + $v['PS']['rescheduled']['package_value'];
+
+		
+		$r['Delivery Only']['dcost'] = $v['Delivery Only']['delivered']['delivery_cost'] + $v['Delivery Only']['revoked']['delivery_cost'] + $v['Delivery Only']['noshow']['delivery_cost'] + $v['Delivery Only']['rescheduled']['delivery_cost'];
+		$r['PS']['pfee'] = $v['PS']['delivered']['delivery_cost'] + $v['PS']['revoked']['delivery_cost'] + $v['PS']['noshow']['delivery_cost'] + $v['PS']['rescheduled']['delivery_cost'];
+
+		$r['delivered']['count'] = $v['COD']['delivered']['count'] + $v['CCOD']['delivered']['count'] + $v['Delivery Only']['delivered']['count'] + $v['PS']['delivered']['count'];
+		$r['noshow']['count'] = $v['COD']['noshow']['count'] + $v['CCOD']['noshow']['count'] + $v['Delivery Only']['noshow']['count'] + $v['PS']['noshow']['count'];
+		$r['revoked']['count'] = $v['COD']['revoked']['count'] + $v['CCOD']['revoked']['count'] + $v['Delivery Only']['revoked']['count'] + $v['PS']['revoked']['count'];
+		$r['rescheduled']['count'] = $v['COD']['rescheduled']['count'] + $v['CCOD']['rescheduled']['count'] + $v['Delivery Only']['rescheduled']['count'] + $v['PS']['rescheduled']['count'];
+
+		$r['total_delivery_count'] = $r['delivered']['count'] + $r['noshow']['count'] + $r['revoked']['count'] + $r['rescheduled']['count'];
+		$r['total_package_value'] = $r['Delivery Only']['pval'] + $r['COD']['pval'] + $r['CCOD']['pval'] + $r['PS']['pval'];
+		return $r;
+	}
+
 
 	public function courierrecon($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
 

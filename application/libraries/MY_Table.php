@@ -466,8 +466,8 @@ class MY_Table extends CI_Table {
 					'heading_cell_start'	=> '<th>',
 					'heading_cell_end'		=> '</th>',
 					
-					'subheading_row_start'       => '<tr>',
-		            'subheading_row_end'         => '</tr>',
+					'subheading_row_start'       => '<thead>',
+		            'subheading_row_end'         => '</thead>',
 		            'subheading_cell_start'      => '<th>',
 		            'subheading_cell_end'        => '</th>',
 
