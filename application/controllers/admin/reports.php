@@ -914,13 +914,12 @@ class Reports extends Application
 
 	public function merchantrecon($type = null,$year = null, $scope = null, $par1 = null, $par2 = null, $par3 = null){
 
-		$type = (is_null($type))?'Global':$type;
+		//$type = (is_null($type))?'Global':$type;
 		//$id = (is_null($type))?'noid':$type;
-
+		$type = 'noid';
 		$id = $this->session->userdata('userid');
 
 		if(is_null($scope)){
-			$id = 'noid';
 			$scope = 'month';
 			$year = date('Y',time());
 			$par1 = date('m',time());
