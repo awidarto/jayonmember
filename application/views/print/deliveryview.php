@@ -84,7 +84,7 @@
         #order_detail,#merchant_detail{
             vertical-align:top;
             padding-top:0px;
-            
+
         }
 
         #order_detail h2{
@@ -188,7 +188,7 @@
             });
 
             $('#cancel_weight').click(function(){
-                $('#weight_option').hide();                
+                $('#weight_option').hide();
             });
 
             $('#set_delivery').click(function(){
@@ -215,7 +215,7 @@
             });
 
             $('#cancel_delivery').click(function(){
-                $('#delivery_option').hide();                
+                $('#delivery_option').hide();
             });
 
 
@@ -295,7 +295,7 @@
                             <tr>
                                 <td>
                                     Online Store:<br />
-                                    <span class="fine"><?php print form_checkbox(array('name'=>'show_shop','id'=>'show_shop','value'=>$main_info['delivery_id'],'checked'=>$main_info['show_shop'] ));?> Show in delivery slip</span>                                    
+                                    <span class="fine"><?php print form_checkbox(array('name'=>'show_shop','id'=>'show_shop','value'=>$main_info['delivery_id'],'checked'=>$main_info['show_shop'] ));?> Show in delivery slip</span>
                                 </td>
                                 <td>
                                     <?php print $main_info['app_name'];?>
@@ -305,7 +305,7 @@
                                 <td>Transaction ID:</td>
                                 <td><?php print $main_info['merchant_trans_id'];?></td>
                             </tr>
-<?php 
+<?php
 /*
     [mc_email] => ganti@bajuresmi.net.com.id
     [mc_street] => 2345678
@@ -330,7 +330,7 @@ $merchant_info .= ($main_info['m_country']=='')?$main_info['mc_country'].'<br />
 $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone']:'Phone : '.$main_info['m_phone'];
 
 
-?>                          
+?>
                             <tr>
                                 <td>Store Detail:</td>
                                 <td><?php print trim($merchant_info);?></td>
@@ -378,7 +378,13 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                             </tr>
                             <tr>
                                 <td>Contact Number:</td>
-                                <td><?php print $main_info['phone'];?></td>
+                                <td>
+                                    <?php
+                                        print ($main_info['phone'] !='' && $main_info['phone'] !='-' && !is_null($main_info['phone']) )?$main_info['phone'].'<br />':'';
+                                        print ($main_info['mobile1'] !='' && $main_info['mobile1'] !='-' && !is_null($main_info['mobile1']) )?$main_info['mobile1'].'<br />':'';
+                                        print ($main_info['mobile2'] !='' && $main_info['mobile2'] !='-' && !is_null($main_info['mobile2']) )?$main_info['mobile2'].'<br />':'';
+                                    ?>
+                                </td>
                             </tr>
                             <tr>
                                 <td colspan="2"><strong>Package Detail</strong></td>
@@ -445,7 +451,7 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
             </tr>
         </tbody>
     </table>
--->    
+-->
 </div>
 </body>
 </html>

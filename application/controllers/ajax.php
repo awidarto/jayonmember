@@ -23,7 +23,7 @@ class Ajax extends Application
 		$q = $this->input->get('term');
 		$zones = ajax_find_cities($q,'city');
 		print json_encode($zones);
-	}                       
+	}
 
 	public function getcourier(){
 		$q = $this->input->get('term');
@@ -49,7 +49,7 @@ class Ajax extends Application
 		$zones = ajax_find_device($q,'identifier');
 		print json_encode($zones);
 	}
-	
+
 	public function getdateblock($month = null){
 		print getdateblock($month);
 	}
@@ -83,7 +83,7 @@ class Ajax extends Application
 			$app_id = 0;
 		}else{
 			$app_id = get_app_id_from_key(trim($app_key));
-			/*	
+			/*
 			$this->db->select('id');
 			$this->db->where('key',$app_key);
 			$result = $this->db->get($CI->config->item('applications_table'));
@@ -168,12 +168,12 @@ class Ajax extends Application
 			}
 		}
 
-		$codhash = json_encode($dctable);			
+		$codhash = json_encode($dctable);
 		$codselect = $dctable;
 		$codtable = $this->table->generate();
 
-		print json_encode(array('app_id'=>$app_id,'result'=>'ok','data'=>array('selector'=>$codselect,'codhash'=>$codhash,'table'=>$codtable)));		
-	}	
+		print json_encode(array('app_id'=>$app_id,'result'=>'ok','data'=>array('selector'=>$codselect,'codhash'=>$codhash,'table'=>$codtable)));
+	}
 
 	public function saveweight(){
 		$delivery_id = $this->input->post('delivery_id');
@@ -219,7 +219,7 @@ class Ajax extends Application
 		$id = $this->input->post('id');
 		$setsw = $this->input->post('switchto');
 		$toggle = ($setsw == 'On')?1:0;
-		
+
 		$dataset[$field] = $toggle;
 
 		if($this->db->where('delivery_id',$id)->update($this->config->item('incoming_delivery_table'),$dataset) == TRUE){
@@ -228,7 +228,7 @@ class Ajax extends Application
 			print json_encode(array('result'=>'failed'));
 		}
 	}
-	
+
 	public function savedeliverytype(){
 		$delivery_id = $this->input->post('delivery_id');
         $delivery_type = $this->input->post('delivery_type');
@@ -299,7 +299,7 @@ class Ajax extends Application
 
 
 		$merchant_id = $this->input->post('merchant_id');
-		$buyer_id = $this->input->post('buyer_id');		
+		$buyer_id = $this->input->post('buyer_id');
 
 		$trx = array(
 			'api_key'=>$this->input->post('api_key'),
@@ -321,9 +321,9 @@ class Ajax extends Application
 			'total_discount'=>$this->input->post('total_discount'),
 			'total_tax'=>$this->input->post('total_tax'),
 			'chargeable_amount'=>$this->input->post('chargeable_amount'),
-			'delivery_cost' => $this->input->post('delivery_cost'), 		
-			'cod_cost' => $this->input->post('cod_cost'), 		
-			'currency' => $this->input->post('currency'), 	
+			'delivery_cost' => $this->input->post('delivery_cost'),
+			'cod_cost' => $this->input->post('cod_cost'),
+			'currency' => $this->input->post('currency'),
 			'status'=>$this->input->post('status'),
 			'merchant_id'=>$this->input->post('merchant_id'),
 			'buyer_id'=>$this->input->post('buyer_id'),
@@ -346,7 +346,19 @@ class Ajax extends Application
 		$api_key = $this->input->post('api_key');
 		$trx_id = $trx['transaction_id'];
 
-		$url = $this->config->item('api_url').'post/'.$api_key.'/'.$trx_id;
+        $api_key = $this->input->post('api_key');
+        $trx_id = $trx['transaction_id'];
+
+        $result = $this->jexclient
+                    ->base($this->config->item('api_url'))
+                    ->endpoint('order/key/'.$api_key.'/trx/'.$trx_id)
+                    ->data($trx)
+                    ->format('json')
+                    ->send();
+        print $result;
+
+
+
 
 		/*
 		$lessday = ((strtotime($this->input->post('buyerdeliverytime')) - time()) < (get_option('auto_lock_hours')*60*60))?true:false;
@@ -358,30 +370,33 @@ class Ajax extends Application
 		if($lessday){
 			$result = json_encode(array('status'=>'ERR:LOCKTIME','timestamp'=>now()));
 		}else{
-			$result = $this->curl->simple_post($url,array('transaction_detail'=>json_encode($trx)));			
+			$result = $this->curl->simple_post($url,array('transaction_detail'=>json_encode($trx)));
 		}
 		*/
-		$result = $this->curl->simple_post($url,array('transaction_detail'=>json_encode($trx)));			
+        /*
+        $url = $this->config->item('api_url').'post/'.$api_key.'/'.$trx_id;
+
+		$result = $this->curl->simple_post($url,array('transaction_detail'=>json_encode($trx)));
 
 		print $result;
-
+        */
 	}
 
-	
+
 	public function incomingmonthly(){
-		
+
 	}
 
 	public function deliveredmonthly(){
-		
+
 	}
 
 	public function rescheduledmonthly(){
-		
+
 	}
 
 	public function revokedmonthly(){
-		
+
 	}
 
 }
