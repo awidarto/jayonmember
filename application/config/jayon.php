@@ -25,7 +25,8 @@ if($_SERVER['HTTP_HOST'] == 'localhost'){
 	$config['thumbnail_path'] = '/Library/WebServer/Documents/jayonadmindev/public/receiver_thumb/';
 }else{
 	//online version should redirect to main site
-	$config['api_url'] = 'http://www.jayonexpress.com/api/v2';
+    $config['api_url'] = 'http://localhost/beta2/jayonapi/v2';
+	//$config['api_url'] = 'http://www.jayonexpress.com/api/v2';
 	$config['admin_url'] = 'http://www.jayonexpress.com/staging/jayonadmin/';
 	$config['picture_path'] = '/var/www/staging/jayonadmin/public/receiver/';
 	$config['thumbnail_path'] = '/var/www/staging/jayonadmin/public/receiver_thumb/';
