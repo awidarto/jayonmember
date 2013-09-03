@@ -1,5 +1,49 @@
 <?php
 
+function normalphone($number){
+    $numbers = explode('/',$number);
+    if(is_array($numbers)){
+        $nums = array();
+        foreach($numbers as $number){
+
+            $number = str_replace(array('-',' ','(',')','[',']','{','}'), '', $number);
+
+            if(preg_match('/^\+/', $number)){
+                if( preg_match('/^\+62/', $number)){
+                    $number = preg_replace('/^\+62|^620/', '62', $number);
+                }else{
+                    $number = preg_replace('/^\+/', '', $number);
+                }
+            }else if(preg_match('/^62/', $number)){
+                $number = preg_replace('/^620/', '62', $number);
+            }else if(preg_match('/^0/', $number)){
+                $number = preg_replace('/^0/', '62', $number);
+            }
+
+            $nums[] = $number;
+        }
+        $number = implode('/',$nums);
+    }else{
+
+        $number = str_replace(array('-',' ','(',')'), '', $number);
+
+        if(preg_match('/^\+/', $number)){
+            if( preg_match('/^\+62/', $number)){
+                $number = preg_replace('/^\+62|^620/', '62', $number);
+            }else{
+                $number = preg_replace('/^\+/', '', $number);
+            }
+        }else if(preg_match('/^62/', $number)){
+            $number = preg_replace('/^620/', '62', $number);
+        }else if(preg_match('/^0/', $number)){
+            $number = preg_replace('/^0/', '62', $number);
+        }
+    }
+
+    return $number;
+}
+
+
 function idr($in){
 	return number_format((double) $in,2,',','.');
 }
@@ -111,10 +155,10 @@ function ajax_find_buyer_email($zone,$col = 'fullname',$idcol = 'id'){
 function get_merchant($id = null,$flatten = true){
 	$CI =& get_instance();
 	if(!is_null($id)){
-		 $CI->db->where('id',$id);	
+		 $CI->db->where('id',$id);
 	}
 
-	$CI->db->where('group_id',user_group_id('merchant'));	
+	$CI->db->where('group_id',user_group_id('merchant'));
 
 	$q = $CI->db->select(array('id','fullname','merchantname'))->get('members');
 	if($flatten){
@@ -208,7 +252,7 @@ function get_slot_range($slot){
 		$CI->db->where('is_on',1);
 		$result = $CI->db->get($CI->config->item('jayon_timeslots_table'));
 		$row = $result->row();
-		return $row->time_from.':00 - '.$row->time_to.':00';		
+		return $row->time_from.':00 - '.$row->time_to.':00';
 	}else{
 		return 0;
 	}
@@ -285,7 +329,7 @@ function get_weight_range($tariff){
 
 		if($result->num_rows() > 0){
 			$row = $result->row();
-			return $row->kg_from.' kg - '.$row->kg_to.' kg';		
+			return $row->kg_from.' kg - '.$row->kg_to.' kg';
 		}else{
 			return 0;
 		}
@@ -311,7 +355,7 @@ function get_cod_tariff($total_price){
 		$CI->db->where('from_price <= ',$total_price);
 		$CI->db->where('to_price >= ',$total_price);
 		$result = $CI->db->get($CI->config->item('jayon_cod_fee_table'));
-		$row = $result->row();			
+		$row = $result->row();
 	}
 
 	return $row->surcharge;
@@ -393,14 +437,14 @@ function overquota($date){
 	$sql = sprintf($sqlf,$CI->config->item('incoming_delivery_table'),$date,'0000-00-00',$date);
 	$quota = $CI->db->query($sql);
 	$quota = $quota->row()->numrows;
-	
+
 	//print $CI->db->last_query();
 
 	if($dailyquota >= $quota){
 		return false;
 	}else{
 		return true;
-	}	
+	}
 }
 
 function getholidays(){
@@ -420,8 +464,8 @@ function get_thumbnail($delivery_id){
 	if(file_exists($CI->config->item('picture_path').$delivery_id.'.jpg')){
 		if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg')){
 			$thumbnail = $CI->config->item('admin_url').'public/receiver_thumb/th_'.$delivery_id.'.jpg';
-			//$thumbnail = sprintf('<img src="%s" />',$thumbnail);					
-			$thumbnail = sprintf('<img style="cursor:pointer;" class="thumb" alt="'.$delivery_id.'" src="%s?'.time().'" />',$thumbnail);					
+			//$thumbnail = sprintf('<img src="%s" />',$thumbnail);
+			$thumbnail = sprintf('<img style="cursor:pointer;" class="thumb" alt="'.$delivery_id.'" src="%s?'.time().'" />',$thumbnail);
 		}else{
 			$thumbnail = $CI->ag_asset->load_image('th_nopic.jpg');
 		}
@@ -449,7 +493,7 @@ function full_reschedule($delivery_id, $datachanged){
 	$new_order['reattemp'] = (int) $new_order['reattemp'] + 1;
 	unset($new_order['delivery_id']);
 	unset($new_order['id']);
-	
+
 	$old_delivery_id = $delivery_id;
 
 	$CI->db->insert($CI->config->item('assigned_delivery_table'),$new_order);
@@ -502,7 +546,7 @@ function send_notification($subject,$to,$cc = null,$template = 'default',$data =
 		$log['to'] = implode(';',$to);
 	}else{
 		$CI->email->to($to);
-		$log['to'] = $to;			
+		$log['to'] = $to;
 	}
 
 	if(!is_null($cc)){
@@ -513,7 +557,7 @@ function send_notification($subject,$to,$cc = null,$template = 'default',$data =
 			$log['cc'] = implode(';',$cc);
 		}else{
 			$CI->email->cc($cc);
-			$log['cc'] = $cc;			
+			$log['cc'] = $cc;
 		}
 	}
 
@@ -524,8 +568,8 @@ function send_notification($subject,$to,$cc = null,$template = 'default',$data =
 			}
 			$log['att'] = implode(';',$attachment);
 		}else{
-			$CI->email->attach($attachment);			
-			$log['att'] = $attachment;			
+			$CI->email->attach($attachment);
+			$log['att'] = $attachment;
 		}
 	}
 
@@ -581,7 +625,7 @@ function send_admin($subject,$to,$cc = null,$template = 'default',$data = '',$at
 		$log['to'] = implode(';',$to);
 	}else{
 		$CI->email->to($to);
-		$log['to'] = $to;			
+		$log['to'] = $to;
 	}
 
 	if(!is_null($cc)){
@@ -592,7 +636,7 @@ function send_admin($subject,$to,$cc = null,$template = 'default',$data = '',$at
 			$log['cc'] = implode(';',$cc);
 		}else{
 			$CI->email->cc($cc);
-			$log['cc'] = $cc;			
+			$log['cc'] = $cc;
 		}
 	}
 
@@ -603,8 +647,8 @@ function send_admin($subject,$to,$cc = null,$template = 'default',$data = '',$at
 			}
 			$log['att'] = implode(';',$attachment);
 		}else{
-			$CI->email->attach($attachment);			
-			$log['att'] = $attachment;			
+			$CI->email->attach($attachment);
+			$log['att'] = $attachment;
 		}
 	}
 
@@ -711,7 +755,7 @@ function getmonthlydatacountarray($year,$month,$where = null,$filter = null,$spa
 		}
 		*/
 
-		$CI->db->like('ordertime', $date, 'after');		
+		$CI->db->like('ordertime', $date, 'after');
 
 		if(!is_null($where)){
 			$CI->db->where($where);
@@ -724,7 +768,7 @@ function getmonthlydatacountarray($year,$month,$where = null,$filter = null,$spa
 				}
 			}
 		}
-		
+
 		/*
 		if(!is_null($merchant_id)){
 			$CI->db->where('merchant_id', $merchant_id);
@@ -848,7 +892,7 @@ function getrangedatacountarray($year,$from,$to,$where = null,$merchant_id = nul
 		$CI->db->like($column,$date,'after');
 		$CI->db->where($column.' != ','0000-00-00');
 
-		//$CI->db->like('ordertime', $date, 'after');		
+		//$CI->db->like('ordertime', $date, 'after');
 
 		if(!is_null($where)){
 			$CI->db->where($where);
@@ -866,7 +910,7 @@ function getrangedatacountarray($year,$from,$to,$where = null,$merchant_id = nul
 		$CI->db->like($column,$date,'after');
 		$CI->db->where($column.' != ','0000-00-00');
 
-		//$CI->db->like('ordertime', $date, 'after');		
+		//$CI->db->like('ordertime', $date, 'after');
 
 		if(!is_null($where)){
 			$CI->db->where($where);
