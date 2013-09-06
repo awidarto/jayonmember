@@ -52,6 +52,7 @@ $config['jayon_cod_fee_table'] = 'cod_surcharge';
 $config['jayon_pickup_fee_table'] = 'pickup_tariff';
 
 
+$config['jayon_buyers_table'] = 'buyers';
 $config['jayon_members_table'] = 'members';
 $config['jayon_couriers_table'] = 'couriers';
 $config['jayon_holidays_table'] = 'holidays';
