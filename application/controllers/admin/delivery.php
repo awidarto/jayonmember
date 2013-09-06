@@ -1377,7 +1377,7 @@ class Delivery extends Application
 				$key['merchant_trans_id'],
 				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//$key['delivery_id'],
-				$key['buyer'],
+				$key['buyer_name'],
 				$key['shipping_address'],
 				$key['phone'],
 				colorizestatus($key['status']),

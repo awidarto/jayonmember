@@ -26,9 +26,10 @@ if($_SERVER['HTTP_HOST'] == 'localhost'){
 }else{
 	//online version should redirect to main site
     $config['api_url'] = 'http://localhost/beta2/jayonapi/v2';
-	$config['admin_url'] = 'http://www.jayonexpress.com/staging/jayonadmin/';
-	$config['picture_path'] = '/var/www/staging/jayonadmin/public/receiver/';
-	$config['thumbnail_path'] = '/var/www/staging/jayonadmin/public/receiver_thumb/';
+	$config['admin_url'] = 'http://www.jayonexpress.com/jayonadmin/';
+    $config['picture_path'] = '/var/www/pro/jayonadmin/public/receiver/';
+    $config['thumbnail_path'] = '/var/www/pro/jayonadmin/public/receiver_thumb/';
+
 }
 
 
