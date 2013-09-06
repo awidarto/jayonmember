@@ -1656,7 +1656,7 @@ class Delivery extends Application
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
 				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
 				//$key['application_id'],
-				$key['buyer'],
+				$key['buyer_name'],
 				$key['app_name'],
 				$key['merchant_trans_id'],
 				$key['courier'],
