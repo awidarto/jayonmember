@@ -380,9 +380,9 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                                 <td>Contact Number:</td>
                                 <td>
                                     <?php
-                                        print ($main_info['phone'] !='' && $main_info['phone'] !='-' && !is_null($main_info['phone']) )?$main_info['phone'].'<br />':'';
-                                        print ($main_info['mobile1'] !='' && $main_info['mobile1'] !='-' && !is_null($main_info['mobile1']) )?$main_info['mobile1'].'<br />':'';
-                                        print ($main_info['mobile2'] !='' && $main_info['mobile2'] !='-' && !is_null($main_info['mobile2']) )?$main_info['mobile2'].'<br />':'';
+                                        print $main_info['phone'].'<br />';
+                                        print $main_info['mobile1'].'<br />';
+                                        print $main_info['mobile2'].'<br />';
                                     ?>
                                 </td>
                             </tr>

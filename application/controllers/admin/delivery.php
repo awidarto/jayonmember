@@ -362,7 +362,7 @@ class Delivery extends Application
 				$key['merchant'],
 				$key['merchant_trans_id'],
 				$key['shipping_address'],
-				$key['phone'],
+				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
@@ -1026,7 +1026,7 @@ class Delivery extends Application
 				$key['merchant'],
 				$key['merchant_trans_id'],
 				$key['shipping_address'],
-				$key['phone'],
+				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
@@ -1198,7 +1198,7 @@ class Delivery extends Application
 				$key['merchant'],
 				$key['merchant_trans_id'],
 				$key['shipping_address'],
-				$key['phone'],
+				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
@@ -1379,7 +1379,7 @@ class Delivery extends Application
 				//$key['delivery_id'],
 				$key['buyer_name'],
 				$key['shipping_address'],
-				$key['phone'],
+				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				$printslip
 			);
@@ -1485,7 +1485,7 @@ class Delivery extends Application
 				$key['merchant_trans_id'],
 				$key['courier'],
 				$key['shipping_address'],
-				$key['phone'],
+				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				$key['reschedule_ref'],
 				$key['revoke_ref']
@@ -1663,7 +1663,7 @@ class Delivery extends Application
 				$key['shipping_address'],
 				$thumbnail,
                 $key['delivery_note'],
-				$key['phone'],
+				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				$key['reschedule_ref'],
 				$key['revoke_ref']
@@ -1953,7 +1953,7 @@ class Delivery extends Application
 				$key['shipping_address'],
 				get_thumbnail($key['delivery_id']),
                 $key['delivery_note'],
-				$key['phone'],
+				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				$key['reschedule_ref'],
 				$key['revoke_ref']
@@ -2140,7 +2140,7 @@ class Delivery extends Application
 				$key['shipping_address'],
 				get_thumbnail($key['delivery_id']),
                 $key['delivery_note'],
-				$key['phone'],
+				$key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
 				colorizestatus($key['status']),
 				$proceed.' '.$cancel
 				//$key['reschedule_ref'],

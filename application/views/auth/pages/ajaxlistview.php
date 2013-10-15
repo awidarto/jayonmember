@@ -15,16 +15,16 @@
 			    "sScrollY": "500px",
 			<?php endif; ?>
 			<?php if(isset($sortdisable)):?>
-				"aoColumnDefs": [ 
+				"aoColumnDefs": [
 				    { "bSortable": false, "aTargets": [ <?php print $sortdisable; ?> ] }
 				 ],
 			<?php endif;?>
 			    "fnServerData": function ( sSource, aoData, fnCallback ) {
 		            $.ajax( {
-		                "dataType": 'json', 
-		                "type": "POST", 
-		                "url": sSource, 
-		                "data": aoData, 
+		                "dataType": 'json',
+		                "type": "POST",
+		                "url": sSource,
+		                "data": aoData,
 		                "success": fnCallback
 		            } );
 		        }
@@ -37,7 +37,7 @@
 		} );
 
 		/*
-		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
+		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
 		 * the footer
 		 */
 		$('tfoot input').each( function (i) {
@@ -66,7 +66,7 @@
 				var currentTime = new Date();
 				$.fancybox.open([
 			        {
-			            href : '<?php print $this->config->item('admin_url');?>public/receiver/' + delivery_id + '.jpg?' + currentTime.getTime(),                
+			            href : '<?php print $this->config->item('admin_url');?>public/receiver/' + delivery_id + '.jpg?' + currentTime.getTime(),
 			            title : delivery_id
 			        }
 			    ]);
@@ -91,11 +91,11 @@
 
 			if ($(e.target).is('.view_detail')) {
 				var delivery_id = e.target.id;
-				var src = '<?php print base_url() ?>/admin/prints/deliveryview/' + delivery_id;
+				var src = '<?php print base_url() ?>admin/prints/deliveryview/' + delivery_id;
 
 				$('#view_frame').attr('src',src);
 				$('#view_dialog').dialog('open');
-			}		   	
+			}
 
 		});
 
@@ -120,7 +120,7 @@
 				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong><br />' + deliverydate +' '+ status+'</li>';
 				count++;
 			});
-			
+
 			if(count > 0){
 				$('#archive_list').html(assigns);
 				$('#archive_dialog').dialog('open');
@@ -143,7 +143,7 @@
 						delivery_ids[i] = $(this).val();
 						laststatus[i] = $(this).attr('title');
 						i++;
-					}); 
+					});
 					$.post('<?php print site_url('admin/delivery/ajaxarchive');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids,'laststatus[]':laststatus}, function(data) {
 						if(data.result == 'ok'){
 							//redraw table
@@ -172,14 +172,14 @@
 					var pframe = document.getElementById('view_frame');
 					var pframeWindow = pframe.contentWindow;
 					pframeWindow.print();
-				}, 
+				},
 				Close: function() {
 					oTable.fnDraw();
 					$( this ).dialog( "close" );
 				}
 			},
 			close: function() {
-				
+
 			}
 		});
 

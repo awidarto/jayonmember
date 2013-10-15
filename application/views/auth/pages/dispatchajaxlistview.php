@@ -1,6 +1,6 @@
 <script>
 	var asInitVals = new Array();
-	
+
 	$(document).ready(function() {
 	    var oTable = $('.dataTable').dataTable(
 			{
@@ -14,16 +14,16 @@
 			    "sScrollY": "500px",
 			<?php endif; ?>
 			<?php if(isset($sortdisable)):?>
-				"aoColumnDefs": [ 
+				"aoColumnDefs": [
 				            { "bSortable": false, "aTargets": [ <?php print $sortdisable; ?> ] }
 				 ],
 			<?php endif;?>
 			    "fnServerData": function ( sSource, aoData, fnCallback ) {
 		            $.ajax( {
-		                "dataType": 'json', 
-		                "type": "POST", 
-		                "url": sSource, 
-		                "data": aoData, 
+		                "dataType": 'json',
+		                "type": "POST",
+		                "url": sSource,
+		                "data": aoData,
 		                "success": fnCallback
 		            } );
 		        }
@@ -36,7 +36,7 @@
 		} );
 
 		/*
-		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
+		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
 		 * the footer
 		 */
 		$('tfoot input').each( function (i) {
@@ -65,9 +65,9 @@
 			minLength: 2
 		});
 
-		
+
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
-		
+
 		$('#search_deliverytime').change(function(){
 			oTable.fnFilter( this.value, $('tfoot input').index(this) );
 		});
@@ -75,7 +75,7 @@
 		/*Delivery process mandatory*/
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		$('#assign_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
-		
+
 		$('#doAssign').click(function(){
 			var assigns = '';
 			var count = 0;
@@ -83,7 +83,7 @@
 				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;">'+this.value+'</li>';
 				count++;
 			});
-			
+
 			if(count > 0){
 				$('#trans_list').html(assigns);
 				$('#assign_dialog').dialog('open');
@@ -102,7 +102,7 @@
 			if ($(e.target).is('.printslip')) {
 				var delivery_id = e.target.id;
 				$('#print_id').val(delivery_id);
-				var src = '<?php print base_url() ?>/admin/prints/deliveryslip/' + delivery_id;
+				var src = '<?php print base_url() ?>admin/prints/deliveryslip/' + delivery_id;
 
 				$('#print_frame').attr('src',src);
 				$('#print_dialog').dialog('open');
@@ -110,14 +110,14 @@
 
 			if ($(e.target).is('.view_detail')) {
 				var delivery_id = e.target.id;
-				var src = '<?php print base_url() ?>/admin/prints/deliveryview/' + delivery_id;
+				var src = '<?php print base_url() ?>admin/prints/deliveryview/' + delivery_id;
 
 				$('#view_frame').attr('src',src);
 				$('#view_dialog').dialog('open');
 			}
 
 		});
-		
+
 		$('#getDevices').click(function(){
 			if($('#assign_deliverytime').val() == ''){
 				alert('Please specify intended delivery time');
@@ -128,7 +128,7 @@
 				},'json');
 			}
 		});
-		
+
 		$('#assign_dialog').dialog({
 			autoOpen: false,
 			height: 300,
@@ -145,7 +145,7 @@
 						$('.assign_check:checked').each(function(){
 							delivery_ids[i] = $(this).val();
 							i++;
-						}); 
+						});
 						$.post('<?php print site_url('admin/delivery/ajaxassignzone');?>',{ assignment_device_id: device_id,'delivery_id[]':delivery_ids, assignment_zone: $('#assign_deliveryzone').val() }, function(data) {
 							if(data.result == 'ok'){
 								//redraw table
@@ -175,7 +175,7 @@
 				"Confirm Delivery Orders": function() {
 					var delivery_id = $('#change_id').html();
 
-					$.post('<?php print site_url('admin/delivery/ajaxchangestatus');?>',{ 
+					$.post('<?php print site_url('admin/delivery/ajaxchangestatus');?>',{
 						'delivery_id':delivery_id,
 						'new_status': $('#new_status').val(),
 						'actor': $('#actor').val()
@@ -207,7 +207,7 @@
 					var pframe = document.getElementById('print_frame');
 					var pframeWindow = pframe.contentWindow;
 					pframeWindow.print();
-				}, 
+				},
 				"Download PDF": function(){
 					var print_id = $('#print_id').val();
 					var src = '<?php print base_url() ?>/admin/prints/deliveryslip/' + print_id + '/pdf';
@@ -219,7 +219,7 @@
 				}
 			},
 			close: function() {
-				
+
 			}
 		});
 
@@ -233,17 +233,17 @@
 					var pframe = document.getElementById('view_frame');
 					var pframeWindow = pframe.contentWindow;
 					pframeWindow.print();
-				}, 
+				},
 				Close: function() {
 					oTable.fnDraw();
 					$( this ).dialog( "close" );
 				}
 			},
 			close: function() {
-				
+
 			}
 		});
-		
+
 		/*
 		function refresh(){
 			oTable.fnDraw();
@@ -253,8 +253,8 @@
 		refresh();
 		*/
 	} );
-	
-	
+
+
 </script>
 <?php if(isset($add_button)):?>
 	<div class="button_nav">

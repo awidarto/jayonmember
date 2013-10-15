@@ -6,7 +6,7 @@ class Admin extends Application
 	{
 		parent::__construct();
 	}
-	
+
 	public function index()
 	{
 		if(logged_in())
@@ -29,34 +29,34 @@ class Admin extends Application
 			$this->login();
 		}
 	}
-	
-	
+
+
 	public function register(){
 		$this->breadcrumb->add_crumb('Home',base_url());
 		$this->breadcrumb->add_crumb('Register','register');
-		
+
 		$this->form_validation->set_rules('username', 'Username', 'required|min_length[6]|callback_field_exists');
 		$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|matches[password_conf]');
 		$this->form_validation->set_rules('password_conf', 'Password Confirmation', 'required|min_length[6]|matches[password]');
 		$this->form_validation->set_rules('email', 'Email Address', 'required|min_length[6]|valid_email|callback_field_exists');
-		$this->form_validation->set_rules('fullname', 'Full Name', 'required|trim|xss_clean');	
-		$this->form_validation->set_rules('merchantname', 'Merchant Name', 'trim|xss_clean');	
-		$this->form_validation->set_rules('merchant_request', 'Request Merchant Account', 'trim|xss_clean');	
-		$this->form_validation->set_rules('bank', 'Bank', 'trim|xss_clean');	
-		$this->form_validation->set_rules('account_name', 'Account Name', 'trim|xss_clean');	
-		$this->form_validation->set_rules('account_number', 'Account Number', 'trim|xss_clean');	
-		$this->form_validation->set_rules('street', 'Street', 'required|trim|xss_clean');	
-		$this->form_validation->set_rules('district', 'District', 'required|trim|xss_clean');  
-		$this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean');	
-		$this->form_validation->set_rules('country', 'Country', 'required|trim|xss_clean');	
-		$this->form_validation->set_rules('zip', 'ZIP', 'required|trim|xss_clean');		
-		$this->form_validation->set_rules('phone', 'Phone Number', 'required|trim|xss_clean');   
+		$this->form_validation->set_rules('fullname', 'Full Name', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('merchantname', 'Merchant Name', 'trim|xss_clean');
+		$this->form_validation->set_rules('merchant_request', 'Request Merchant Account', 'trim|xss_clean');
+		$this->form_validation->set_rules('bank', 'Bank', 'trim|xss_clean');
+		$this->form_validation->set_rules('account_name', 'Account Name', 'trim|xss_clean');
+		$this->form_validation->set_rules('account_number', 'Account Number', 'trim|xss_clean');
+		$this->form_validation->set_rules('street', 'Street', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('district', 'District', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('country', 'Country', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('zip', 'ZIP', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('phone', 'Phone Number', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('mobile', 'Mobile Number', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('group_id', 'Group', 'trim');
-				
+
 		if($this->form_validation->run() == FALSE)
 		{
-			
+
 			$data['groups'] = array(
 				group_id('merchant')=>group_desc('merchant'),
 				group_id('buyer')=>group_desc('buyer')
@@ -76,19 +76,22 @@ class Admin extends Application
 			$bank = set_value('bank');
 			$account_number = set_value('account_number');
 			$account_name = set_value('account_name');
-			$street = set_value('street'); 
+			$street = set_value('street');
 			$district = set_value('district');
 			$province = set_value('province');
 			$city = set_value('city');
 			$country = set_value('country');
 			$zip = set_value('zip');
 			$phone= set_value('phone');
-			$mobile= set_value('mobile'); 
+			$mobile= set_value('mobile');
 			$email = set_value('email');
 			$group_id = set_value('group_id');
 
-			$group_id = ($group_id == 0)?group_id('buyer'):$group_id;
-			
+			//$group_id = ($group_id == 0)?group_id('buyer'):$group_id;
+
+            // by default all web registration become a merchant
+            $group_id = group_id('pendingmerchant');
+
 			$dataset = array(
 				'username'=>$username,
 				'password'=>$password,
@@ -102,26 +105,27 @@ class Admin extends Application
 				'district'=>$district,
 				'province'=>$province,
 				'city'=>$city,
-				'country'=>$country, 
+				'country'=>$country,
 				'zip'=>$zip,
 				'phone'=>$phone,
-				'mobile'=>$mobile, 
+				'mobile'=>$mobile,
 				'email'=>$email,
-				'group_id'=>$group_id
+				'group_id'=>$group_id,
+                'created'=> date('Y-m-d h:i:s',time())
 			);
-			
+
 			if($this->db->insert($this->config->item('jayon_members_table'),$dataset) === TRUE)
 			{
 				$edata['email'] = $email;
 				$edata['fullname'] = $fullname;
 				$edata['password'] = $epassword;
-				send_notification('New Member Registration - Jayon Express COD Service',$email,null,'new_member',$edata,null);
+				send_notification('New Member Registration - Jayon Express COD Service',$email,null,'new_pending_merchant',$edata,null);
 
 				redirect($this->config->item('auth_register_success').'?reg=success');
 
 				/*
 				$this->breadcrumb->append_crumb('Success','');
-				
+
 				$data['message'] = "The user account has now been created.";
 				$data['page_title'] = 'Add Member';
 				$data['back_url'] = anchor('admin/members/manage','Back to list');
@@ -133,7 +137,7 @@ class Admin extends Application
 				redirect($this->config->item('auth_register_fail').'?reg=err');
 				/*
 				$this->breadcrumb->append_crumb('Failed','');
-				
+
 				$data['message'] = "The user account has not been created.";
 				$data['page_title'] = 'Add Member Error';
 				$data['back_url'] = anchor('admin/members/manage','Back to list');
@@ -142,7 +146,7 @@ class Admin extends Application
 			}
 
 		} // if($this->form_validation->run() == FALSE)
-		
+
 	}
 
 	public function resetpass(){
@@ -183,7 +187,7 @@ class Admin extends Application
 		$id = $this->session->userdata('userid');
 		$user = $this->get_user($id);
 		$data['user'] = $user;
-				
+
 		if($this->form_validation->run() == FALSE)
 		{
 			$data['groups'] = $this->get_group();
@@ -193,14 +197,14 @@ class Admin extends Application
 		else
 		{
 			$result = TRUE;
-			
+
 			$dataset['password'] = $this->ag_auth->salt(set_value('password'));
 
 			if( $result = $this->update_user($id,$dataset))
 			{
 				$this->oi->add_success('Your password is now updated');
 				redirect('admin/dashboard');
-				
+
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
@@ -209,7 +213,7 @@ class Admin extends Application
 			}
 
 		} // if($this->form_validation->run() == FALSE)
-		
+
 	} // public function register()
 
 
@@ -229,7 +233,7 @@ class Admin extends Application
 		}else{
 			return false;
 		}
-	}	
+	}
 
 	private function get_group(){
 		$this->db->select('id,description');
@@ -238,12 +242,12 @@ class Admin extends Application
 			$res[$row['id']] = $row['description'];
 		}
 		return $res;
-	}	
+	}
 
 	private function update_user($id,$data){
 		$result = $this->db->where('id', $id)->update($this->ag_auth->config['auth_user_table'],$data);
 		return $result;
-	}	
+	}
 
 
 }

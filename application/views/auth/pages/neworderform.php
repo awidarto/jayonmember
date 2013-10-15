@@ -895,6 +895,8 @@
                             $('#sendingstatus', window.parent.document).show();
 
                             parent.$('#neworder_dialog').dialog('close');
+                            parent.refreshTab();
+
                             //$('#trx_result').html('Transaction Success');
                             //$('#neworder_dialog', window.parent.document).dialog('close');
                         }else if(data.status == 'ERR:LOCKTIME'){

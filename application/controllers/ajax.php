@@ -839,6 +839,8 @@ class Ajax extends Application
         //$bd['longitude']  =  $ds['longitude'];
         $bd['created']  =  $ds['created'];
 
+        $bd['cluster_id'] = substr(md5(uniqid(rand(), true)), 0, 20 );
+
         if($this->db->insert($this->config->item('jayon_buyers_table'),$bd)){
             return $this->db->insert_id();
         }else{

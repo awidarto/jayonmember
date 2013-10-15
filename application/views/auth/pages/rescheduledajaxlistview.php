@@ -17,16 +17,16 @@
 			    "sScrollY": "500px",
 			<?php endif; ?>
 			<?php if(isset($sortdisable)):?>
-				"aoColumnDefs": [ 
+				"aoColumnDefs": [
 				    { "bSortable": false, "aTargets": [ <?php print $sortdisable; ?> ] }
 				 ],
 			<?php endif;?>
 			    "fnServerData": function ( sSource, aoData, fnCallback ) {
 		            $.ajax( {
-		                "dataType": 'json', 
-		                "type": "POST", 
-		                "url": sSource, 
-		                "data": aoData, 
+		                "dataType": 'json',
+		                "type": "POST",
+		                "url": sSource,
+		                "data": aoData,
 		                "success": fnCallback
 		            } );
 		        }
@@ -39,7 +39,7 @@
 		} );
 
 		/*
-		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
+		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
 		 * the footer
 		 */
 		$('tfoot input').each( function (i) {
@@ -91,11 +91,11 @@
 
 			if ($(e.target).is('.view_detail')) {
 				var delivery_id = e.target.id;
-				var src = '<?php print base_url() ?>/admin/prints/deliveryview/' + delivery_id;
+				var src = '<?php print base_url() ?>admin/prints/deliveryview/' + delivery_id;
 
 				$('#view_frame').attr('src',src);
 				$('#view_dialog').dialog('open');
-			}			   	
+			}
 
 		});
 
@@ -123,7 +123,7 @@
 			var curr_date = d.getDate();
 			var curr_month = d.getMonth() + 1; //months are zero based
 			var curr_year = d.getFullYear();
-		
+
 			curr_date = (curr_date < 10)?"0" + curr_date : curr_date;
 			curr_month = (curr_month < 10)?"0" + curr_month : curr_month;
 			var indate = curr_year + '-' + curr_month + '-' + curr_date;
@@ -131,7 +131,7 @@
 			var select = 1;
 			var css = 'open';
 			var popup = 'working day';
-			
+
 			if(window.dateBlock[indate] == 'weekend'){
 				select = 0;
 				css = 'weekend';
@@ -166,7 +166,7 @@
 				assigns += '<li style="padding:5px;border-bottom:thin solid grey;margin-left:0px;"><strong>'+this.value + '</strong><br />' + deliverydate +' '+ status+'</li>';
 				count++;
 			});
-			
+
 			if(count > 0){
 				$('#archive_list').html(assigns);
 				$('#archive_dialog').dialog('open');
@@ -189,7 +189,7 @@
 						delivery_ids[i] = $(this).val();
 						laststatus[i] = $(this).attr('title');
 						i++;
-					}); 
+					});
 					$.post('<?php print site_url('admin/delivery/ajaxarchive');?>',{ assignment_date: $('#assign_deliverytime').val(),'delivery_id[]':delivery_ids,'laststatus[]':laststatus}, function(data) {
 						if(data.result == 'ok'){
 							//redraw table
@@ -221,7 +221,7 @@
 							req_by : $('#rs_req_by').val(),
 							req_name : $('#rs_req_name').val(),
 							req_note : $('#rs_req_note').val(),
-							recipient_name : $('#rs_rec_name').val(),	 	 	 	 	 	 	 
+							recipient_name : $('#rs_rec_name').val(),
 							shipping_address : $('#rs_ship_addr').val(),
 							shipping_zip : $('#rs_ship_zip').val()
 						},
@@ -254,13 +254,13 @@
 					var pframe = document.getElementById('view_frame');
 					var pframeWindow = pframe.contentWindow;
 					pframeWindow.print();
-				}, 
+				},
 				Close: function() {
 					$( this ).dialog( "close" );
 				}
 			},
 			close: function() {
-				
+
 			}
 		});
 	});

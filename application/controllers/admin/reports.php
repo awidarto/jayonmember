@@ -456,7 +456,7 @@ class Reports extends Application
 
 		$this->load->library('number_words');
 
-		if($id == 'noid'){
+		if($id == 'noid' || is_null($id)){
 			$data['type_name'] = '-';
 			$data['bank_account'] = 'n/a';
 			$data['type'] = 'Global';
