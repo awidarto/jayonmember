@@ -502,7 +502,7 @@ class Ajax extends Application
                     $dataset['country'] = 'Indonesia';
                     $dataset['zip'] = $in->zip;
 
-                    $buyer_id = $this->register_buyer($dataset);
+                    //$buyer_id = $this->register_buyer($dataset);
                     $is_new = true;
                 }
 
