@@ -324,43 +324,47 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 							</tr>
 
 
-                        <?php if($main_info['delivery_type'] == 'PS'):?>
+						<?php
+                            /*
+                            if($main_info['delivery_type'] == 'PS'):?>
 							<tr>
-								<td class="row_label">Diambil Dari</td>
+								<td class="row_label">Picked Up From</td>
 								<td><?php print ($main_info['recipient_name'] == "")?$main_info['buyer_name']:$main_info['recipient_name'];?></td>
 							</tr>
 							<tr>
-								<td>Alamat Pengambilan</td>
+								<td>Pick Up Address</td>
 								<td><?php print $main_info['shipping_address'];?></td>
 							</tr>
 						<?php else: ?>
 
 							<tr>
-								<td class="row_label">Kepada</td>
+								<td class="row_label">Delivered To</td>
 								<td><?php print ($main_info['recipient_name'] == "")?$main_info['buyer_name']:$main_info['recipient_name'];?></td>
 							</tr>
 							<tr>
-								<td>Alamat Pengiriman</td>
+								<td>Shipping Address</td>
 								<td><?php print $main_info['shipping_address'];?></td>
 							</tr>
 
-						<?php endif; ?>
+						<?php endif; */ ?>
 
-                            <tr>
-                                <td>Phone</td>
-                                <td>
+                            <?php
+                            /*
+
+
+							<tr>
+								<td>Phone</td>
+								<td>
                                     <?php
                                         $phones = array($main_info['phone'], $main_info['mobile1'], $main_info['mobile2'] );
-                                        //$phones = array_unique($phones);
+                                        $phones = array_unique($phones);
                                         $phones = implode('<br />', $phones);
 
                                         print $phones;
                                     ?>
                                 </td>
-                            </tr>
+							</tr>
 
-                            <?php
-                            /*
 							<tr>
 								<td>Email</td>
 								<td><?php print $main_info['email'];?></td>
@@ -382,8 +386,8 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 					<table border="0" cellpadding="4" cellspacing="0" id="signBox">
 						<tbody style="text-align:center;">
 							<tr class="sign_head">
-								<td style="width:50%;">Dibuat Oleh</td>
-								<td style="width:50%;">Penerima Barang</td>
+								<td style="width:50%;">Created By</td>
+								<td style="width:50%;">Goods Received By</td>
 							</tr>
 							<tr class="sign_space">
 								<td>&nbsp;</td>
@@ -394,7 +398,7 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 								<td>&nbsp;</td>
 							</tr>
 							<tr class="sign_head">
-								<td>Laporan</td>
+								<td>Reporting</td>
 								<td>Staff Dispatch Admin</td>
 							</tr>
 							<tr class="sign_space">
@@ -406,8 +410,8 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 								<td>&nbsp;</td>
 							</tr>
 							<tr class="sign_head">
-								<td>Keuangan</td>
-								<td>Staff Delivery</td>
+								<td>Finance</td>
+								<td>Courier</td>
 							</tr>
 							<tr class="sign_space">
 								<td>&nbsp;</td>

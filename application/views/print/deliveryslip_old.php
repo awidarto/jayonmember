@@ -196,7 +196,7 @@
 										print $this->ag_asset->load_image('plogo.png', 'assets/images');?><br />
 										<?php print get_option('jex_hq_address');?>
 								</td>
-								<td style="align:right;vertical-align:top;"><?php print $qr;?></td>
+								<td style="align:right"><?php print $qr;?></td>
 							</tr>
 						</tbody>
 					</table>
@@ -208,7 +208,7 @@
 							</tr>
 							<?php if($main_info['show_merchant']):?>
 								<tr>
-									<td>Nama Penjual<hr /><span class="fine">Merchant Name</span></td>
+									<td>Merchant Name<hr /><span class="fine">Nama Penjual</span></td>
 									<td>
 										<?php print $main_info['merchant'].'</span>';?>
 									</td>
@@ -216,22 +216,17 @@
 							<?php endif;?>
 							<?php if($main_info['show_shop']):?>
 								<tr>
-									<td>Nama Toko<hr /><span class="fine">Store Name</span></td>
+									<td>Store Name<hr /><span class="fine">Nama Toko</span></td>
 									<td>
 										<?php //print $main_info['app_name'].'<br /><span class="fine">'.$main_info['app_name'].'</span>';?>
 										<?php print $main_info['app_name'].'</span>';?>
 									</td>
 								</tr>
 							<?php endif;?>
-
-                            <?php
-                            /*
-                            <tr>
-                                <td>Transaction ID<hr /><span class="fine">Kode Transaksi</span></td>
-                                <td><?php print $main_info['merchant_trans_id'];?></td>
-                            </tr>
-                            */
-                            ?>
+							<tr>
+								<td>Transaction ID<hr /><span class="fine">Kode Transaksi</span></td>
+								<td><?php print $main_info['merchant_trans_id'];?></td>
+							</tr>
 <?php
 /*
     [mc_email] => ganti@bajuresmi.net.com.id
@@ -258,17 +253,12 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 
 
 ?>
-<?php
-/*
-                            <tr>
-                                <td colspan="2">Store Detail</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"><?php print trim($merchant_info);?></td>
-                            </tr>
-
-*/
-?>
+							<tr>
+								<td colspan="2">Store Detail</td>
+							</tr>
+							<tr>
+								<td colspan="2"><?php print trim($merchant_info);?></td>
+							</tr>
 						</tbody>
 					</table>
 				</td>
@@ -279,8 +269,8 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 								<td colspan="2"><strong>Delivery Info</strong></td>
 							</tr>
 							<tr>
-								<td class="row_label">Jenis Delivery</td>
-								<td style="font-size:24px;font-weight:bold;">
+								<td class="row_label">Delivery Type</td>
+								<td>
 									<?php print $main_info['delivery_type'];?>
 									<?php if($main_info['delivery_type'] == 'CCOD'):?>
 										<?php if($main_info['ccod_method'] == '' || $main_info['ccod_method'] == 'full'): ?>
@@ -300,76 +290,64 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 								</td>
 							</tr>
 							<tr>
-								<td class="row_label">Nomor Delivery</td>
-								<td style="font-size:18px;font-weight:bold;"><?php
-                                        $orderno = explode('-',$main_info['delivery_id']);
-                                        $orderno = array_pop($orderno);
-                                        print $orderno;
-                                    ?>
-                                </td>
+								<td class="row_label">Delivery Number</td>
+								<td><?php print $main_info['delivery_id'];?></td>
 							</tr>
 							<tr>
-								<td>Tanggal Delivery</td>
-								<td><?php print $main_info['assignment_date'];?>
-                                    <?php
-                                        /*
-                                            <span id="order_slot">Order Slot: <?php print $main_info['assignment_timeslot'];?></span>
-
-                                        */
-                                    ?>
-                                </td>
+								<td>Delivery Date</td>
+								<td><?php print $main_info['assignment_date'];?> <span id="order_slot">Order Slot: <?php print $main_info['assignment_timeslot'];?></span></td>
 							</tr>
 							<tr>
-								<td colspan="2" style="padding-top:8px;" ><strong>Rincian Order</strong></td>
+								<td colspan="2"><strong>Order Detail</strong></td>
 							</tr>
 
 
-                        <?php if($main_info['delivery_type'] == 'PS'):?>
+						<?php if($main_info['delivery_type'] == 'PS'):?>
 							<tr>
-								<td class="row_label">Diambil Dari</td>
+								<td class="row_label">Picked Up From</td>
 								<td><?php print ($main_info['recipient_name'] == "")?$main_info['buyer_name']:$main_info['recipient_name'];?></td>
 							</tr>
 							<tr>
-								<td>Alamat Pengambilan</td>
+								<td>Pick Up Address</td>
 								<td><?php print $main_info['shipping_address'];?></td>
 							</tr>
 						<?php else: ?>
 
 							<tr>
-								<td class="row_label">Kepada</td>
+								<td class="row_label">Delivered To</td>
 								<td><?php print ($main_info['recipient_name'] == "")?$main_info['buyer_name']:$main_info['recipient_name'];?></td>
 							</tr>
 							<tr>
-								<td>Alamat Pengiriman</td>
+								<td>Shipping Address</td>
 								<td><?php print $main_info['shipping_address'];?></td>
 							</tr>
 
 						<?php endif; ?>
-
-                            <tr>
-                                <td>Phone</td>
+							<tr>
+								<td>Phone</td>
                                 <td>
                                     <?php
+                                    /*
+                                        print ($main_info['phone'] !='' && $main_info['phone'] !='-' && !is_null($main_info['phone']) )?$main_info['phone'].'<br />':'';
+                                        print ($main_info['mobile1'] !='' && $main_info['mobile1'] !='-' && !is_null($main_info['mobile1']) )?$main_info['mobile1'].'<br />':'';
+                                        print ($main_info['mobile2'] !='' && $main_info['mobile2'] !='-' && !is_null($main_info['mobile2']) )?$main_info['mobile2'].'<br />':'';
+                                    */
                                         $phones = array($main_info['phone'], $main_info['mobile1'], $main_info['mobile2'] );
-                                        //$phones = array_unique($phones);
+                                        $phones = array_unique($phones);
                                         $phones = implode('<br />', $phones);
 
                                         print $phones;
+
                                     ?>
                                 </td>
-                            </tr>
+							</tr>
 
-                            <?php
-                            /*
 							<tr>
 								<td>Email</td>
 								<td><?php print $main_info['email'];?></td>
 							</tr>
-                            */
-                            ?>
-
 							<tr>
-								<td>Arahan / Catatan</td>
+								<td>Direction</td>
 								<td><?php print $main_info['directions'];?></td>
 							</tr>
 						</tbody>
@@ -380,10 +358,10 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 
 				<td id="sign_boxes">
 					<table border="0" cellpadding="4" cellspacing="0" id="signBox">
-						<tbody style="text-align:center;">
+						<tbody>
 							<tr class="sign_head">
-								<td style="width:50%;">Dibuat Oleh</td>
-								<td style="width:50%;">Penerima Barang</td>
+								<td>Created By</td>
+								<td>Online Store</td>
 							</tr>
 							<tr class="sign_space">
 								<td>&nbsp;</td>
@@ -394,7 +372,19 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 								<td>&nbsp;</td>
 							</tr>
 							<tr class="sign_head">
-								<td>Laporan</td>
+								<td>Goods Received By</td>
+								<td>Cash Received By</td>
+							</tr>
+							<tr class="sign_space">
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr class="sign_name">
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr class="sign_head">
+								<td>Reporting</td>
 								<td>Staff Dispatch Admin</td>
 							</tr>
 							<tr class="sign_space">
@@ -406,8 +396,8 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 								<td>&nbsp;</td>
 							</tr>
 							<tr class="sign_head">
-								<td>Keuangan</td>
-								<td>Staff Delivery</td>
+								<td>Finance</td>
+								<td>Courier</td>
 							</tr>
 							<tr class="sign_space">
 								<td>&nbsp;</td>
@@ -419,8 +409,6 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 							</tr>
 						</tbody>
 					</table>
-                    <?php
-                    /*
 					<table width="100%" cellpadding="4" cellspacing="0" >
 						<tbody>
 							<tr>
@@ -437,8 +425,6 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
 							</tr>
 						</tbody>
 					</table>
-                    */
-                    ?>
 				</td>
 			</tr>
 		</tbody>
