@@ -14,6 +14,34 @@ class Prints extends Application
 
 	}
 
+    public function mapview($type,$buyer_id){
+
+        if($type == 'buyer'){
+            $table = $this->config->item('jayon_buyers_table');
+        }else{
+            $table = $this->config->item('incoming_delivery_table');
+        }
+
+        $this->db->where('id',$buyer_id);
+        $this->db->select('id,buyer_name,buyerdeliveryzone,buyerdeliverycity,shipping_address,recipient_name,shipping_zip,directions,dir_lat ,dir_lon ,latitude ,longitude');
+        $buyer = $this->db->get($table)->row_array();
+
+
+        $data['page_title'] = 'Set Location';
+        $data['id'] = $buyer['id'];
+        $data['latitude'] = $buyer['latitude'];
+        $data['longitude'] = $buyer['longitude'];
+
+        unset($buyer['id']);
+        unset($buyer['latitude']);
+        unset($buyer['longitude']);
+
+        $data['buyer'] = $buyer;
+        $data['type'] = $type;
+
+        $this->load->view('auth/pages/setlocation',$data); // Load the view
+    }
+
 	public function deliveryslip($delivery_id,$pdf = false)
 	{
 			$main = $this->db
@@ -96,53 +124,95 @@ class Prints extends Application
 
 			$chg = ($gt - $dsc) + $tax + $dc + $cod;
 
+            if($data['main_info']['delivery_type'] == 'COD' || $data['main_info']['delivery_type'] == 'CCOD'){
+                $cclass = ' bigtype';
+            }else{
+                $cclass = '';
+            }
+
+
+			$this->table->add_row(
+					array('data'=>'Total Price',
+						'colspan'=>3,
+						'class'=>'lsums'.$cclass
+						),
+                    array('data'=>number_format($gt,2,',','.'),
+                        'colspan'=>3,
+                        'class'=>$cclass
+                        )
+
+			);
+
 				$this->table->add_row(
-					'&nbsp;',
-					'&nbsp;',
-					'Total Price',
-					number_format($gt,2,',','.')
+					array('data'=>'Total Discount',
+						'colspan'=>3,
+						'class'=>'lsums'
+						),
+                    array(
+                        'data'=>number_format($dsc,2,',','.'),
+                        'class'=>'lsums'
+                        )
 				);
 
 				$this->table->add_row(
-					'&nbsp;',
-					'&nbsp;',
-					'Total Discount',
-					number_format($dsc,2,',','.')
+					array('data'=>'Total Tax',
+						'colspan'=>3,
+						'class'=>'lsums'
+						),
+                    number_format($tax,2,',','.')
 				);
 
-				$this->table->add_row(
-					'&nbsp;',
-					'&nbsp;',
-					'Total Tax',
-					number_format($tax,2,',','.')
-				);
+				/*
+				if($data['main_info']['delivery_bearer'] == 'merchant'){
+					$chg -= $dc;
+					$dc = 0;
+				}
+				*/
 
-
 				$this->table->add_row(
-					'&nbsp;',
-					'&nbsp;',
-					'Delivery Charge',
+					array('data'=>'Dibayar oleh '.$data['main_info']['delivery_bearer'],
+						'colspan'=>2,
+						'class'=>'lsums'
+						),
+					array('data'=>'Delivery Charge',
+                        'class'=>'lsums'.$cclass
+						),
 					array('data'=>number_format($dc,2,',','.'),
-						'class'=>'editable',
+						'class'=>'editable'.$cclass,
 						'id'=>'delivery_cost'
 					)
 				);
 
+				/*
+				if($data['main_info']['cod_bearer'] == 'merchant'){
+					$chg -= $cod;
+					$cod = 0;
+				}
+				*/
+
 				$this->table->add_row(
-					'&nbsp;',
-					'&nbsp;',
-					'COD Surcharge',
+					array('data'=>'Dibayar oleh '.$data['main_info']['cod_bearer'],
+						'colspan'=>2,
+						'class'=>'lsums'
+						),
+					array('data'=>'COD Surcharge',
+                        'class'=>'lsums'.$cclass
+						),
 					array('data'=>number_format($cod,2,',','.'),
-						'class'=>'editable',
+						'class'=>'editable'.$cclass,
 						'id'=>'cod_cost'
 					)
 				);
 
 				$this->table->add_row(
-					'&nbsp;',
-					'&nbsp;',
-					'Total Charges',
-					number_format($chg,2,',','.')
+					array('data'=>'Total Charges',
+						'colspan'=>3,
+                        'class'=>'lsums'.$cclass
+						),
+                    array('data'=>number_format($chg,2,',','.'),
+                        'class'=>'editable'.$cclass,
+                        'id'=>'delivery_cost'
+                        )
 				);
 
 			$data['grand_total'] = $gt;
@@ -196,17 +266,17 @@ class Prints extends Application
 						a.zip as m_zip,
 						a.phone as m_phone,
 						a.mobile as m_mobile,
-						a.application_name as app_name,
-						c.fullname as courier_name' )
+						a.application_name as app_name')
 					->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left')
 					->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left')
-					->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left')
 					->join('applications as a',$this->config->item('assigned_delivery_table').'.application_key=a.key','left')
 					->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
 
 					//print $this->db->last_query();
 
 			$data['main_info'] = $main->row_array();
+
+			//print_r($main->row_array());
 
 			$this->db->select('seq,kg_from,kg_to,calculated_kg,tariff_kg,total');
 			$this->db->order_by('seq','asc');
@@ -242,6 +312,8 @@ class Prints extends Application
 			$typeselect = form_dropdown('delivery_type',$delivery_type,$data['main_info']['delivery_type'],'id="delivery_type_select"');
 
 			$data['typeselect'] = $typeselect;
+
+
 
 			$details = $this->db->where('delivery_id',$delivery_id)->order_by('unit_sequence','asc')->get($this->config->item('delivery_details_table'));
 
@@ -290,44 +362,38 @@ class Prints extends Application
 			$chg = ($gt - $dsc) + $tax + $dc + $cod;
 
 			$this->table->add_row(
-					array('data'=>'Total Price',
-						'colspan'=>3,
-						'class'=>'lsums'
-						),
+				'&nbsp;',
+				'&nbsp;',
+				'Total Price',
 				array('data'=>number_format($gt,2,',','.'),
-					'class'=>'editable',
 					'id'=>'total_price'
 				)
 
 			);
 
 				$this->table->add_row(
-					array('data'=>'Total Discount',
-						'colspan'=>3,
-						'class'=>'lsums'
-						),
+					'&nbsp;',
+					'&nbsp;',
+					'Total Discount',
 					array('data'=>number_format($dsc,2,',','.'),
-						'class'=>'editable',
 						'id'=>'total_discount'
 					)
 				);
 
 				$this->table->add_row(
-					array('data'=>'Total Tax',
-						'colspan'=>3,
-						'class'=>'lsums'
-						),
+					'&nbsp;',
+					'&nbsp;',
+					'Total Tax',
 					array('data'=>number_format($tax,2,',','.'),
-						'class'=>'editable',
 						'id'=>'total_tax'
 					)
 				);
 
+
 				$this->table->add_row(
-					array('data'=>'Delivery Charge',
-						'colspan'=>3,
-						'class'=>'lsums'
-						),
+					'&nbsp;',
+					'&nbsp;',
+					'Delivery Charge',
 					array('data'=>number_format($dc,2,',','.'),
 						'class'=>'editable',
 						'id'=>'delivery_cost'
@@ -335,10 +401,9 @@ class Prints extends Application
 				);
 
 				$this->table->add_row(
-					array('data'=>'COD Surcharge',
-						'colspan'=>3,
-						'class'=>'lsums'
-						),
+					'&nbsp;',
+					'&nbsp;',
+					'COD Surcharge',
 					array('data'=>number_format($cod,2,',','.'),
 						'class'=>'editable',
 						'id'=>'cod_cost'
@@ -346,18 +411,15 @@ class Prints extends Application
 				);
 
 				$this->table->add_row(
-					array('data'=>'Total Charges',
-						'colspan'=>3,
-						'class'=>'lsums'
-						),
+					'&nbsp;',
+					'&nbsp;',
+					'Total Charges',
 					array('data'=>number_format($chg,2,',','.'),
-						'class'=>'editable',
-						'id'=>'total_charges'
+						'id'=>'total_charges',
+                        'class'=>'bigtype'
 					)
 
 				);
-
-			$data['detail_table'] = $this->table;
 
 			$data['grand_total'] = $gt;
 			$data['grand_discount'] = $d;
@@ -383,103 +445,9 @@ class Prints extends Application
 				//print $html; // Load the view
 				pdf_create($html, $delivery_id.'.pdf','A4','landscape', true);
 			}else{
-				//print_r($data);
 				$this->load->view('print/deliveryview',$data); // Load the view
 			}
 		}
-
-	public function __reconciliation($from, $to ,$type,$id,$pdf = false){
-		$this->load->library('number_words');
-
-		if($id == 'noid'){
-			$data['type_name'] = '-';
-		}else{
-			$user = $this->db->where('id',$id)->get($this->config->item('jayon_members_table'))->row();
-			$data['type_name'] = $user->fullname;
-		}
-
-		$data['type'] = $type;
-		$data['period'] = $from.' s/d '.$to;
-		$data['bank_account'] = 'xxxxxx';
-
-		$sfrom = date('Y-m-d',strtotime($from));
-		$sto = date('Y-m-d',strtotime($to));
-
-		$column = 'assignment_date';
-		$daterange = sprintf("`%s`between '%s%%' and '%s%%' ", $column, $sfrom, $sto);
-
-		$this->db->where($daterange, null, false);
-		$this->db->where($column.' != ','0000-00-00');
-
-		$this->db->where('status',$this->config->item('trans_status_mobile_delivered'));
-		$this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
-		$this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
-		$this->db->or_where('status',$this->config->item('trans_status_mobile_rescheduled'));
-
-
-		$rows = $this->db->get($this->config->item('delivered_delivery_table'));
-
-		//print $this->db->last_query();
-
-		$this->table->set_heading(
-				array('data'=>'Delivery Details',
-					'colspan'=>'6'
-				)
-			);
-
-
-		$this->table->set_heading(
-				'No.',
-				'Merchant Trans ID',
-				'Delivery ID',
-				'Delivery Date',
-				'Status',
-				'Value'
-				); // Setting headings for the table
-
-		$seq = 1;
-		$total_billing = 0;
-
-		foreach($rows->result() as $r){
-			$this->table->add_row(
-				$seq,
-				$r->merchant_trans_id,
-				$r->delivery_id,
-				$r->assignment_date,
-				$r->status,
-				number_format((int)str_replace('.','',$r->total_price),2,',','.')
-			);
-
-			if($r->status == $this->config->item('trans_status_mobile_delivered')){
-				$total_billing += (int)str_replace('.','',$r->total_price);
-			}
-			$seq++;
-		}
-
-		$this->table->add_row(
-			array('data'=>'Total','colspan'=>5),
-			number_format($total_billing,2,',','.')
-		);
-
-		$this->table->add_row(
-			'Terbilang',
-			array('data'=>$this->number_words->to_words($total_billing).' rupiah',
-				'colspan'=>5)
-		);
-
-		$recontab = $this->table->generate();
-		$data['recontab'] = $recontab;
-
-		if($pdf){
-			$html = $this->load->view('print/reconciliation',$data,true);
-			//print $html; // Load the view
-			pdf_create($html, $delivery_id.'.pdf','A4','landscape', true);
-		}else{
-			$this->load->view('print/reconciliation',$data); // Load the view
-		}
-
-	}
-
 
 	public function reconciliation($from, $to ,$type,$id,$pdf = false){
 
@@ -487,6 +455,7 @@ class Prints extends Application
 
 		if($id == 'noid'){
 			$data['type_name'] = '-';
+			$data['bank_account'] = 'n/a';
 		}else{
 			if($type == 'Merchant'){
 				$user = $this->db->where('id',$id)->get($this->config->item('jayon_members_table'))->row();
@@ -580,9 +549,6 @@ class Prints extends Application
 		}
 
 
-
-
-
 		$seq = 1;
 		$total_billing = 0;
 		$total_delivery = 0;
@@ -612,7 +578,7 @@ class Prints extends Application
 					$payable = ($total - $dsc) + $tax;
 					// + $dc + $cod;
 				}else if($type == 'Courier'){
-					$payable = ($dc + $cod);
+					$payable = ($dc + $cod) * 0.1;
 				}
 				$total_billing += (int)str_replace('.','',$payable);
 			}else if(
@@ -715,6 +681,7 @@ class Prints extends Application
 		}
 
 	}
+
 
 }
 
