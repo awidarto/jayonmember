@@ -407,8 +407,8 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                         </tbody>
                     </table>
 
-                    <?php //echo $this->table->generate(); ?>
-                    <?php print $detail_table->generate(); ?>
+                    <?php echo $this->table->generate(); ?>
+                    <?php //print $detail_table->generate(); ?>
                 </td>
             </tr>
         </tbody>
