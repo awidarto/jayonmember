@@ -48,8 +48,13 @@ if($_SERVER['HTTP_HOST'] == 'localhost'){
 	$config['auth_register_success'] = 'register';
 }else{
 	//online version should redirect to main site
-	$config['auth_register_fail'] = 'http://www.jayonexpress.com/';
-	$config['auth_register_success'] = 'http://www.jayonexpress.com/';
+    if( preg_match('/sandbox/',$_SERVER['HTTP_HOST'])){
+        $config['auth_register_fail'] = 'http://www.jayonexpress.com/sandbox/member';
+        $config['auth_register_success'] = 'http://www.jayonexpress.com/sandbox/member';
+    }else{
+        $config['auth_register_fail'] = 'http://www.jayonexpress.com/';
+        $config['auth_register_success'] = 'http://www.jayonexpress.com/';
+    }
 }
 
 
