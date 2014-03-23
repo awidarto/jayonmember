@@ -9,7 +9,7 @@
 * @version 1.0.6
 * @copyright Adam Griffiths 2009
 *
-* Auth provides a powerful, lightweight and simple interface for user authentication 
+* Auth provides a powerful, lightweight and simple interface for user authentication
 */
 
 
@@ -36,7 +36,11 @@ if($_SERVER['HTTP_HOST'] == 'localhost'){
 	$config['auth_logout'] = 'login';
 }else{
 	//online version should redirect to main site
-	$config['auth_logout'] = 'http://www.jayonexpress.com/';
+    if( preg_match('/sandbox/',$_SERVER['HTTP_HOST'])){
+        $config['auth_logout'] = 'http://www.jayonexpress.com/sandbox/member';
+    }else{
+        $config['auth_logout'] = 'http://www.jayonexpress.com/';
+    }
 }
 
 if($_SERVER['HTTP_HOST'] == 'localhost'){
@@ -72,7 +76,7 @@ $config['auth_models_root'] = '';
 $config['auth_views_root'] = 'auth/';
 
 $config['buy_views_root'] = 'buy/';
- 
+
 /**
 * Set the names for your user tables below (sans prefix, which will be automatically added)
 * ex.: your table is named `ci_users` with 'ci_' defined as your dbprefix in config/database.php, so set it to 'users' below
