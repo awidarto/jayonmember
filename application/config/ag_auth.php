@@ -36,19 +36,21 @@ if($_SERVER['HTTP_HOST'] == 'localhost'){
 	$config['auth_logout'] = 'login';
 }else{
 	//online version should redirect to main site
-    if( stripos('sandbox',uri_string() )){
+    if( stripos('sandbox',$_SERVER['REQUEST_URI'])){
         $config['auth_logout'] = 'http://www.jayonexpress.com/sandbox/member';
     }else{
         $config['auth_logout'] = 'http://www.jayonexpress.com/';
     }
 }
+print $_SERVER['REQUEST_URI']."\r\n";
+print $config['auth_logout'];
 
 if($_SERVER['HTTP_HOST'] == 'localhost'){
 	$config['auth_register_fail'] = 'register';
 	$config['auth_register_success'] = 'register';
 }else{
 	//online version should redirect to main site
-    if( stripos('sandbox',uri_string())){
+    if( stripos('sandbox',$_SERVER['REQUEST_URI'])){
         $config['auth_register_fail'] = 'http://www.jayonexpress.com/sandbox/member';
         $config['auth_register_success'] = 'http://www.jayonexpress.com/sandbox/member';
     }else{
