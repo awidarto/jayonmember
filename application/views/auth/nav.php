@@ -43,9 +43,12 @@
 				<ul>
 					<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/delivery\/incoming')?>" ><?php echo anchor('admin/delivery/incoming', 'Incoming Orders');?></li><?php endif;?>
 					<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/delivery\/dispatched')?>" ><?php echo anchor('admin/delivery/dispatched', 'In Progress Orders'); ?></li><?php endif;?>
-					<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/delivery\/delivered')?>" ><?php echo anchor('admin/delivery/delivered', 'Delivered Orders');?></li><?php endif;?>
+					<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/delivery\/delivered')?>" ><?php echo anchor('admin/delivery/delivered', 'Delivery Status');?></li><?php endif;?>
+                    <?php /*
 					<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/delivery\/revoked')?>" ><?php echo anchor('admin/delivery/revoked', 'Revoked Orders');?></li><?php endif;?>
 					<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/delivery\/rescheduled')?>" ><?php echo anchor('admin/delivery/rescheduled', 'Rescheduled Orders');?></li><?php endif;?>
+                        */
+                    ?>
 				</ul>
 			</li>
 			<li class="<?php print set_hilite('admin\/location\/log')?>" ><?php if(user_group('admin')) { echo anchor('admin/location/log', 'Locations'); } ?>

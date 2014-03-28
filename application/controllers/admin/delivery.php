@@ -151,11 +151,16 @@ class Delivery extends Application
 				$reference = $key['revoke_ref'];
 			}
 
-			$deliveryidfield = ($key['status'] == $this->config->item('trans_status_canceled'))?$key['delivery_id']:form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
+            $orderno = explode('-',$key['delivery_id']);
+            $orderno = array_pop($orderno);
+
+
+			$deliveryidfield = ($key['status'] == $this->config->item('trans_status_canceled'))?$key['delivery_id']:form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$orderno.'</span>';
 
 			$deliverytypefield = '<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_type'].'</span>';
 
 			$weightfield = ($key['weight'] == 0)?'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">unspecified</span>':get_weight_range($key['weight']);
+
 
 			$aadata[] = array(
 				//date('Y-m-d H:i:s',$key['created']),
@@ -165,7 +170,7 @@ class Delivery extends Application
 				$key['buyerdeliveryzone'],
 				$key['buyerdeliverycity'],
 				$deliveryidfield,
-				$key['merchant_trans_id'],
+				$this->hide_trx($key['merchant_trans_id']),
 				$app['application_name'],
 				$key['merchant'],
 				//$app['domain'],
@@ -209,7 +214,7 @@ class Delivery extends Application
 			'Zone',
 			'City',
 			'Delivery ID',
-			'Merchant Trans ID',
+			'No Kode Toko',
 			'App Name',
 			'Merchant',
 			//'App Domain',
@@ -1367,6 +1372,9 @@ class Delivery extends Application
 			$cityfield = ($barcity == $key['buyerdeliverycity'])?'':$key['buyerdeliverycity'];
 			$zonefield = ($barzone == $key['buyerdeliveryzone'])?'':$key['buyerdeliveryzone'];
 
+            $orderno = explode('-',$key['delivery_id']);
+            $orderno = array_pop($orderno);
+
 			$aadata[] = array(
 				$datefield,
 				//$devicefield,
@@ -1374,8 +1382,8 @@ class Delivery extends Application
 				$cityfield,
 				$zonefield,
 				//$key['merchant'],
-				$key['merchant_trans_id'],
-				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
+				$this->hide_trx($key['merchant_trans_id']),
+				'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$orderno.'</span>',
 				//$key['delivery_id'],
 				$key['buyer_name'],
 				$key['shipping_address'],
@@ -1415,7 +1423,7 @@ class Delivery extends Application
 			'City',
 			'Zone',
 			//'Merchant',
-			'Merchant Trans ID',
+			'No Kode Toko',
 			'Delivery ID',
 			'Buyer',
 			'Shipping Address',
@@ -1516,7 +1524,7 @@ class Delivery extends Application
 			//'Application ID',
 			'Buyer',
 			'Merchant',
-			'Merchant Trans ID',
+			'No Kode Toko',
 			'Courier',
 			'Shipping Address',
 			'Phone',
@@ -1652,13 +1660,16 @@ class Delivery extends Application
 
 			$thumbnail = get_thumbnail($key['delivery_id']);
 
+            $orderno = explode('-',$key['delivery_id']);
+            $orderno = array_pop($orderno);
+
 			$aadata[] = array(
 				'<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
-				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
+				form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$orderno.'</span>',
 				//$key['application_id'],
 				$key['buyer_name'],
 				$key['app_name'],
-				$key['merchant_trans_id'],
+				$this->hide_trx($key['merchant_trans_id']),
 				$key['courier'],
 				$key['shipping_address'],
 				$thumbnail,
@@ -1691,7 +1702,7 @@ class Delivery extends Application
 			//'Application ID',
 			'Buyer',
 			'Application Domain',
-			'Merchant Trans ID',
+			'No Kode Toko',
 			'Courier',
 			'Shipping Address',
 			'Receiver',
@@ -1721,6 +1732,7 @@ class Delivery extends Application
 		$page['page_title'] = 'Delivered Orders';
 		$this->ag_auth->view('ajaxlistview',$page); // Load the view
 	}
+
 
 
 	/*revoked*/
@@ -2749,6 +2761,15 @@ class Delivery extends Application
 
 		return $order_exist;
 	}
+
+    public function hide_trx($trx_id){
+        if(preg_match('/^TRX_/', $trx_id)){
+            return '';
+        }else{
+            return $trx_id;
+        }
+    }
+
 
 }
 

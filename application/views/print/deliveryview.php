@@ -346,7 +346,11 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                             </tr>
                             <tr>
                                 <td class="row_label">Delivery Number:</td>
-                                <td><?php print $main_info['delivery_id'];?>
+                                <td><?php
+                                        $orderno = explode('-',$main_info['delivery_id']);
+                                        $orderno = array_pop($orderno);
+                                        print $orderno;
+                                    ?>
                                     <input type="hidden" id="delivery_id" value="<?php print $main_info['delivery_id']?>" />
                                 </td>
                             </tr>

@@ -243,6 +243,23 @@
                             </tr>
                             */
                             ?>
+                            <tr>
+                                <td colspan="2"><strong>Area Kirim</strong></td>
+                            </tr>
+
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Kecamatan<hr /><span class="fine">District</span></td>
+                                    <td>
+                                        <strong><?php print $main_info['buyerdeliveryzone'].'</span>';?></strong>
+                                    </td>
+                                </tr>
+
+
 <?php
 /*
     [mc_email] => ganti@bajuresmi.net.com.id
@@ -331,6 +348,12 @@ $merchant_info .= ($main_info['m_phone'] == '')?'Phone : '.$main_info['mc_phone'
                                     ?>
                                 </td>
 							</tr>
+                            <tr>
+                                <td class="row_label">No Kode Toko</td>
+                                <td>
+                                    <?php print $main_info['merchant_trans_id']; ?>
+                                </td>
+                            </tr>
 							<tr>
 								<td>Tanggal Delivery</td>
 								<td><?php print $main_info['assignment_date'];?>
