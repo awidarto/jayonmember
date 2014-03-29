@@ -302,7 +302,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>No Kode Toko:</td>
+                                <td>No Kode Penjualan Toko:</td>
                                 <td>
                                     <?php
                                         if(preg_match('/^TRX_/', $main_info['merchant_trans_id'])){
