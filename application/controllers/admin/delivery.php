@@ -89,8 +89,13 @@ class Delivery extends Application
 			$search = true;
 		}
 
-		if($this->input->post('sSearch_4') != ''){
-			$this->db->like($this->config->item('incoming_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_4'));
+        if($this->input->post('sSearch_4') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_4'));
+            $search = true;
+        }
+
+		if($this->input->post('sSearch_5') != ''){
+			$this->db->like($this->config->item('incoming_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_5'));
 			$search = true;
 		}
 
@@ -312,6 +317,10 @@ class Delivery extends Application
 			$this->db->like('delivery_id',$this->input->post('sSearch_3'));
 		}
 
+        if($this->input->post('sSearch_4') != ''){
+            $this->db->like('merchant_trans_id',$this->input->post('sSearch_4'));
+        }
+
 		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
 		$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
@@ -416,7 +425,12 @@ class Delivery extends Application
 			'<input type="text" name="search_city" id="search_city" value="Search city" class="search_init" />',
 			'<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
 			'<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
-			form_button('do_assign','Assign Selection to Zone / Device','id="doAssign"')
+			form_button('do_assign','Assign Selection to Zone / Device','id="doAssign"'),
+            '',
+            '',
+            '',
+            '',
+            '<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />'
 			);
 
 		$page['sortdisable'] = '1,2';
@@ -1430,7 +1444,7 @@ class Delivery extends Application
 			'Phone',
 			'Status',
 			'Actions'
-			); // Setting headings for the table
+            ); // Setting headings for the table
 
 		$this->table->set_footing(
 			'<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery date" class="search_init" />',
