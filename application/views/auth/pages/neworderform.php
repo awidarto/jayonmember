@@ -1277,6 +1277,12 @@
                             <tr>
                                 <td colspan="2"><strong>Order Detail</strong></td>
                             </tr>
+                            <tr class="buyer_info">
+                                <td class="row_label" id="merchant_id_label">No Kode Penjualan Toko<hr /><span class="fine">No Kode Penjualan Toko</span></td>
+                                <td>
+                                    <input type="text" id="merchant_trans_id" name="merchant_trans_id" value="" /> <span class="fine">( No. Invoice / AWB / dll )</span>
+                                </td>
+                            </tr>
 
                             <tr>
                                 <td class="row_label">Delivery Type<hr /><span class="fine">Jenis Pengiriman</span></td>
@@ -1300,12 +1306,6 @@
                                     ID : <span id="buyer_id_txt"></span><br />
                                     <input type="hidden" value="" id="buyer_id" name="buyer_id" />
                                     <input type="text" id="buyer_name" name="buyer_name" value="" />
-                                </td>
-                            </tr>
-                            <tr class="buyer_info">
-                                <td class="row_label" id="merchant_id_label">No Kode Penjualan Toko<hr /><span class="fine">No Kode Penjualan Toko</span></td>
-                                <td>
-                                    <input type="text" id="merchant_trans_id" name="merchant_trans_id" value="" /> <span class="fine">( No. Invoice / AWB / dll )</span>
                                 </td>
                             </tr>
                             <tr class="buyer_info">
