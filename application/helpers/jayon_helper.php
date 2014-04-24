@@ -503,6 +503,13 @@ function get_thumbnail($delivery_id){
 		$thumbnail = $CI->ag_asset->load_image('th_nopic.jpg');
 	}
 
+    if(file_exists($CI->config->item('picture_path').$delivery_id.'_sign.jpg')){
+        //if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'_sign.jpg')){
+            $sthumbnail = $CI->config->item('admin_url').'public/receiver/'.$delivery_id.'_sign.jpg';
+            $thumbnail .= sprintf('<img style="cursor:pointer;width:100px;height:auto;" class="sign thumb" alt="'.$delivery_id.'" src="%s?'.time().'" />',$sthumbnail);
+        //}
+    }
+
 	return $thumbnail;
 }
 
