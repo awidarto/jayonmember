@@ -219,7 +219,7 @@
 							</tr>
 							<?php if($main_info['show_merchant']):?>
 								<tr>
-									<td>Nama Penjual<hr /><span class="fine">Merchant Name</span></td>
+									<td>Nama Penjual</td>
 									<td>
 										<?php print $main_info['merchant'].'</span>';?>
 									</td>
@@ -227,7 +227,7 @@
 							<?php endif;?>
 							<?php if($main_info['show_shop']):?>
 								<tr>
-									<td>Nama Toko<hr /><span class="fine">Store Name</span></td>
+									<td>Nama Toko</td>
 									<td>
 										<?php //print $main_info['app_name'].'<br /><span class="fine">'.$main_info['app_name'].'</span>';?>
 										<?php print $main_info['app_name'].'</span>';?>
@@ -253,7 +253,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Kecamatan<hr /><span class="fine">District</span></td>
+                                    <td>Kecamatan</td>
                                     <td>
                                         <strong><?php print $main_info['buyerdeliveryzone'].'</span>';?></strong>
                                     </td>

@@ -145,94 +145,107 @@ class Prints extends Application
             }
 
 
-			$this->table->add_row(
-					array('data'=>'Total Price',
-						'colspan'=>3,
-						'class'=>'lsums'.$cclass
-						),
-                    array('data'=>number_format($gt,2,',','.'),
-                        'colspan'=>3,
-                        'class'=>$cclass
-                        )
+                if($data['main_info']['delivery_type'] != 'Delivery Only' ){
 
-			);
+        			$this->table->add_row(
+        					array('data'=>'Total Price',
+        						'colspan'=>3,
+        						'class'=>'lsums'.$cclass
+        						),
+                            array('data'=>number_format($gt,2,',','.'),
+                                'class'=>$cclass
+                                )
 
-				$this->table->add_row(
-					array('data'=>'Total Discount',
-						'colspan'=>3,
-						'class'=>'lsums'
-						),
-                    array(
-                        'data'=>number_format($dsc,2,',','.'),
-                        'class'=>'lsums'
-                        )
-				);
+        			);
 
-				$this->table->add_row(
-					array('data'=>'Total Tax',
-						'colspan'=>3,
-						'class'=>'lsums'
-						),
-                    number_format($tax,2,',','.')
-				);
+                    if($dsc > 0){
+                        $this->table->add_row(
+                            array('data'=>'Total Discount',
+                                'colspan'=>3,
+                                'class'=>'lsums'
+                                ),
+                            array(
+                                'data'=>number_format($dsc,2,',','.'),
+                                'class'=>'lsums'
+                                )
+                        );
+                    }
 
-				/*
-				if($data['main_info']['delivery_bearer'] == 'merchant'){
-					$chg -= $dc;
-					$dc = 0;
-				}
-				*/
+                    if($tax > 0){
+                        $this->table->add_row(
+                            array('data'=>'Total Tax',
+                                'colspan'=>3,
+                                'class'=>'lsums'
+                                ),
+                            number_format($tax,2,',','.')
+                        );
+                    }
 
-                $translasi = array(
+    				/*
+    				if($data['main_info']['delivery_bearer'] == 'merchant'){
+    					$chg -= $dc;
+    					$dc = 0;
+    				}
+    				*/
+
+                    $translasi = array(
+                    ''=>'',
                     'merchant'=>'toko online',
                     'buyer'=>'pembeli'
                     );
 
-				$this->table->add_row(
-					array('data'=>'Dibayar oleh '.$translasi[$data['main_info']['delivery_bearer']],
-						'colspan'=>2,
-						'class'=>'lsums'
-						),
-					array('data'=>'Delivery Charge',
-                        'class'=>'lsums'.$cclass
-						),
-					array('data'=>number_format($dc,2,',','.'),
-						'class'=>'editable'.$cclass,
-						'id'=>'delivery_cost'
-					)
-				);
+                    $paidby = ($data['main_info']['delivery_bearer'] == '')?'':'Dibayar oleh '.$translasi[$data['main_info']['delivery_bearer']];
 
-				/*
-				if($data['main_info']['cod_bearer'] == 'merchant'){
-					$chg -= $cod;
-					$cod = 0;
-				}
-				*/
+    				$this->table->add_row(
+    					array('data'=>$paidby,
+    						'colspan'=>2,
+    						'class'=>'lsums'
+    						),
+    					array('data'=>'Delivery Charge',
+                            'class'=>'lsums'.$cclass
+    						),
+    					array('data'=>number_format($dc,2,',','.'),
+    						'class'=>'editable'.$cclass,
+    						'id'=>'delivery_cost'
+    					)
+    				);
 
-				$this->table->add_row(
-					array('data'=>'Dibayar oleh '.$translasi[$data['main_info']['cod_bearer']],
-						'colspan'=>2,
-						'class'=>'lsums'
-						),
-					array('data'=>'COD Surcharge',
-                        'class'=>'lsums'.$cclass
-						),
-					array('data'=>number_format($cod,2,',','.'),
-						'class'=>'editable'.$cclass,
-						'id'=>'cod_cost'
-					)
-				);
+    				/*
+    				if($data['main_info']['cod_bearer'] == 'merchant'){
+    					$chg -= $cod;
+    					$cod = 0;
+    				}
+    				*/
 
-				$this->table->add_row(
-					array('data'=>'Total Charges',
-						'colspan'=>3,
-                        'class'=>'lsums'.$cclass
-						),
-                    array('data'=>number_format($chg,2,',','.'),
-                        'class'=>'editable'.$cclass,
-                        'id'=>'delivery_cost'
+
+                    $paidby = ($data['main_info']['cod_bearer'] == '')?'':'Dibayar oleh '.$translasi[$data['main_info']['cod_bearer']];
+
+                    $this->table->add_row(
+                        array('data'=>$paidby,
+                            'colspan'=>2,
+                            'class'=>'lsums'
+                            ),
+                        array('data'=>'COD Surcharge',
+                            'class'=>'lsums'.$cclass
+                            ),
+                        array('data'=>number_format($cod,2,',','.'),
+                            'class'=>'editable'.$cclass,
+                            'id'=>'cod_cost'
                         )
-				);
+                    );
+
+    				$this->table->add_row(
+    					array('data'=>'Total Charges',
+    						'colspan'=>3,
+                            'class'=>'lsums'.$cclass
+    						),
+                        array('data'=>number_format($chg,2,',','.'),
+                            'class'=>'editable'.$cclass,
+                            'id'=>'delivery_cost'
+                            )
+    				);
+
+                }
 
 			$data['grand_total'] = $gt;
 			$data['grand_discount'] = $d;
