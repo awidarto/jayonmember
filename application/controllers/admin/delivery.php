@@ -1672,7 +1672,14 @@ class Delivery extends Application
 			$delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
 			$edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
 
-			$thumbnail = get_thumbnail($key['delivery_id']);
+			//$thumbnail = get_thumbnail($key['delivery_id']);
+
+            if($key['status'] == 'pending'){
+                $thumbnail = get_thumbnail($key['delivery_id'], 'thumb_multi');
+            }else{
+                $thumbnail = get_thumbnail($key['delivery_id']);
+            }
+
 
             $orderno = explode('-',$key['delivery_id']);
             $orderno = array_pop($orderno);

@@ -73,6 +73,25 @@
 
 			}
 
+            if($(e.target).is('.thumb_multi')){
+                var delivery_id = e.target.alt;
+                var currentTime = new Date();
+
+                var images = [];
+
+                $('.gal_' + delivery_id).each(function(el){
+                    images.push(
+                        {
+                            href : '<?php print base_url();?>public/receiver/' + $(this).val() + '?' + currentTime.getTime(),
+                            title : delivery_id
+                        }
+                    );
+                });
+
+                $.fancybox.open(images);
+
+            }
+
 			if ($(e.target).is('.cancel_link')) {
 				var delivery_id = e.target.id;
 				var answer = confirm("Are you sure you want to archive this order ?");
