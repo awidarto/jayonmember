@@ -1,12 +1,12 @@
 <script type="text/javascript">
-	
+
 	var base = '<?php print base_url();?>';
 	var controller = '<?php print $controller; ?>';
 
 	$(document).ready(function() {
 		$('#date_from').datepicker({ dateFormat: 'yy-mm-dd' });
 		$('#date_to').datepicker({ dateFormat: 'yy-mm-dd' });
-		
+
 		$('#get_week').click(function(){
 
 				var user_scopes = $('#user_scopes').val();
@@ -39,7 +39,34 @@
 			}
 		);
 
+        $('#show_last').on('click',function(){
+            $('#last_query').toggle();
+        });
 
+        $('#act_regenerate').on('click',function(){
+            $('#generating').show();
+            var mo = $('#month_period').val();
+            var yr = $('#year_period').val();
+
+            <?php
+                if($select_title == 'Device'){
+                    $gen = 'dev';
+                }else{
+                    $gen = 'rev';
+                }
+            ?>
+
+            $.post( base + 'gen/<?php print $gen; ?>/' + mo +'/' + yr,
+                {},
+                function(data){
+                    if(data.result == 'OK'){
+                        $('#generating').hide();
+                        alert('Report regenerated, refresh page if necessary');
+                    }
+                },
+                'json' );
+        });
+		//$("#toClone thead").sticky({topSpacing:0});
 
 	});
 
@@ -67,18 +94,42 @@ table#recon_select td {
 }
 
 .dataTable * td, .dataTable * th{
-	text-align: center;	
+	text-align: center;
 }
 
 .dataTable * td.right{
 	text-align: right;
 }
 
+.floatingHeader {
+  position: fixed;
+  top: 0;
+  visibility: hidden;
+}
+
+#toClone{
+	margin-top: 0px;
+}
+
+.hide {
+        display:none;
+    }
+div.stickyHeader {
+    top:0;
+    position:fixed;
+    _position:absolute;
+}
+
+#generating{
+    color: red;
+    font-weight: bold;
+    background-color: yellow;
+}
 
 </style>
 
 <?php
-	
+
 	$opts = array('Global'=>'Global','Merchant'=>'Merchant','Courier'=>'Courier');
 
 	for($i=2012;$i < 2100;$i++){
@@ -103,10 +154,9 @@ table#recon_select td {
 		<form method="get">
 			<table style="width:500px;" id="recon_select" cellspacing="0" >
 				<tr>
-					<td>Merchant</td>
-					<td colspan="3"><?php print $type;?>
-						<input type="hidden" id="user_scopes" name="user_scopes" value="<?php print $id?>" />
-					</td>
+					<td><?php print (isset($select_title))?$select_title:'Merchant'; ?></td>
+					<td colspan="3"><input type="hidden" value="noid" id="user_scopes">
+                        <?php print $merchants; ?></td>
 				</tr>
 				<tr>
 					<td>Year</td>
@@ -139,11 +189,55 @@ table#recon_select td {
 					<td><?php print 'To '.form_input(array('name'=>'date_to','id'=>'date_to','class'=>'text','value'=>$to));?></td>
 					<td><span id="get_date_range" class="action_link" >Generate</span></td>
 				</tr>
+
+                <tr>
+                    <td colspan="4" style="text-align:right;padding-top:30px;"><?php print anchor($downloadurl.'/csv', 'Download CSV',array('class'=>'button'));?></td>
+                </tr>
+                <?php
+                    /*
+
+                <tr>
+                    <td>Period</td>
+                    <td>
+                        <?php print form_dropdown('month_period',$months,$month,'id = "month_period"');?>
+                    </td>
+                    <td>
+                        <?php print form_dropdown('year_period',$years,$year,'id = "year_period"');?>
+                    </td>
+                    <td>
+                        <span id="act_regenerate" class="action_link" >Regenerate Report Data</span>
+                    </td>
+
+                </tr>
+                <tr id="generating" style="display:none">
+                    <td colspan="4">
+                        <img src="<?php print base_url();?>assets/images/ajax_loader.gif" />
+                        Regenerating data, please wait, this will take a while.
+                    </td>
+                </tr>
+
+                    */
+                ?>
+
 			</table>
 		</form>
 	</div>
 </div>
+
 <div>
 	<h3><?php print $type.' '.$period; ?></h3>
 	<?php print $recontab; ?>
 </div>
+
+<?php
+/*
+<span id="show_last">Query</span>
+<div id="last_query" style="display:none;">
+    <p>
+        <?php print $last_query; ?>
+    </p>
+</div>
+
+*/
+?>
+

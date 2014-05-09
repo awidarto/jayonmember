@@ -172,11 +172,13 @@ function ajax_find_buyer_email($zone,$col = 'fullname',$idcol = 'id'){
 
 function get_merchant($id = null,$flatten = true){
 	$CI =& get_instance();
-	if(!is_null($id)){
-		 $CI->db->where('id',$id);
-	}
 
-	$CI->db->where('group_id',user_group_id('merchant'));
+	if(!is_null($id)){
+        $CI->db->where('id',$id);
+	}else{
+        $CI->db->where('group_id',user_group_id('merchant'));
+    }
+
 
 	$q = $CI->db->select(array('id','fullname','merchantname'))->get('members');
 	if($flatten){
@@ -184,7 +186,9 @@ function get_merchant($id = null,$flatten = true){
 			$result[$val['id']] = $val['fullname'];
 		}
 		return $result;
-	}if(!is_null($id)){
+	}
+
+    if(!is_null($id)){
 		return $q->row_array();
 	}else{
 		return $q->result_array();
@@ -326,6 +330,7 @@ function get_city_status(){
 
 	return $res;
 }
+
 function user_group_id($group)
 {
 	$CI =& get_instance();

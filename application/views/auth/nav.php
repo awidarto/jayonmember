@@ -59,10 +59,11 @@
 			</li>
 			<li class="<?php print set_hilite('admin\/reports\/revenue')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/revenue', 'Report'); } ?>
 				<ul>
-					<li class="<?php print set_hilite('admin\/reports\/revenue')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/revenue', 'Merchant Report'); } ?></li>
-					<li class="<?php print set_hilite('admin\/reports\/statistics')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/statistics', 'Statistics'); } ?></li>
+                    <li class="<?php print set_hilite('admin\/reports\/orderlist')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/orderlist', 'Order List'); } ?></li>
+					<li class="<?php print set_hilite('admin\/reports\/ordersummary')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/ordersummary', 'Order Summary'); } ?></li>
 					<?php
 						/*
+                        <li class="<?php print set_hilite('admin\/reports\/statistics')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/statistics', 'Statistics'); } ?></li>
 						<li class="<?php print set_hilite('admin\/reports\/revenue')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/revenue', 'Merchant Report'); } ?></li>
 						<li class="<?php print set_hilite('admin\/reports\/statistics')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/statistics', 'Statistics'); } ?></li>
 						<li class="<?php print set_hilite('admin\/reports\/dist')?>" ><?php if(user_group('merchant')) { echo anchor('admin/reports/dist', 'Distributions'); } ?></li>
