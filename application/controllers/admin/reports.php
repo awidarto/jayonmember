@@ -166,6 +166,7 @@ class Reports extends Application
             $string = ob_get_clean();
 
             $filename = str_replace('/', '_', uri_string()).'.csv';
+            $filename = str_replace('noid', $id , $filename);
 
             // Output CSV-specific headers
             header('Pragma: public');
@@ -596,6 +597,7 @@ class Reports extends Application
             $string = ob_get_clean();
 
             $filename = str_replace('/', '_', uri_string()).'.csv';
+            $filename = str_replace('noid', $id , $filename);
 
             // Output CSV-specific headers
             header('Pragma: public');
