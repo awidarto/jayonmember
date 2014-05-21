@@ -529,6 +529,9 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
 		}
 	}else{
         if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg')){
+            if($pidx > 0){
+                $class = 'thumb_multi';
+            }
             $thumbnail = $CI->config->item('admin_url').'public/receiver_thumb/th_'.$delivery_id.'.jpg';
             //$thumbnail = sprintf('<img src="%s" />',$thumbnail);
             $thumbnail = sprintf('<img style="cursor:pointer;" class="'.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" />',$thumbnail);
