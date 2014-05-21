@@ -515,6 +515,10 @@ function getmaxholiday(){
 function get_thumbnail($delivery_id, $class = 'thumb'){
 	$CI =& get_instance();
 
+    $existingpic = glob($CI->config->item('picture_path').$delivery_id.'*.jpg');
+
+    $pidx = count($existingpic);
+
 	if(file_exists($CI->config->item('picture_path').$delivery_id.'.jpg')){
 		if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg')){
 			$thumbnail = $CI->config->item('admin_url').'public/receiver_thumb/th_'.$delivery_id.'.jpg';
@@ -533,12 +537,32 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
         }
 	}
 
+    $has_sign = false;
     if(file_exists($CI->config->item('picture_path').$delivery_id.'_sign.jpg')){
         //if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'_sign.jpg')){
             $sthumbnail = $CI->config->item('admin_url').'public/receiver/'.$delivery_id.'_sign.jpg';
             $thumbnail .= sprintf('<img style="cursor:pointer;width:100px;height:auto;" class="sign '.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" />',$sthumbnail);
         //}
+            $has_sign = true;
+
     }
+
+    if($has_sign){
+        $gal = '<br />'.($pidx - 1).' pics & 1 signature';
+    }else{
+        $gal = '<br />'.$pidx.' pics, no signature';
+    }
+
+
+    if($pidx > 0){
+        for($g = 0; $g < $pidx; $g++){
+            $img = str_replace($CI->config->item('picture_path'), '', $existingpic[$g]);
+            $gal .= '<input type="hidden" class="gal_'.$delivery_id.'" value="'.$img.'" >';
+        }
+    }
+
+    $thumbnail = $thumbnail.$gal;
+
 
 	return $thumbnail;
 }
