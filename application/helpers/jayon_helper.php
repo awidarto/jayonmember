@@ -511,7 +511,7 @@ function getmaxholiday(){
     return $maxholiday->holiday;
 }
 
-/*
+
 function get_thumbnail($delivery_id, $class = 'thumb'){
 	$CI =& get_instance();
 
@@ -536,8 +536,9 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
 
 	return $thumbnail;
 }
-*/
 
+
+/*
 function get_thumbnail($delivery_id, $class = 'thumb'){
     $CI =& get_instance();
 
@@ -591,7 +592,7 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
 
     return $thumbnail;
 }
-
+*/
 
 function delivery_log($data){
 	$CI =& get_instance();
