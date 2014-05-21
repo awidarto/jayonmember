@@ -82,7 +82,7 @@
                 $('.gal_' + delivery_id).each(function(el){
                     images.push(
                         {
-                            href : '<?php print base_url();?>public/receiver/' + $(this).val() + '?' + currentTime.getTime(),
+                            href : '<?php print $this->config->item('admin_url');?>public/receiver/' + $(this).val() + '?' + currentTime.getTime(),
                             title : delivery_id
                         }
                     );
