@@ -289,6 +289,15 @@ function get_slot_count(){
 	return $slots;
 }
 
+function get_apps($merchant_id){
+    $CI =& get_instance();
+
+    $apps = $CI->db->where('merchant_id',$merchant_id)
+        ->get($CI->config->item('applications_table'))->result_array();
+
+    return $apps;
+}
+
 
 function get_app_id_from_key($key){
 	$CI =& get_instance();
@@ -360,6 +369,32 @@ function get_weight_range($tariff){
 	}else{
 		return 0;
 	}
+}
+
+function get_weight_tariff($weight, $delivery_type ,$app_id = null){
+    $CI =& get_instance();
+
+    $weight = (float)$weight;
+
+    if($weight > 0){
+        $CI->db->select('total');
+        $CI->db->where('app_id', $app_id);
+        $CI->db->where('kg_from <= ',$weight);
+        $CI->db->where('kg_to >= ',$weight);
+        if($delivery_type == 'PS'){
+            $result = $CI->db->get($CI->config->item('jayon_pickup_fee_table'));
+        }else{
+            $result = $CI->db->get($CI->config->item('jayon_delivery_fee_table'));
+        }
+        if($result->num_rows() > 0){
+            $row = $result->row();
+            return $row->total;
+        }else{
+            return 0;
+        }
+    }else{
+        return 0;
+    }
 }
 
 function get_cod_tariff($total_price){
@@ -529,9 +564,6 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
 		}
 	}else{
         if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg')){
-            if($pidx > 0){
-                $class = 'thumb_multi';
-            }
             $thumbnail = $CI->config->item('admin_url').'public/receiver_thumb/th_'.$delivery_id.'.jpg';
             //$thumbnail = sprintf('<img src="%s" />',$thumbnail);
             $thumbnail = sprintf('<img style="cursor:pointer;" class="'.$class.'" alt="'.$delivery_id.'" src="%s?'.time().'" />',$thumbnail);

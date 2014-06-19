@@ -146,4 +146,10 @@ $config['notify_password'] = 'NotiFier987';
 
 $config['admin_username'] = 'admin@jayonexpress.com';
 $config['admin_password'] = 'JayonAdmin234';
+
+$config['import_label_default'] = 4;
+$config['import_header_default'] = 7;
+$config['import_data_default'] = 8;
+
+
 ?>

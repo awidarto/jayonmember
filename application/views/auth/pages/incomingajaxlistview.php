@@ -489,6 +489,7 @@
 
 </script>
 <div class="button_nav">
+    <a class="button add" id="import" style="cursor:pointer;" href="<?php echo site_url('/admin/import') ?>">Import</a>
 	<span class="button add" id="neworder" style="cursor:pointer;">New Order</span>
 </div>
 
