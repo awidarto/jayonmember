@@ -229,7 +229,7 @@ class Import extends Application
             }
 
 
-            $jsonfile = date('d-m-Y-h-i-s',time());
+            $jsonfile = date('d-m-Y-h-i-s',time()).'-'.$merchant_id;
 
             file_put_contents(FCPATH.'json/'.$jsonfile.'.json', json_encode($sheetdata));
 
