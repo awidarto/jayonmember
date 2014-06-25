@@ -244,6 +244,23 @@ function get_slot_max(){
 	return $slot;
 }
 
+function colorizetype($type){
+
+    if($type == 'COD'){
+        $class = 'brown';
+    }else if($type == 'CCOD'){
+        $class = 'maroon';
+    }else if($type == 'PS'){
+        $class = 'green';
+    }else{
+        $class = 'red';
+        $type = 'DO';
+    }
+
+    return sprintf('<span class="%s" style="text-align:center;">%s</span>',$class,$type);
+}
+
+
 function get_slot_select(){
 
 	$CI =& get_instance();
