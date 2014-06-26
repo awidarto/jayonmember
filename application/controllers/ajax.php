@@ -199,6 +199,40 @@ class Ajax extends Application
 		print json_encode(array('app_id'=>$app_id,'result'=>'ok','data'=>array('selector'=>$codselect,'codhash'=>$codhash,'table'=>$codtable)));
 	}
 
+    public function savedeliverybearer(){
+        $delivery_id = $this->input->post('delivery_id');
+        $delivery_bearer_type = $this->input->post('delivery_bearer_type');
+
+        $newdata = array('delivery_bearer'=>$delivery_bearer_type);
+
+        $this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$newdata);
+
+        if($this->db->affected_rows() > 0){
+            print json_encode(array('status'=>'OK','delivery_bearer_type'=>$delivery_bearer_type));
+        }else{
+            print json_encode(array('status'=>'ERR','delivery_bearer_type'=>0));
+        }
+
+    }
+
+    public function savecodbearer(){
+        $delivery_id = $this->input->post('delivery_id');
+        $cod_bearer_type = $this->input->post('cod_bearer_type');
+
+        $newdata = array('cod_bearer'=>$cod_bearer_type);
+
+        $this->db->where('delivery_id',$delivery_id)->update($this->config->item('incoming_delivery_table'),$newdata);
+
+        if($this->db->affected_rows() > 0){
+            print json_encode(array('status'=>'OK','cod_bearer_type'=>$cod_bearer_type));
+        }else{
+            print json_encode(array('status'=>'ERR','cod_bearer_type'=>0));
+        }
+
+    }
+
+
+
 	public function saveweight(){
 		$delivery_id = $this->input->post('delivery_id');
         $delivery_cost = $this->input->post('weight_tariff');

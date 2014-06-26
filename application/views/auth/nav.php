@@ -42,6 +42,7 @@
 			<li class="<?php print set_hilite('admin\/delivery')?>" ><?php if(user_group('merchant')) { echo anchor('admin/delivery/incoming', 'Orders'); } ?>
 				<ul>
 					<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/delivery\/incoming')?>" ><?php echo anchor('admin/delivery/incoming', 'Incoming Orders');?></li><?php endif;?>
+                    <?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/delivery\/canceled')?>" ><?php echo anchor('admin/delivery/canceled', 'Canceled Orders');?></li><?php endif;?>
 					<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/delivery\/dispatched')?>" ><?php echo anchor('admin/delivery/dispatched', 'In Progress Orders'); ?></li><?php endif;?>
 					<?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/delivery\/delivered')?>" ><?php echo anchor('admin/delivery/delivered', 'Delivery Status');?></li><?php endif;?>
                     <?php /*

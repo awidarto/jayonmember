@@ -71,6 +71,7 @@ $config['jayon_mobile_table'] = 'mobile_orders';
 /* Delivery status strings */
 
 $config['trans_status_new'] = 'pending';
+$config['trans_status_tobeconfirmed'] = 'to be confirmed';
 $config['trans_status_purged'] = 'purged';
 $config['trans_status_archived'] = 'archived';
 $config['trans_status_confirmed'] = 'confirmed';
@@ -95,6 +96,7 @@ $config['trans_status_admin_dispatched'] = 'dispatched';
 
 $config['status_colors'] = array(
 	$config['trans_status_new'] => 'orange',
+    $config['trans_status_tobeconfirmed'] => 'orange',
 	$config['trans_status_purged'] => 'red',
 	$config['trans_status_archived'] => 'brown',
 	$config['trans_status_confirmed'] => 'green',
