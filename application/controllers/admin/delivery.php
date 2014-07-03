@@ -49,7 +49,7 @@ class Delivery extends Application
 			->where($this->config->item('incoming_delivery_table').'.merchant_id',$this->session->userdata('userid'))
 			->where('status',$this->config->item('trans_status_new'))
 			->or_where('status',$this->config->item('trans_status_confirmed'))
-			->or_where('status',$this->config->item('trans_status_cancelled'))
+			//->or_where('status',$this->config->item('trans_status_cancelled'))
 			->not_like('status','assigned','before')
 			->count_all_results($this->config->item('incoming_delivery_table'));
 
@@ -68,6 +68,7 @@ class Delivery extends Application
             $this->db->or_like('delivery_id',$srch);
             $search = true;
         }
+
 
         if($this->input->post('sSearch_0') != ''){
             $this->db->like($this->config->item('incoming_delivery_table').'.ordertime',$this->input->post('sSearch_0'));
@@ -96,75 +97,86 @@ class Delivery extends Application
         }
 
         if($this->input->post('sSearch_5') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.shipping_zip',$this->input->post('sSearch_5'));
+            $this->db->like($this->config->item('incoming_delivery_table').'.shipping_address',$this->input->post('sSearch_5'));
             $search = true;
         }
 
         if($this->input->post('sSearch_6') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_id',$this->input->post('sSearch_6'));
+            $this->db->like($this->config->item('incoming_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_6'));
             $search = true;
         }
 
         if($this->input->post('sSearch_7') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_7'));
+            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_type',$this->input->post('sSearch_7'));
             $search = true;
         }
 
         if($this->input->post('sSearch_8') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_type',$this->input->post('sSearch_8'));
-            $search = true;
-        }
-
-        if($this->input->post('sSearch_9') != ''){
             if($search == true){
                 $this->db->and_();
             }
             $this->db->group_start();
-            $this->db->like('a.application_name',$this->input->post('sSearch_9'));
-            $this->db->or_like('m.merchantname',$this->input->post('sSearch_9'));
+            $this->db->like('a.application_name',$this->input->post('sSearch_8'));
+            $this->db->or_like('m.merchantname',$this->input->post('sSearch_8'));
             $this->db->group_end();
             $search = true;
         }
 
+        if($this->input->post('sSearch_9') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_id',$this->input->post('sSearch_9'));
+            $search = true;
+        }
+
         if($this->input->post('sSearch_10') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_cost',$this->input->post('sSearch_10'));
+            $this->db->like($this->config->item('incoming_delivery_table').'.status',$this->input->post('sSearch_10'));
             $search = true;
         }
 
         if($this->input->post('sSearch_11') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.cod_cost',$this->input->post('sSearch_11'));
+            $this->db->like($this->config->item('incoming_delivery_table').'.directions',$this->input->post('sSearch_11'));
             $search = true;
         }
 
         if($this->input->post('sSearch_12') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.chargeable_amount',$this->input->post('sSearch_12'));
+            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_cost',$this->input->post('sSearch_12'));
             $search = true;
         }
 
         if($this->input->post('sSearch_13') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.buyer_name',$this->input->post('sSearch_13'));
+            $this->db->like($this->config->item('incoming_delivery_table').'.cod_cost',$this->input->post('sSearch_13'));
             $search = true;
         }
 
         if($this->input->post('sSearch_14') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.shipping_address',$this->input->post('sSearch_14'));
+            $this->db->like($this->config->item('incoming_delivery_table').'.chargeable_amount',$this->input->post('sSearch_14'));
             $search = true;
         }
 
         if($this->input->post('sSearch_15') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.directions',$this->input->post('sSearch_15'));
+            $this->db->like($this->config->item('incoming_delivery_table').'.buyer_name',$this->input->post('sSearch_15'));
             $search = true;
         }
 
         if($this->input->post('sSearch_16') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.phone',$this->input->post('sSearch_16'));
+            $this->db->like($this->config->item('incoming_delivery_table').'.shipping_zip',$this->input->post('sSearch_16'));
             $search = true;
         }
 
+
         if($this->input->post('sSearch_17') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.status',$this->input->post('sSearch_17'));
+            if($search == true){
+                $this->db->and_();
+            }
+            $this->db->group_start();
+            $this->db->like($this->config->item('incoming_delivery_table').'.phone',$this->input->post('sSearch_17'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.mobile1',$this->input->post('sSearch_17'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.mobile2',$this->input->post('sSearch_17'));
+            $this->db->group_end();
+
             $search = true;
         }
+
+
 
 		if($search){
 			//$this->db->and_();
@@ -286,6 +298,38 @@ class Delivery extends Application
                 get_slot_range($key['buyerdeliveryslot']),
                 $key['buyerdeliveryzone'],
                 $key['buyerdeliverycity'],
+                $key['shipping_address'],
+                $this->hide_trx($key['merchant_trans_id']).$markscan,
+                colorizetype($key['delivery_type']),
+                '<b>'.$key['merchant'].'</b><br />'.$app_name,
+                ($key['status'] == 'canceled')?$printslip:$printslip.'<br /><br />'.$reschedule,
+                //$printslip.'<br /><br />'.$reschedule.'<br />'.$changestatus,
+                $delivery_check,
+                colorizestatus($key['status']).'<br />'.$pick_stat,
+                $direction,
+                $key['width'].' x '.$key['height'].' x '.$key['length'].' = '.$volume,
+                //(double)$key['width']*(double)$key['height']*(double)$key['length'],
+                get_weight_range($key['weight'],$key['application_id']),
+                $key['delivery_cost'],
+                ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
+                ($key['delivery_type'] == 'COD')?(double)$key['chargeable_amount']:'',
+                //$key['merchant'],
+                //$app['domain'],
+                $key['buyer_name'],
+                $key['shipping_zip'],
+                $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
+                $reference
+
+                /*
+                $num,
+                $key['ordertime'],
+                $picture,
+                $key['pickup_person'],
+                $key['pickup_dev_id'],
+                '<span id="'.$key['delivery_id'].'"><input type="hidden" value="'.$key['buyerdeliverytime'].'" id="cd_'.$key['delivery_id'].'">'.$reqdate.'</span>',
+                get_slot_range($key['buyerdeliveryslot']),
+                $key['buyerdeliveryzone'],
+                $key['buyerdeliverycity'],
                 $key['shipping_zip'],
                 $delivery_check,
                 $this->hide_trx($key['merchant_trans_id']).$markscan,
@@ -328,11 +372,12 @@ class Delivery extends Application
 				//$key['phone'],
 				colorizestatus($key['status']),
 				$reference,
-                */
 				($key['status'] == 'canceled')?$printslip:$printslip.'<br /><br />'.$reschedule
 				//$key['reschedule_ref'],
 				//$key['revoke_ref'],
 				//($key['status'] === 'confirm')?$assign:''.' '.$edit.' '.$delete
+                */
+
 			);
 		}
 
@@ -364,23 +409,23 @@ class Delivery extends Application
             'Requested Time Slot',
             'Zone',
             'City',
-            'ZIP',
-            'Delivery ID',
+            'Shipping Address',
             'No Kode Penjualan Toko',
             'Type',
             'Merchant / App Name',
+            'Actions',
+            'Delivery ID',
+            'Status',
+            'Directions',
             'W x H x L = V',
             'Weight Range',
             'Delivery Fee',
             'COD Surcharge',
             'COD Value',
             'Buyer',
-            'Shipping Address',
-            'Directions',
+            'ZIP',
             'Phone',
-            'Status',
-            'Reference',
-            'Actions'
+            'Reference'
             /*
 			'Timestamp',
 			'Requested Delivery Date',
@@ -414,12 +459,14 @@ class Delivery extends Application
             '<input type="text" name="search_buyerdeliveryslot" id="search_buyerdeliveryslot" value="Search Slot" class="search_init" />',
             '<input type="text" name="search_zone" id="search_zone" value="Search zone" class="search_init" />',
             '<input type="text" name="search_buyerdeliverycity" id="search_buyerdeliverycity" value="Search city" class="search_init" />',
-            '<input type="text" name="search_zip" id="search_zip" value="Search ZIP" class="search_init" />',
-            '<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
+            '<input type="text" name="search_shipping_address" value="Search address" class="search_init" />',
             '<input type="text" name="search_merchantid" value="Search merchant ID" class="search_init" />',
             '<input type="text" name="search_delivery_type" id="search_delivery_type" value="Search type" class="search_init" />',
             '<input type="text" name="search_application_name" id="search_application_name" value="Search app name" class="search_init" />',
-            //'',
+            '',
+            '<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
+            '<input type="text" name="search_status" value="Search status" class="search_init" />',
+            '<input type="text" name="search_directions" value="Search direction" class="search_init" />',
             '',
             '',
             '<input type="text" name="search_delivery_cost" id="search_delivery_cost" value="Search cost" class="search_init" />',
@@ -427,10 +474,9 @@ class Delivery extends Application
             '<input type="text" name="search_chargeable_amount" id="search_chargeable_amount" value="Search Value" class="search_init" />',
             '<input type="text" name="search_buyer_name" value="Search buyer" class="search_init" />',
             //'<input type="text" name="search_merchant" value="Search merchant" class="search_init" />',
-            '<input type="text" name="search_shipping_address" value="Search address" class="search_init" />',
-            '<input type="text" name="search_directions" value="Search direction" class="search_init" />',
-            '<input type="text" name="search_phone" value="Search phone" class="search_init" />',
-            '<input type="text" name="search_status" value="Search status" class="search_init" />'
+            '<input type="text" name="search_zip" id="search_zip" value="Search ZIP" class="search_init" />',
+
+            '<input type="text" name="search_phone" value="Search phone" class="search_init" />'
 
             /*
 			'',
