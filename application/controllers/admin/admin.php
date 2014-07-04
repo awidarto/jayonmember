@@ -56,13 +56,15 @@ class Admin extends Application
 
 		if($this->form_validation->run() == FALSE)
 		{
-
+            redirect('register','location');
+            /*
 			$data['groups'] = array(
 				group_id('merchant')=>group_desc('merchant'),
 				group_id('buyer')=>group_desc('buyer')
 			);
 			$data['page_title'] = 'Register';
 			$this->ag_auth->view('register',$data);
+            */
 		}
 		else
 		{
