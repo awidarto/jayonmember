@@ -66,7 +66,8 @@ class Admin extends Application
                 $this->ag_auth->view('register',$data);
 
             }else{
-                $this->session->set_flashdata('registerError', validation_errors('<div class="error">', '</div>') );
+                session_start();
+                $_SESSION['registerError'] = validation_errors('<div class="error">', '</div>');
                 redirect('http://www.jayonexpress.com/register','location');
             }
 
