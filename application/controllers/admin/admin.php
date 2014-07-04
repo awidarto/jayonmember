@@ -56,16 +56,20 @@ class Admin extends Application
 
 		if($this->form_validation->run() == FALSE)
 		{
-            $this->session->set_flashdata('registerError', validation_errors('<div class="error">', '</div>') );
-            redirect('register','location');
-            /*
-			$data['groups'] = array(
-				group_id('merchant')=>group_desc('merchant'),
-				group_id('buyer')=>group_desc('buyer')
-			);
-			$data['page_title'] = 'Register';
-			$this->ag_auth->view('register',$data);
-            */
+            if($_SERVER['HTTP_HOST'] == 'localhost'){
+
+                $data['groups'] = array(
+                    group_id('merchant')=>group_desc('merchant'),
+                    group_id('buyer')=>group_desc('buyer')
+                );
+                $data['page_title'] = 'Register';
+                $this->ag_auth->view('register',$data);
+
+            }else{
+                $this->session->set_flashdata('registerError', validation_errors('<div class="error">', '</div>') );
+                redirect('http://www.jayonexpress.com/register','location');
+            }
+
 		}
 		else
 		{
