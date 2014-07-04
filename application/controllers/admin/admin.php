@@ -67,7 +67,7 @@ class Admin extends Application
 
             }else{
                 session_start();
-                $_SESSION['registerError'] = validation_errors('<div class="error">', '</div>');
+                $_SESSION['registerError'] = validation_errors('<div class=\"error\">', '</div>');
                 redirect('http://www.jayonexpress.com/register','location');
             }
 
