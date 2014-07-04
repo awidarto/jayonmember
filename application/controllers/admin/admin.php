@@ -56,6 +56,7 @@ class Admin extends Application
 
 		if($this->form_validation->run() == FALSE)
 		{
+            $this->session->set_flashdata('registerError', validation_errors('<div class="error">', '</div>') );
             redirect('register','location');
             /*
 			$data['groups'] = array(
