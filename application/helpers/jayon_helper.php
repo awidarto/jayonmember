@@ -619,6 +619,41 @@ function get_thumbnail($delivery_id, $class = 'thumb'){
 	return $thumbnail;
 }
 
+function generate_thumbnail($delivery_id){
+    $CI =& get_instance();
+    $un = true;
+
+    $target_path = $CI->config->item('picture_path').$delivery_id.'.jpg';
+
+    if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg')){
+        $un = unlink($CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg');
+    }
+
+    if($un){
+        $config['image_library'] = 'gd2';
+        $config['source_image'] = $target_path;
+        $config['new_image'] = $CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg';
+        $config['create_thumb'] = false;
+        $config['maintain_ratio'] = TRUE;
+        $config['width']     = 100;
+        $config['height']   = 75;
+
+        $CI->load->library('image_lib', $config);
+
+        $CI->image_lib->resize();
+
+        if(file_exists($CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg')){
+            return $CI->config->item('thumbnail_path').'th_'.$delivery_id.'.jpg';
+        }else{
+            return false;
+        }
+
+    }else{
+        return false;
+    }
+
+}
+
 
 /*
 function get_thumbnail($delivery_id, $class = 'thumb'){
