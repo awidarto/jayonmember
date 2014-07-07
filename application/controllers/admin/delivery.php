@@ -220,6 +220,7 @@ class Delivery extends Application
 			$revoke = '<span class="revoke_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Revoke</span>';
 			$purge = '<span class="purge_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Purge</span>';
             $printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Preview Slip</span>';
+            $printlabel = '<span class="printlabel" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Label</span>';
 
 			$app = $this->get_app_info($key['application_key']);
 
@@ -252,9 +253,9 @@ class Delivery extends Application
 			$weightfield = ($key['weight'] == 0)?'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">unspecified</span>':get_weight_range($key['weight']);
             //from ext
             //if($key['status'] == $this->config->item('trans_status_canceled')){
-                $delivery_check = '<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
+            //    $delivery_check = '<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
             //}else{
-            //    $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
+                $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
             //}
 
             $volume = (double)$key['width']*(double)$key['height']*(double)$key['length'];
@@ -278,7 +279,8 @@ class Delivery extends Application
             $app_name = (isset($app['application_name']))?$app['application_name']:'-';
 
             if($key['toscan'] == 1){
-                $markscan = '<img src="'.base_url().'assets/images/barcode-icon.png" style="width:25px;height:auto">';
+                $markscan = '<img src="'.base_url().'admin/prints/barcode/'.$key['merchant_trans_id'].'" style="width:100px;height:auto">';
+                //$markscan = '<img src="'.base_url().'assets/images/barcode-icon.png" style="width:25px;height:auto">';
                 $pick_stat = colorizestatus($key['pickup_status']);
             }else{
                 $markscan = '';
@@ -302,7 +304,7 @@ class Delivery extends Application
                 $this->hide_trx($key['merchant_trans_id']).$markscan,
                 colorizetype($key['delivery_type']),
                 '<b>'.$key['merchant'].'</b><br />'.$app_name,
-                ($key['status'] == 'canceled')?$printslip:$printslip.'<br /><br />'.$reschedule,
+                ($key['status'] == 'canceled')?$printslip:$printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reschedule,
                 //$printslip.'<br /><br />'.$reschedule.'<br />'.$changestatus,
                 $delivery_check,
                 colorizestatus($key['status']).'<br />'.$pick_stat,
@@ -1961,6 +1963,7 @@ class Delivery extends Application
             $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
             $reassign = '<span class="reassign" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Reassign</span>';
             $viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
+            $printlabel = '<span class="printlabel" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Label</span>';
 
 
             $datefield = ($bardate == $key['assignment_date'])?'':$key['assignment_date'];
@@ -1972,6 +1975,7 @@ class Delivery extends Application
             $cityfield = ($barcity == $key['buyerdeliverycity'])?'':$key['buyerdeliverycity'];
             $zonefield = ($barzone == $key['buyerdeliveryzone'])?'':$key['buyerdeliveryzone'];
 
+            $delivery_check = form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>';
 
             $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
             $lon = ($key['longitude'] == 0)? '':$key['longitude'];
@@ -2002,11 +2006,12 @@ class Delivery extends Application
                 $key['recipient_name'],
                 $key['shipping_address'], //.'<br />'.$direction
                 $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
-                '<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
+                $delivery_check,
+                //'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
                 $thumbstat,
                 $key['pending_count'],
                 $key['delivery_note'],
-                $printslip,
+                $printslip.'<br /><br />'.$printlabel,
                 //.' '.$reassign.' '.$changestatus.' '.$viewlog,
 
                 $this->hide_trx($key['merchant_trans_id']),

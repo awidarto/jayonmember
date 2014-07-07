@@ -108,6 +108,16 @@
 				$('#print_dialog').dialog('open');
 			}
 
+            if ($(e.target).is('.printlabel')) {
+                var delivery_id = e.target.id;
+                var col = $('#label_columns').val();
+                $('#label_id').val(delivery_id);
+                var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + col;
+
+                $('#label_frame').attr('src',src);
+                $('#label_dialog').dialog('open');
+            }
+
 			if ($(e.target).is('.view_detail')) {
 				var delivery_id = e.target.id;
 				var src = '<?php print base_url() ?>admin/prints/deliveryview/' + delivery_id;
@@ -128,6 +138,35 @@
 				},'json');
 			}
 		});
+
+        $('#doLabel').click(function(){
+            var assigns = [];
+            var count = 0;
+            $('.assign_check:checked').each(function(){
+                assigns.push(this.value);
+                count++;
+            });
+
+            if(count > 0){
+                $.post(
+                    '<?php print base_url().'ajax/printsession'; ?>',
+                    { ids: assigns },
+                    function(data){
+                        if(data.result == 'OK'){
+                            var delivery_id = 'SESS:' + data.session;
+                            var col = $('#label_columns').val();
+                            $('#label_id').val(delivery_id);
+                            var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + col;
+                            $('#label_frame').attr('src',src);
+                            $('#label_dialog').dialog('open');
+                        }
+                    },'json');
+
+                $('#label_dialog').dialog('open');
+            }else{
+                alert('Please select one or more delivery orders');
+            }
+        });
 
 		$('#assign_dialog').dialog({
 			autoOpen: false,
@@ -244,6 +283,35 @@
 			}
 		});
 
+        $('#label_dialog').dialog({
+            autoOpen: false,
+            height: 600,
+            width: 1050,
+            modal: true,
+            buttons: {
+
+                Print: function(){
+                    var pframe = document.getElementById('label_frame');
+                    var pframeWindow = pframe.contentWindow;
+                    pframeWindow.print();
+                },
+                "Download PDF": function(){
+                    var print_id = $('#label_id').val();
+                    var col = $('#label_columns').val();
+                    var src = '<?php print base_url() ?>admin/prints/label/' + print_id + '/' + col + '/pdf';
+                    window.location = src;
+                    //alert(src);
+                },
+
+                Close: function() {
+                    $( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+
+            }
+        });
+
 		/*
 		function refresh(){
 			oTable.fnDraw();
@@ -262,6 +330,14 @@
 	</div>
 <?php endif;?>
 <?php echo $this->table->generate(); ?>
+
+<div style="text-align:right;margin-top:12px;">
+<?php
+
+    print form_button('do_label','Print Selection Label','id="doLabel"');
+
+?>
+</div>
 
 <div id="assign_dialog" title="Assign Selection to Device">
 	<table style="width:100%;border:0;margin:0;">
@@ -326,6 +402,21 @@
 <div id="view_dialog" title="Order Detail" style="overflow:hidden;padding:8px;">
 	<input type="hidden" value="" id="print_id" />
 	<iframe id="view_frame" name="print_frame" width="100%" height="100%"
+    marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
+    title="Dialog Title">Your browser does not suppr</iframe>
+</div>
+
+<div id="label_dialog" title="Print Label" style="overflow:hidden;padding:8px;">
+    <div style="border-bottom:thin solid #ccc;">
+        Print options :
+        <label>Number of columns
+                <input type="text" value="2" id="label_columns" />
+        </label>
+        <button id="label_refresh">refresh</button>
+        <button id="label_default">make default</button>
+    </div>
+    <input type="hidden" value="" id="label_id" />
+    <iframe id="label_frame" name="label_frame" width="100%" height="90%"
     marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
     title="Dialog Title">Your browser does not suppr</iframe>
 </div>
