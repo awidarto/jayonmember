@@ -193,12 +193,13 @@ class Delivery extends Application
 
         $data = $this->db->get($this->config->item('incoming_delivery_table'));
 
+        $count_all = $dbca->count_all_results($this->config->item('incoming_delivery_table'));
+        $count_display_all = $dbcr->count_all_results($this->config->item('incoming_delivery_table'));
+
 		$last_query = $this->db->last_query();
 
 		$result = $data->result_array();
 
-        $count_all = $dbca->count_all_results($this->config->item('incoming_delivery_table'));
-        $count_display_all = $dbcr->count_all_results($this->config->item('incoming_delivery_table'));
 
 		$aadata = array();
 
