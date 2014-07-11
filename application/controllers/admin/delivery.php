@@ -2234,7 +2234,7 @@ class Delivery extends Application
 
         $dbcr = clone $this->db;
 
-        $this->db->limit($limit_count, $limit_offset)
+        $this->db->limit($limit_count, $limit_offset);
 
         $data = $this->db->get($this->config->item('delivered_delivery_table'));
 
