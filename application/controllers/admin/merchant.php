@@ -2,7 +2,7 @@
 
 class Merchant extends Application
 {
-	
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -14,20 +14,20 @@ class Merchant extends Application
 
 		$this->breadcrumb->add_crumb('Home','admin/dashboard');
 		$this->breadcrumb->add_crumb('Merchant','admin/merchant');
-		
+
 	}
 
 	public function index(){
-		$this->load->library('table');		
-	
+		$this->load->library('table');
+
 		$id = $this->session->userdata('userid');
 
 		$user = $this->get_user($id);
-		
+
 		foreach($user as $key=>$val){
 			$this->table->add_row($key,$val); // Adding row to table
 		}
-		
+
 		$page['page_title'] = 'Merchant Info';
 		$this->ag_auth->view('merchant/info',$page);
 	}
@@ -55,13 +55,13 @@ class Merchant extends Application
 		$this->form_validation->set_rules('mc_phone', 'Phone Number', 'trim|xss_clean');
 		$this->form_validation->set_rules('mc_mobile', 'Mobile Number', 'trim|xss_clean');
 
-		$user = $this->get_user($id);		
+		$user = $this->get_user($id);
 		$page['user'] = $user;
 
 		//print_r($user);
 
 		if($this->form_validation->run() == FALSE)
-		{			
+		{
 			$page['page_title'] = 'Merchant Request';
 			$this->ag_auth->view('merchant/request',$page); // Load the view
 		}
@@ -86,12 +86,12 @@ class Merchant extends Application
 
 			$dataset['group_id'] = user_group_id('merchant');
 
-			$this->session->set_userdata(array('group_id'=>user_group_id('merchant')));
+			$this->session->set_userdata(array('group_id'=>user_group_id('pendingmerchant')));
 
 			if($this->db->where('id',$id)->update($this->config->item('jayon_members_table'),$dataset) === TRUE)
 			//if($this->update_user($id,$dataset) === TRUE)
 			{
-				$this->oi->add_success('Successfully register merchant');
+				$this->oi->add_success('Successfully requesting merchant status');
 				redirect('admin/merchant');
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
@@ -125,13 +125,13 @@ class Merchant extends Application
 		$this->form_validation->set_rules('mc_phone', 'Phone Number', 'trim|xss_clean');
 		$this->form_validation->set_rules('mc_mobile', 'Mobile Number', 'trim|xss_clean');
 
-		$user = $this->get_user($id);		
+		$user = $this->get_user($id);
 		$page['user'] = $user;
 
 		//print_r($user);
 
 		if($this->form_validation->run() == FALSE)
-		{			
+		{
 			$page['page_title'] = 'Edit Merchant Info';
 			$this->ag_auth->view('merchant/request',$page); // Load the view
 		}
@@ -173,7 +173,7 @@ class Merchant extends Application
 	public function __request(){
 
 		$this->breadcrumb->add_crumb('Merchant Request','admin/merchant/request');
-		
+
 		$page['page_title'] = 'Merchant Request';
 		$this->ag_auth->view('merchant/request',$page); // Load the view
 	}

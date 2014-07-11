@@ -1796,7 +1796,7 @@ class Delivery extends Application
             );
 
         // get total count result
-        $count_all = $this->db->count_all($this->config->item('assigned_delivery_table'));
+        //$count_all = $this->db->count_all($this->config->item('assigned_delivery_table'));
 
 
         $search = false;
@@ -1920,9 +1920,10 @@ class Delivery extends Application
             ->order_by('buyerdeliveryzone','asc')
             ->order_by($columns[$sort_col],$sort_dir);
 
+        $dbcr = clone $this->db;
+
         $this->db->limit($limit_count, $limit_offset);
 
-        $dbcr = clone $this->db;
 
         $data = $this->db->get($this->config->item('assigned_delivery_table'));
 
@@ -2229,10 +2230,11 @@ class Delivery extends Application
 
         $dbca = clone $this->db;
 
-        $this->db->limit($limit_count, $limit_offset)
-            ->order_by('deliverytime','desc');
+        $this->db->order_by('deliverytime','desc');
 
         $dbcr = clone $this->db;
+
+        $this->db->limit($limit_count, $limit_offset)
 
         $data = $this->db->get($this->config->item('delivered_delivery_table'));
 
