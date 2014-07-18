@@ -19,12 +19,14 @@ $config['site_title']	= 'Jayon Express - Member';
 $config['infinite_scroll'] = false;
 
 if($_SERVER['HTTP_HOST'] == 'localhost'){
+    $config['public_path'] = '/var/www/pro/jayonadmin/public/';
 	$config['api_url'] = 'http://localhost/jayonapidev/v2';
 	$config['admin_url'] = 'http://localhost/jayonadmindev/';
 	$config['picture_path'] = '/Library/WebServer/Documents/jayonadmindev/public/receiver/';
 	$config['thumbnail_path'] = '/Library/WebServer/Documents/jayonadmindev/public/receiver_thumb/';
 }else{
 	//online version should redirect to main site
+    $config['public_path'] = '/var/www/pro/jayonadmin/public/';
     $config['api_url'] = 'http://localhost/beta2/jayonapi/v2';
 	$config['admin_url'] = 'http://www.jayonexpress.com/jayonadmin/';
     $config['picture_path'] = '/var/www/pro/jayonadmin/public/receiver/';
