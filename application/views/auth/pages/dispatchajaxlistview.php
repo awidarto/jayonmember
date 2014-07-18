@@ -371,11 +371,8 @@
                     var cell_width = $('#label_cell_width').val();
                     var mright = $('#label_margin_right').val();
                     var mbottom = $('#label_margin_bottom').val();
-                    //var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id  + '/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom +'/pdf';
-                    var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + res + '/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom + '/pdf';
-                    //var src = '<?php print base_url() ?>admin/prints/label/' + print_id + '/' + col + '/pdf';
+                    var src = '<?php print base_url() ?>admin/prints/label/' + print_id + '/' + res + '/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom + '/pdf';
                     window.location = src;
-                    //alert(src);
                 },
 
                 Close: function() {
