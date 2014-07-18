@@ -46,14 +46,16 @@ class Prints extends Application
 
         $this->load->library('barcode');
 
+        $text = base64_decode($text);
+
         $barcode = new Barcode();
         $barcode->make($text,'code128',40, 'horizontal' ,true);
         return $barcode->render('jpg',$text);
     }
 
-
-    public function label($delivery_id, $columns = 2, $pdf = false, $filename = null){
+    public function label($delivery_id, $resolution = 200 ,$cell_height = 50, $cell_width = 200,$col = 2,$margin_right = 20,$margin_bottom = 20, $pdf = false, $filename = null){
             $this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,
+                        m.id as merchant_id,
                         m.merchantname as merchant,
                         m.street as mc_street,
                         m.fullname as mc_pic,
@@ -86,8 +88,28 @@ class Prints extends Application
                     $main = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
                 }
 
+            //$pd = get_print_default();
+            /*
+            if($pd){
+                $data['resolution'] = $pd['res'];
+                $data['cell_width'] = $pd['cell_width'];
+                $data['cell_height'] = $pd['cell_height'];
+                $data['columns'] = $pd['col'];
+                $data['margin_right'] = $pd['mright'];
+                $data['margin_bottom'] = $pd['mbottom'];
+            }else{
+                */
+                $data['resolution'] = $resolution;
+                $data['cell_width'] = $cell_width;
+                $data['cell_height'] = $cell_height;
+                $data['columns'] = $col;
+                $data['margin_right'] = $margin_right;
+                $data['margin_bottom'] = $margin_bottom;
+            //}
+
+
+
             $data['main_info'] = $main->result_array();
-            $data['columns'] = $columns;
 
             if($pdf){
                 $html = $this->load->view('print/label',$data,true);

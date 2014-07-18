@@ -88,6 +88,8 @@ class Merchant extends Application
 
 			$this->session->set_userdata(array('group_id'=>user_group_id('pendingmerchant')));
 
+            //TODO : send notification
+
 			if($this->db->where('id',$id)->update($this->config->item('jayon_members_table'),$dataset) === TRUE)
 			//if($this->update_user($id,$dataset) === TRUE)
 			{

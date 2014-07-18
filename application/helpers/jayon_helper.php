@@ -48,6 +48,23 @@ function idr($in){
 	return number_format((double) $in,2,',','.');
 }
 
+function get_print_default($user_group = 'admin'){
+    $CI =& get_instance();
+
+    $user_id = $CI->session->userdata('userid');
+    $user_group = user_group_id($user_group);
+
+    $df = $CI->db->where('user_id',$user_id)
+            ->where('user_group',$user_group)
+            ->get('print_defaults');
+
+    //print $CI->db->last_query();
+
+    $result = $df->row_array();
+
+    return $result;
+}
+
 function get_delivery_id($sequence,$merchant_id){
 	$CI =& get_instance();
 	$year_count = str_pad($sequence, $CI->config->item('year_sequence_pad'), '0', STR_PAD_LEFT);
@@ -563,6 +580,19 @@ function getmaxholiday(){
     return $maxholiday->holiday;
 }
 
+function get_logo($merchant_id){
+    $CI =& get_instance();
+
+    if(file_exists($CI->config->item('public_path').'logo/logo_'.$merchant_id.'.jpg')){
+        $exist = true;
+        $thumbnail = base_url().'public/logo/logo_'.$merchant_id.'.jpg';
+    }else{
+        $exist = false;
+        $thumbnail = base_url().'assets/images/th_nopic.jpg';
+    }
+
+    return array('exist'=>$exist,'logo'=>$thumbnail) ;
+}
 
 function get_thumbnail($delivery_id, $class = 'thumb'){
 	$CI =& get_instance();

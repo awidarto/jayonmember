@@ -254,10 +254,14 @@ td.currency{
 }
 
 .reportTable th{
-	text-align: center;	
+	text-align: center;
 }
 
 .reportTable thead{
 	background-color: #777;
 	color: white;
+}
+
+input.label-opt{
+    width:35px;
 }

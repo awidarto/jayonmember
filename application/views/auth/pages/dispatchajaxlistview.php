@@ -78,6 +78,14 @@
 		$('#search_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 		$('#assign_deliverytime').datepicker({ dateFormat: 'yy-mm-dd' });
 
+        $('#assign_all').click(function(){
+            if($('#assign_all').is(':checked')){
+                $('.assign_check').attr('checked', true);
+            }else{
+                $('.assign_check').attr('checked', false);
+            }
+        });
+
 		$('#doAssign').click(function(){
 			var assigns = '';
 			var count = 0;
@@ -93,6 +101,87 @@
 				alert('Please select one or more delivery orders');
 			}
 		});
+
+        $('#doLabel').click(function(){
+            var assigns = [];
+            var count = 0;
+            $('.assign_check:checked').each(function(){
+                assigns.push(this.value);
+                count++;
+            });
+
+            if(count > 0){
+                $.post(
+                    '<?php print base_url().'ajax/printsession'; ?>',
+                    { ids: assigns },
+                    function(data){
+                        if(data.result == 'OK'){
+                            var delivery_id = 'SESS:' + data.session;
+                            var res = $('#label_resolution').val();
+                            var col = $('#label_columns').val();
+                            var cell_height = $('#label_cell_height').val();
+                            var cell_width = $('#label_cell_width').val();
+                            var mright = $('#label_margin_right').val();
+                            var mbottom = $('#label_margin_bottom').val();
+
+                            $('#label_id').val(delivery_id);
+                            var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id  + '/' +  res +'/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom;
+                            $('#label_frame').attr('src',src);
+                            $('#label_dialog').dialog('open');
+                        }
+                    },'json');
+
+                //$('#label_dialog').dialog('open');
+            }else{
+                alert('Please select one or more delivery orders');
+            }
+        });
+
+        $('#label_refresh').on('click',function(){
+            var delivery_id = $('#label_id').val();
+            var res = $('#label_resolution').val();
+            var col = $('#label_columns').val();
+            var cell_height = $('#label_cell_height').val();
+            var cell_width = $('#label_cell_width').val();
+            var mright = $('#label_margin_right').val();
+            var mbottom = $('#label_margin_bottom').val();
+            var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + res + '/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom;
+
+            $('#label_frame').attr('src',src);
+        });
+
+        $('#label_default').on('click',function(){
+            var delivery_id = $('#label_id').val();
+            var res = $('#label_resolution').val();
+            var col = $('#label_columns').val();
+            var cell_height = $('#label_cell_height').val();
+            var cell_width = $('#label_cell_width').val();
+            var mright = $('#label_margin_right').val();
+            var mbottom = $('#label_margin_bottom').val();
+
+            $.post(
+                '<?php print base_url();?>ajax/printdefault',
+                {
+                    delivery_id : delivery_id,
+                    res : res,
+                    col : col,
+                    cell_height : cell_height,
+                    cell_width : cell_width,
+                    mright : mright,
+                    mbottom : mbottom
+                },
+                function(data){
+                    if(data.result == 'OK'){
+                        alert('Setting saved as default');
+                    }else{
+                        alert('Setting can not be saved, sorry.');
+                    }
+                },'json'
+                );
+
+            $('#label_frame').attr('src',src);
+        });
+
 
 		$('table.dataTable').click(function(e){
 			if ($(e.target).is('.changestatus')) {
@@ -112,9 +201,14 @@
 
             if ($(e.target).is('.printlabel')) {
                 var delivery_id = e.target.id;
+                var res = $('#label_resolution').val();
                 var col = $('#label_columns').val();
+                var cell_height = $('#label_cell_height').val();
+                var cell_width = $('#label_cell_width').val();
+                var mright = $('#label_margin_right').val();
+                var mbottom = $('#label_margin_bottom').val();
                 $('#label_id').val(delivery_id);
-                var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + col;
+                var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + res + '/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom;
 
                 $('#label_frame').attr('src',src);
                 $('#label_dialog').dialog('open');
@@ -141,34 +235,6 @@
 			}
 		});
 
-        $('#doLabel').click(function(){
-            var assigns = [];
-            var count = 0;
-            $('.assign_check:checked').each(function(){
-                assigns.push(this.value);
-                count++;
-            });
-
-            if(count > 0){
-                $.post(
-                    '<?php print base_url().'ajax/printsession'; ?>',
-                    { ids: assigns },
-                    function(data){
-                        if(data.result == 'OK'){
-                            var delivery_id = 'SESS:' + data.session;
-                            var col = $('#label_columns').val();
-                            $('#label_id').val(delivery_id);
-                            var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + col;
-                            $('#label_frame').attr('src',src);
-                            $('#label_dialog').dialog('open');
-                        }
-                    },'json');
-
-                $('#label_dialog').dialog('open');
-            }else{
-                alert('Please select one or more delivery orders');
-            }
-        });
 
 		$('#assign_dialog').dialog({
 			autoOpen: false,
@@ -300,7 +366,14 @@
                 "Download PDF": function(){
                     var print_id = $('#label_id').val();
                     var col = $('#label_columns').val();
-                    var src = '<?php print base_url() ?>admin/prints/label/' + print_id + '/' + col + '/pdf';
+                    var res = $('#label_resolution').val();
+                    var cell_height = $('#label_cell_height').val();
+                    var cell_width = $('#label_cell_width').val();
+                    var mright = $('#label_margin_right').val();
+                    var mbottom = $('#label_margin_bottom').val();
+                    //var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id  + '/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom +'/pdf';
+                    var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + res + '/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom + '/pdf';
+                    //var src = '<?php print base_url() ?>admin/prints/label/' + print_id + '/' + col + '/pdf';
                     window.location = src;
                     //alert(src);
                 },
@@ -326,6 +399,7 @@
 
 
 </script>
+<?php print form_checkbox('assign_all',1,FALSE,'id="assign_all"');?> Select All
 <?php if(isset($add_button)):?>
 	<div class="button_nav">
 		<?php echo anchor($add_button['link'],$add_button['label'],'class="button add"')?>
@@ -411,9 +485,25 @@
 <div id="label_dialog" title="Print Label" style="overflow:hidden;padding:8px;">
     <div style="border-bottom:thin solid #ccc;">
         Print options :
-        <label>Number of columns
-                <input type="text" value="2" id="label_columns" />
+        <label>Res
+                <input type="text" class="label-opt" value="<?php print $resolution ?>" id="label_resolution" /> ppi
         </label>
+        <label>Width
+                <input type="text" class="label-opt" value="<?php print $cell_width ?>" id="label_cell_width" /> px
+        </label>
+        <label>Height
+                <input type="text" class="label-opt" value="<?php print $cell_height ?>" id="label_cell_height" /> px
+        </label>
+        <label>Columns
+                <input type="text" class="label-opt" value="<?php print $columns ?>" id="label_columns" />
+        </label>
+        <label>Right
+                <input type="text" class="label-opt" value="<?php print $margin_right ?>" id="label_margin_right" /> px
+        </label>
+        <label>Bottom
+                <input type="text" class="label-opt" value="<?php print $margin_bottom ?>" id="label_margin_bottom" /> px
+        </label>
+
         <button id="label_refresh">refresh</button>
         <button id="label_default">make default</button>
     </div>
