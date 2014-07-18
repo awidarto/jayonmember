@@ -83,6 +83,7 @@
             <li class="<?php print set_hilite('admin\/merchant')?>" ><?php if(user_group('merchant')) { echo anchor('admin/merchant', 'User Profiles'); } ?>
                 <ul>
                     <?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/merchant\/edit')?>" ><?php if(user_group('merchant')) { echo anchor('admin/merchant/edit', 'Edit Merchant Info'); } ?></li><?php endif;?>
+                    <?php if(user_group('buyer') || user_group('merchant')):?><li class="<?php print set_hilite('admin\/merchant\/edit')?>" ><?php if(user_group('merchant')) { echo anchor('admin/merchant/logo', 'Upload Merchant Logo'); } ?></li><?php endif;?>
                     <li class="<?php print set_hilite('admin\/apps')?>" ><?php if(user_group('merchant')) { echo anchor('admin/apps/manage', 'Application Keys'); } ?></li>
                 </ul>
             </li>

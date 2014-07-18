@@ -2,7 +2,7 @@
 
 class Members extends Application
 {
-	
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -11,17 +11,17 @@ class Members extends Application
 			'table_open' => '<table border="0" cellpadding="4" cellspacing="0" class="dataTable">'
 		);
 		$this->table->set_template($this->table_tpl);
-		
+
 	}
-	
+
 	public function manage()
 	{
-	    $this->load->library('table');		
-			
+	    $this->load->library('table');
+
 		$data = $this->db->get($this->config->item('jayon_members_table'));
 		$result = $data->result_array();
 		$this->table->set_heading('Username', 'Email','Full Name','Merchant Name','Bank Account','Mobile','Phone','Group','Actions'); // Setting headings for the table
-		
+
 		foreach($result as $value => $key)
 		{
 			$delete = anchor("admin/members/delete/".$key['id']."/", "Delete"); // Build actions links
@@ -38,20 +38,20 @@ class Members extends Application
 		$page['page_title'] = 'Manage Members';
 		$this->ag_auth->view('members/manage',$page); // Load the view
 	}
-	
+
 	function details($id){
-		$this->load->library('table');		
-	
+		$this->load->library('table');
+
 		$user = $this->get_user($id);
-		
+
 		foreach($user as $key=>$val){
 			$this->table->add_row($key,$val); // Adding row to table
 		}
-		
+
 		$page['page_title'] = 'Member Info';
 		$this->ag_auth->view('members/details',$page);
 	}
-	
+
 	public function delete($id)
 	{
 		$this->db->where('id', $id)->delete($this->config->item('jayon_members_table'));
@@ -67,7 +67,7 @@ class Members extends Application
 			return false;
 		}
 	}
-	
+
 	public function get_group(){
 		$this->db->select('id,description');
 		$result = $this->db->get($this->ag_auth->config['auth_group_table']);
@@ -86,33 +86,33 @@ class Members extends Application
 		$row = $result->row();
 		return $row->description;
 	}
-	
+
 	public function update_user($id,$data){
 		$result = $this->db->where('id', $id)->update($this->config->item('jayon_members_table'),$data);
 		return $this->db->affected_rows();
 	}
-	
-	
+
+
 	public function add()
 	{
 		$this->form_validation->set_rules('username', 'Username', 'required|min_length[6]|callback_field_exists');
 		$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|matches[password_conf]');
 		$this->form_validation->set_rules('password_conf', 'Password Confirmation', 'required|min_length[6]|matches[password]');
 		$this->form_validation->set_rules('email', 'Email Address', 'required|min_length[6]|valid_email|callback_field_exists');
-		$this->form_validation->set_rules('fullname', 'Full Name', 'required|trim|xss_clean');	
-		$this->form_validation->set_rules('merchantname', 'Merchant Name', 'trim|xss_clean');	
-		$this->form_validation->set_rules('bank', 'Bank', 'trim|xss_clean');	
-		$this->form_validation->set_rules('account_name', 'Account Name', 'trim|xss_clean');	
-		$this->form_validation->set_rules('account_number', 'Account Number', 'trim|xss_clean');	
-		$this->form_validation->set_rules('street', 'Street', 'required|trim|xss_clean');	
-		$this->form_validation->set_rules('district', 'District', 'required|trim|xss_clean');  
-		$this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean');	
-		$this->form_validation->set_rules('country', 'Country', 'required|trim|xss_clean');	
-		$this->form_validation->set_rules('zip', 'ZIP', 'required|trim|xss_clean');		
-		$this->form_validation->set_rules('phone', 'Phone Number', 'required|trim|xss_clean');   
+		$this->form_validation->set_rules('fullname', 'Full Name', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('merchantname', 'Merchant Name', 'trim|xss_clean');
+		$this->form_validation->set_rules('bank', 'Bank', 'trim|xss_clean');
+		$this->form_validation->set_rules('account_name', 'Account Name', 'trim|xss_clean');
+		$this->form_validation->set_rules('account_number', 'Account Number', 'trim|xss_clean');
+		$this->form_validation->set_rules('street', 'Street', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('district', 'District', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('country', 'Country', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('zip', 'ZIP', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('phone', 'Phone Number', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('mobile', 'Mobile Number', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('group_id', 'Group', 'trim');
-				
+
 		if($this->form_validation->run() == FALSE)
 		{
 			$data['groups'] = array(
@@ -131,17 +131,17 @@ class Members extends Application
 			$bank = set_value('bank');
 			$account_number = set_value('account_number');
 			$account_name = set_value('account_name');
-			$street = set_value('street'); 
+			$street = set_value('street');
 			$district = set_value('district');
 			$province = set_value('province');
 			$city = set_value('city');
 			$country = set_value('country');
 			$zip = set_value('zip');
 			$phone= set_value('phone');
-			$mobile= set_value('mobile'); 
+			$mobile= set_value('mobile');
 			$email = set_value('email');
 			$group_id = set_value('group_id');
-			
+
 			$dataset = array(
 				'username'=>$username,
 				'password'=>$password,
@@ -154,21 +154,21 @@ class Members extends Application
 				'district'=>$district,
 				'province'=>$province,
 				'city'=>$city,
-				'country'=>$country, 
+				'country'=>$country,
 				'zip'=>$zip,
 				'phone'=>$phone,
-				'mobile'=>$mobile, 
+				'mobile'=>$mobile,
 				'email'=>$email,
 				'group_id'=>$group_id
 			);
-			
+
 			if($this->db->insert($this->config->item('jayon_members_table'),$dataset) === TRUE)
 			{
 				$data['message'] = "The user account has now been created.";
 				$data['page_title'] = 'Add Member';
 				$data['back_url'] = anchor('admin/members/manage','Back to list');
 				$this->ag_auth->view('message', $data);
-				
+
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
@@ -179,14 +179,14 @@ class Members extends Application
 			}
 
 		} // if($this->form_validation->run() == FALSE)
-		
+
 	} // public function register()
 
 	public function addlogin()
 	{
 		$this->form_validation->set_rules('username', 'Username', 'required|min_length[6]|callback_field_exists');
 		$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|matches[password_conf]');
-				
+
 		if($this->form_validation->run() == FALSE)
 		{
 			$this->ag_auth->view('loginreg',$data);
@@ -196,20 +196,20 @@ class Members extends Application
 			$username = set_value('username');
 			$password = $this->ag_auth->salt(set_value('password'));
 			$group_id = group_id('buyer');
-			
+
 			$dataset = array(
 				'username'=>$username,
 				'password'=>$password,
 				'group_id'=>$group_id
 			);
-			
+
 			if($this->db->insert($this->config->item('jayon_members_table'),$dataset) === TRUE)
 			{
 				$data['message'] = "The user account has now been created.";
 				$data['page_title'] = 'Add Member';
 				$data['back_url'] = anchor('admin/members/manage','Back to list');
 				$this->ag_auth->view('members/edit', $data);
-				
+
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
@@ -220,7 +220,7 @@ class Members extends Application
 			}
 
 		} // if($this->form_validation->run() == FALSE)
-		
+
 	} // public function register()
 
 
@@ -228,22 +228,22 @@ class Members extends Application
 	{
 		$this->form_validation->set_rules('email', 'Email Address', 'required|min_length[6]|valid_email');
 		$this->form_validation->set_rules('fullname', 'Full Name', 'required|trim|xss_clean');
-		$this->form_validation->set_rules('merchantname', 'Merchant Name', 'trim|xss_clean');	
-		$this->form_validation->set_rules('bank', 'Bank', 'trim|xss_clean');	
-		$this->form_validation->set_rules('account_name', 'Account Name', 'trim|xss_clean');	
-		$this->form_validation->set_rules('account_number', 'Account Number', 'trim|xss_clean');	
-		$this->form_validation->set_rules('street', 'Street', 'required|trim|xss_clean');	
-		$this->form_validation->set_rules('district', 'District', 'required|trim|xss_clean');  
-		$this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean');	
-		$this->form_validation->set_rules('country', 'Country', 'required|trim|xss_clean');	
-		$this->form_validation->set_rules('zip', 'ZIP', 'required|trim|xss_clean');		
-		$this->form_validation->set_rules('phone', 'Phone Number', 'required|trim|xss_clean');   
+		$this->form_validation->set_rules('merchantname', 'Merchant Name', 'trim|xss_clean');
+		$this->form_validation->set_rules('bank', 'Bank', 'trim|xss_clean');
+		$this->form_validation->set_rules('account_name', 'Account Name', 'trim|xss_clean');
+		$this->form_validation->set_rules('account_number', 'Account Number', 'trim|xss_clean');
+		$this->form_validation->set_rules('street', 'Street', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('district', 'District', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('city', 'City', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('country', 'Country', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('zip', 'ZIP', 'required|trim|xss_clean');
+		$this->form_validation->set_rules('phone', 'Phone Number', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('mobile', 'Mobile Number', 'required|trim|xss_clean');
 		$this->form_validation->set_rules('group_id', 'Group', 'trim');
-		
+
 		$user = $this->get_user($id);
 		$data['user'] = $user;
-				
+
 		if($this->form_validation->run() == FALSE)
 		{
 			$data['groups'] = array(
@@ -261,17 +261,17 @@ class Members extends Application
 			$dataset['bank'] = set_value('bank');
 			$dataset['account_name'] = set_value('account_name');
 			$dataset['account_number'] = set_value('account_number');
-			$dataset['street'] = set_value('street'); 
+			$dataset['street'] = set_value('street');
 			$dataset['district'] = set_value('district');
 			$dataset['province'] = set_value('province');
 			$dataset['city'] = set_value('city');
 			$dataset['country'] = set_value('country');
 			$dataset['zip'] = set_value('zip');
 			$dataset['phone'] = set_value('phone');
-			$dataset['mobile'] = set_value('mobile'); 
+			$dataset['mobile'] = set_value('mobile');
 			$dataset['email'] = set_value('email');
 			$dataset['group_id'] = set_value('group_id');
-			
+
 			if($this->db->where('id',$id)->update($this->config->item('jayon_members_table'),$dataset) === TRUE)
 			//if($this->update_user($id,$dataset) === TRUE)
 			{
@@ -279,7 +279,7 @@ class Members extends Application
 				$data['page_title'] = 'Edit Member';
 				$data['back_url'] = anchor('admin/members/manage','Back to list');
 				$this->ag_auth->view('message', $data);
-				
+
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
@@ -290,7 +290,7 @@ class Members extends Application
 			}
 
 		} // if($this->form_validation->run() == FALSE)
-		
+
 	} // public function register()
 
 	public function editpass($id)
@@ -300,7 +300,7 @@ class Members extends Application
 
 		$user = $this->get_user($id);
 		$data['user'] = $user;
-				
+
 		if($this->form_validation->run() == FALSE)
 		{
 			$data['groups'] = $this->get_group();
@@ -319,7 +319,7 @@ class Members extends Application
 				$data['page_title'] = 'Edit Member Password Success';
 				$data['back_url'] = anchor('admin/members/manage','Back to list');
 				$this->ag_auth->view('message', $data);
-				
+
 			} // if($this->ag_auth->register($username, $password, $email) === TRUE)
 			else
 			{
@@ -330,8 +330,62 @@ class Members extends Application
 			}
 
 		} // if($this->form_validation->run() == FALSE)
-		
+
 	} // public function register()
+
+    public function logo($id)
+    {
+        $data['id'] = $id;
+        $data['page_title'] = 'Upload Logo';
+        $this->ag_auth->view('members/uploadlogo',$data);
+    }
+
+    public function logoupload($id)
+    {
+
+        $uconfig['upload_path'] = $this->config->item('public_path').'logo/';
+        $uconfig['allowed_types'] = 'jpg|png';
+        $uconfig['max_size'] = 0;
+        $uconfig['max_width']  = 0;
+        $uconfig['max_height']  = 0;
+
+        $this->load->library('upload', $uconfig);
+
+        if ( ! $this->upload->do_upload())
+        {
+            $err = $this->upload->display_errors('<p>', '</p>');
+
+            $data['message'] = "The logo failed to upload.".$err;
+            $data['page_title'] = 'Upload Logo Error';
+            $data['back_url'] = anchor('admin/members/merchant','Back to list');
+            $this->ag_auth->view('message', $data);
+        }
+        else
+        {
+            $upl = $this->upload->data();
+
+                $target_path = $upl['full_path'];
+
+                $config['image_library'] = 'gd2';
+                $config['source_image'] = $target_path;
+                $config['new_image'] = $upl['file_path'].'logo_'.$id.'.jpg';
+                $config['create_thumb'] = false;
+                $config['maintain_ratio'] = TRUE;
+                $config['width']     = 100;
+                $config['height']   = 75;
+
+                $this->load->library('image_lib', $config);
+
+                $this->image_lib->resize();
+
+
+            $data['message'] = "The logo picture uploaded.";
+            $data['page_title'] = 'Upload Logo Success';
+            $data['back_url'] = anchor('admin/members/merchant','Back to list');
+            $this->ag_auth->view('message', $data);
+        }
+
+
 	// WOKRING ON PROPER IMPLEMENTATION OF ADDING & EDITING USER ACCOUNTS
 }
 

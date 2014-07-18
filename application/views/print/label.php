@@ -81,23 +81,7 @@
 
 <?php foreach( $main_info as $address ):?>
     <?php
-        // assume resolution in 72 ppi
-        /*
-        $paper_pw = 1100;
-        if($columns > 1){
-            $min_width = ((int) floor($paper_pw/$columns)).'px';
-            $width = ($min_width - 10).'px';
-        }else{
-            $min_width = ((int) floor($paper_pw/2)).'px';
-            $width = ($min_width - 10).'px';
-        }
-        $resolution;
-        $cell_width;
-        $cell_height;
-        $columns;
-        $margin_right;
-        $margin_bottom;
-        */
+        $time = time();
     ?>
     <div class="label">
         <table>
@@ -106,7 +90,7 @@
                     <?php
                         $logo = get_logo($address['merchant_id']);
                         if($logo['exist'] == true){
-                            print '<img class="logo" src="'.$logo['logo'].'" />';
+                            print '<img class="logo" src="'.$logo['logo'].'?'.$time.'" />';
                         }else{
                             print $address['merchant'];
                         }

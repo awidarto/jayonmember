@@ -171,6 +171,62 @@ class Merchant extends Application
 		} // if($this->form_validation->run() == FALSE)
 	}
 
+    public function logo($id = null)
+    {
+        $this->breadcrumb->add_crumb('Upload Merchant Logo','admin/merchant/logo');
+
+        $data['id'] = $this->session->userdata('userid');
+        $data['page_title'] = 'Upload Logo';
+        $this->ag_auth->view('merchant/uploadlogo',$data);
+    }
+
+    public function logoupload($id = null)
+    {
+
+        $uconfig['upload_path'] = $this->config->item('public_path').'logo/';
+        $uconfig['allowed_types'] = 'jpg|png';
+        $uconfig['max_size'] = 0;
+        $uconfig['max_width']  = 0;
+        $uconfig['max_height']  = 0;
+
+        $this->load->library('upload', $uconfig);
+
+        if ( ! $this->upload->do_upload())
+        {
+            $err = $this->upload->display_errors('<p>', '</p>');
+
+            $data['message'] = "The logo failed to upload.".$err;
+            $data['page_title'] = 'Upload Logo Error';
+            $data['back_url'] = anchor('merchant','Back to list');
+            $this->ag_auth->view('message', $data);
+        }
+        else
+        {
+            $upl = $this->upload->data();
+
+                $target_path = $upl['full_path'];
+
+                $config['image_library'] = 'gd2';
+                $config['source_image'] = $target_path;
+                $config['new_image'] = $upl['file_path'].'logo_'.$id.'.jpg';
+                $config['create_thumb'] = false;
+                $config['maintain_ratio'] = TRUE;
+                $config['width']     = 100;
+                $config['height']   = 75;
+
+                $this->load->library('image_lib', $config);
+
+                $this->image_lib->resize();
+
+
+            $data['message'] = "The logo picture uploaded.";
+            $data['page_title'] = 'Upload Logo Success';
+            $data['back_url'] = anchor('merchant','Back to list');
+            $this->ag_auth->view('message', $data);
+        }
+
+    }
+
 
 	public function __request(){
 
