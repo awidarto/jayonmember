@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>Delivery Slip</title>
@@ -8,7 +9,6 @@
         font-size: 12pt;
     }
     .label{
-        float: left;
         font-family: Arial, sans-serif;
         max-height:<?php print $cell_height;?>px;
         min-height:<?php print $cell_height;?>px;
@@ -20,10 +20,11 @@
 
         margin-right: <?php print $margin_right;?>px;
         margin-bottom: <?php print $margin_bottom;?>px;
-        display: table-cell;
+        display: inline-block;
 
         border: thin ridge #ddd;
-        padding: 4px;/* add padding offset = padding * column count */
+        padding: 4px;
+        /* add padding offset = padding * column count */
     }
 
     .label table{

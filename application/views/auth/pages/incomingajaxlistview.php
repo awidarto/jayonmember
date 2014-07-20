@@ -633,6 +633,7 @@
                     var pframeWindow = pframe.contentWindow;
                     pframeWindow.print();
                 },
+                /*
                 "Download PDF": function(){
                     var print_id = $('#label_id').val();
                     var col = $('#label_columns').val();
@@ -644,7 +645,7 @@
                     var src = '<?php print base_url() ?>admin/prints/label/' + print_id + '/' + res + '/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom + '/pdf';
                     window.location = src;
                 },
-
+                */
                 Close: function() {
                     $( this ).dialog( "close" );
                 }
