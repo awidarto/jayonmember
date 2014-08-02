@@ -498,6 +498,8 @@ class Delivery extends Application
             $page['columns'] = $pd['col'];
             $page['margin_right'] = $pd['mright'];
             $page['margin_bottom'] = $pd['mbottom'];
+            $page['font_size'] = $pd['fsize'];
+            $page['code_type'] = $pd['codetype'];
         }else{
             $page['resolution'] = 150;
             $page['cell_width'] = 450;
@@ -505,6 +507,8 @@ class Delivery extends Application
             $page['columns'] = 2;
             $page['margin_right'] = 10;
             $page['margin_bottom'] = 10;
+            $page['font_size'] = 12;
+            $page['code_type'] = 'barcode';
         }
 
 
@@ -2142,6 +2146,8 @@ class Delivery extends Application
             $page['columns'] = $pd['col'];
             $page['margin_right'] = $pd['mright'];
             $page['margin_bottom'] = $pd['mbottom'];
+            $page['font_size'] = $pd['fsize'];
+            $page['code_type'] = $pd['codetype'];
         }else{
             $page['resolution'] = 150;
             $page['cell_width'] = 450;
@@ -2149,6 +2155,8 @@ class Delivery extends Application
             $page['columns'] = 2;
             $page['margin_right'] = 10;
             $page['margin_bottom'] = 10;
+            $page['font_size'] = 12;
+            $page['code_type'] = 'barcode';
         }
 
 

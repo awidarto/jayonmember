@@ -145,7 +145,10 @@
             var cell_width = $('#label_cell_width').val();
             var mright = $('#label_margin_right').val();
             var mbottom = $('#label_margin_bottom').val();
-            var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + res + '/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom;
+            var fsize = $('#label_font_size').val();
+            var codetype = $('#label_code_type').val();
+
+            var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + res + '/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom +'/'+ fsize +'/'+ codetype;
 
             $('#label_frame').attr('src',src);
         });
@@ -158,6 +161,8 @@
             var cell_width = $('#label_cell_width').val();
             var mright = $('#label_margin_right').val();
             var mbottom = $('#label_margin_bottom').val();
+            var fsize = $('#label_font_size').val();
+            var codetype = $('#label_code_type').val();
 
             $.post(
                 '<?php print base_url();?>ajax/printdefault',
@@ -168,7 +173,9 @@
                     cell_height : cell_height,
                     cell_width : cell_width,
                     mright : mright,
-                    mbottom : mbottom
+                    mbottom : mbottom,
+                    fsize : fsize,
+                    codetype : codetype
                 },
                 function(data){
                     if(data.result == 'OK'){
@@ -207,8 +214,10 @@
                 var cell_width = $('#label_cell_width').val();
                 var mright = $('#label_margin_right').val();
                 var mbottom = $('#label_margin_bottom').val();
+                var fsize = $('#label_font_size').val();
+                var codetype = $('#label_code_type').val();
                 $('#label_id').val(delivery_id);
-                var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + res + '/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom;
+                var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + res + '/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom +'/'+ fsize +'/'+ codetype;
 
                 $('#label_frame').attr('src',src);
                 $('#label_dialog').dialog('open');
@@ -500,6 +509,13 @@
         </label>
         <label>Bottom
                 <input type="text" class="label-opt" value="<?php print $margin_bottom ?>" id="label_margin_bottom" /> px
+        </label>
+        <label>Font Size
+                <input type="text" class="label-opt" value="<?php print $font_size ?>" id="label_font_size" /> pt
+        </label>
+
+        <label>Code Type
+                <?php print form_dropdown('', array( 'barcode'=>'Barcode', 'qr'=>'QR Code' ), $code_type, 'id="label_code_type"'  ) ?>
         </label>
 
         <button id="label_refresh">refresh</button>

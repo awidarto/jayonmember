@@ -192,6 +192,11 @@
             font-weight: bold;
         }
 
+        .qr{
+            width: 75px;
+            height:auto;
+        }
+
 	</style>
 </head>
 <body>
@@ -207,7 +212,7 @@
 										print $this->ag_asset->load_image('plogo.png', 'assets/images');?><br />
 										<?php print get_option('jex_hq_address');?>
 								</td>
-								<td style="align:right;vertical-align:top;"><?php print $qr;?></td>
+                                <td style="align:right;vertical-align:top;"><img class="qr" src="<?php print base_url().'img/qr/'.urlencode($qr);?>" alt="<?php print $qr;?>"></td>
 							</tr>
 						</tbody>
 					</table>
