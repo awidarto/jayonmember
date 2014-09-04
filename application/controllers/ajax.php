@@ -444,7 +444,7 @@ class Ajax extends Application
 			'ccod_method' => $this->input->post('ccod_method')
 		);
 
-        if($trx['merchant_trans_id'] == ''){
+        if($trx['merchant_trans_id'] == '' || $trx['merchant_trans_id'] == '-'){
             $trx['transaction_id'] = 'TRX_'.$merchant_id.'_'.str_replace(array(' ','.'), '', microtime());
         }else{
             $trx['transaction_id'] = $trx['merchant_trans_id'];
