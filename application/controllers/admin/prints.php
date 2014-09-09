@@ -347,7 +347,7 @@ class Prints extends Application
             $this->gc_qrcode->clear();
             */
 
-            $data['qr'] = $qr_data;
+            $data['qr'] = base64_encode( $qr_data );
 
 			$data['page_title'] = 'Delivery Orders';
 
@@ -584,7 +584,7 @@ class Prints extends Application
 
 			$qr_data = $delivery_id."|".$data['main_info']['merchant_trans_id'];
 
-            $data['qr'] = $qr_data;
+            $data['qr'] = base64_encode( $qr_data );
 
             $this->gc_qrcode->clear();
 
