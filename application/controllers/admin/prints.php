@@ -53,7 +53,79 @@ class Prints extends Application
         return $barcode->render('jpg',$text);
     }
 
-    public function label($delivery_id, $resolution = 200 ,$cell_height = 50, $cell_width = 200,$col = 2,$margin_right = 20,$margin_bottom = 20, $font_size = 12 ,$code_type = 'barcode', $pdf = false, $filename = null){
+    public function label($delivery_id, $resolution = 200 ,$cell_height = 50, $cell_width = 200,$col = 2,$margin_right = 20,$margin_bottom = 20, $font_size = 12 ,$code_type = 'qr',$pdf = false, $filename = null){
+            $this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,
+                        m.id as merchant_id,
+                        m.merchantname as merchant,
+                        m.street as mc_street,
+                        m.fullname as mc_pic,
+                        m.district as mc_district,
+                        m.city as mc_city,
+                        m.province as mc_province,
+                        m.country as mc_country,
+                        m.zip as mc_zip,
+                        m.phone as mc_phone,
+                        m.mobile as mc_mobile,
+                        a.street as m_street,
+                        a.contact_person as m_pic,
+                        a.district as m_district,
+                        a.city as m_city,
+                        a.province as m_province,
+                        a.country as m_country,
+                        a.zip as m_zip,
+                        a.phone as m_phone,
+                        a.mobile as m_mobile,
+                        a.application_name as app_name')
+                    ->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left')
+                    ->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left')
+                    ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_key=a.key','left');
+                if(preg_match('/^SESS:/', $delivery_id)){
+                    $sess = str_replace('SESS:','',$delivery_id);
+                    session_start();
+                    $ids = $_SESSION[$sess];
+                    $main = $this->db->where_in('delivery_id',$ids)->get($this->config->item('assigned_delivery_table'));
+                }else{
+                    $main = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
+                }
+
+            //$pd = get_print_default();
+            /*
+            if($pd){
+                $data['resolution'] = $pd['res'];
+                $data['cell_width'] = $pd['cell_width'];
+                $data['cell_height'] = $pd['cell_height'];
+                $data['columns'] = $pd['col'];
+                $data['margin_right'] = $pd['mright'];
+                $data['margin_bottom'] = $pd['mbottom'];
+            }else{
+                */
+                $data['resolution'] = $resolution;
+                $data['cell_width'] = $cell_width;
+                $data['cell_height'] = $cell_height;
+                $data['columns'] = $col;
+                $data['margin_right'] = $margin_right;
+                $data['margin_bottom'] = $margin_bottom;
+                $data['font_size'] = $font_size;
+                $data['code_type'] = $code_type;
+            //}
+
+
+
+            $data['main_info'] = $main->result_array();
+
+            if($pdf){
+                $html = $this->load->view('print/label',$data,true);
+                //print $html; // Load the view
+                pdf_create($html, 'label_'.$delivery_id.'.pdf','A4','portrait', true);
+            }else{
+                $this->load->view('print/label',$data); // Load the view
+            }
+
+            //print $this->db->last_query();
+
+    }
+
+    public function ___label($delivery_id, $resolution = 200 ,$cell_height = 50, $cell_width = 200,$col = 2,$margin_right = 20,$margin_bottom = 20, $font_size = 12 ,$code_type = 'barcode', $pdf = false, $filename = null){
             $this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,
                         m.id as merchant_id,
                         m.merchantname as merchant,

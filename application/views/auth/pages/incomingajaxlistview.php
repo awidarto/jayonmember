@@ -824,7 +824,7 @@
         </label>
 
         <label>Code Type
-                <?php print form_dropdown('', array( 'barcode'=>'Barcode', 'qr'=>'QR Code' ), $code_type, 'id="label_code_type"'  ) ?>
+                <?php print form_dropdown('', array( 'qr'=>'QR Code' ), $code_type, 'id="label_code_type"'  ) ?>
         </label>
 
         <button id="label_refresh">refresh</button>

@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
 <head>
     <title>Delivery Slip</title>
@@ -9,6 +8,7 @@
         font-size: 12pt;
     }
     .label{
+        float: left;
         font-family: Arial, sans-serif;
         max-height:<?php print $cell_height;?>px;
         min-height:<?php print $cell_height;?>px;
@@ -20,11 +20,10 @@
 
         margin-right: <?php print $margin_right;?>px;
         margin-bottom: <?php print $margin_bottom;?>px;
-        display: inline-block;
+        display: table-cell;
 
         border: thin ridge #ddd;
-        padding: 4px;
-        /* add padding offset = padding * column count */
+        padding: 4px;/* add padding offset = padding * column count */
     }
 
     @media print {
@@ -100,7 +99,23 @@
 
 <?php foreach( $main_info as $address ):?>
     <?php
-        $time = time();
+        // assume resolution in 72 ppi
+        /*
+        $paper_pw = 1100;
+        if($columns > 1){
+            $min_width = ((int) floor($paper_pw/$columns)).'px';
+            $width = ($min_width - 10).'px';
+        }else{
+            $min_width = ((int) floor($paper_pw/2)).'px';
+            $width = ($min_width - 10).'px';
+        }
+        $resolution;
+        $cell_width;
+        $cell_height;
+        $columns;
+        $margin_right;
+        $margin_bottom;
+        */
     ?>
     <div class="label">
         <table>
@@ -109,7 +124,7 @@
                     <?php
                         $logo = get_logo($address['merchant_id']);
                         if($logo['exist'] == true){
-                            print '<img class="logo" src="'.$logo['logo'].'?'.$time.'" />';
+                            print '<img class="logo" src="'.$logo['logo'].'" />';
                         }else{
                             print $address['merchant'];
                         }
@@ -122,7 +137,7 @@
                 <td colspan="2" style="text-align:right">
                     <?php if($code_type == 'qr') : ?>
                     <div class="code-container">
-                        <img class="qr" src="<?php print base_url()?>img/qr/<?php print base64_encode($address['merchant_trans_id']) ?>" alt="<?php print $address['merchant_trans_id'] ?>">
+                        <img class="qr" src="<?php print base_url()?>img/qr/<?php print base64_encode($address['delivery_id'].'|'.$address['merchant_trans_id']) ?>" alt="<?php print $address['merchant_trans_id'] ?>">
                     </div>
                     <?php endif; ?>
                     <div>
