@@ -266,6 +266,7 @@ class Import extends Application
         foreach($json as $sheet_id=>$rows){
 
             //print $sheet_id.'<br />';
+            //print_r($rows);
 
             $this->load->library('table');
 
@@ -741,8 +742,8 @@ class Import extends Application
 
                 $in = json_decode($in);
 
-                print "order input to save: \r\n";
-                print_r($in);
+                //print "order input to save: \r\n";
+                //print_r($in);
 
                 $is_new = false;
 
@@ -783,9 +784,13 @@ class Import extends Application
 
                 }
 
-                if(isset($in->transaction_id) && $in->transaction_id != ""){
-                    $transaction_id = $in->transaction_id;
+
+
+                if(isset($in->merchant_trans_id) && $in->merchant_trans_id != ""){
+                    $transaction_id = $in->merchant_trans_id;
                 }
+
+                //print($transaction_id);
 
 
                 if($is_new){
@@ -821,6 +826,8 @@ class Import extends Application
                 $order['application_key'] = $app->key;
                 $order['buyer_id'] = $buyer_id;
                 $order['merchant_id'] = $app->merchant_id;
+
+
                 $order['merchant_trans_id'] = trim($transaction_id);
 
                 $order['buyer_name'] = $in->buyer_name;
@@ -881,7 +888,7 @@ class Import extends Application
                 }
 
                 $order['is_import'] = 1;
-                print_r($order);
+
 
                 $inres = $this->db->insert($this->config->item('incoming_delivery_table'),$order);
                 $sequence = $this->db->insert_id();
