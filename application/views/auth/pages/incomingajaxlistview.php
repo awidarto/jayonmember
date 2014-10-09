@@ -689,10 +689,14 @@
 <?php endif;?>
 <?php echo $this->table->generate(); ?>
 
+<div style="clear:both"></div>
+
 <div style="text-align:right;margin-top:12px;">
 <?php
 
-    print form_button('do_label','Print Selection Label','id="doLabel"');
+    print form_button('do_label','Print Selection Label','id="doLabel"').'&nbsp;&nbsp;'.
+    form_button('do_confirm','Confirm Selection','id="doConfirm"').'&nbsp;&nbsp;'.
+    form_button('do_cancel','Cancel Selection','id="doCancel"');
 
 ?>
 </div>
