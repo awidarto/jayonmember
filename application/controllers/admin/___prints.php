@@ -6,7 +6,7 @@ class Prints extends Application
 	public function __construct()
 	{
 		parent::__construct();
-		//$this->ag_auth->restrict('admin'); // restrict this controller to admins only
+		$this->ag_auth->restrict('admin'); // restrict this controller to admins only
 		$this->table_tpl = array(
 			'table_open' => '<table border="0" cellpadding="4" cellspacing="0" class="dataTable">'
 		);
@@ -18,55 +18,14 @@ class Prints extends Application
 
         if($type == 'buyer'){
             $table = $this->config->item('jayon_buyers_table');
-            $this->db->where('id',$buyer_id);
-            $this->db->select('id,buyer_name,buyerdeliveryzone,buyerdeliverycity,shipping_address,recipient_name,shipping_zip,directions,dir_lat ,dir_lon ,latitude ,longitude');
-
         }else{
             $table = $this->config->item('incoming_delivery_table');
-            $this->db->where('id',$buyer_id);
-            $this->db->select('id,delivery_id,buyer_name,buyerdeliveryzone,buyerdeliverycity,shipping_address,recipient_name,shipping_zip,directions,dir_lat ,dir_lon ,latitude ,longitude');
         }
 
+        $this->db->where('id',$buyer_id);
+        $this->db->select('id,buyer_name,buyerdeliveryzone,buyerdeliverycity,shipping_address,recipient_name,shipping_zip,directions,dir_lat ,dir_lon ,latitude ,longitude');
         $buyer = $this->db->get($table)->row_array();
 
-        //print_r($buyer);
-
-        if(($buyer['buyerdeliverycity'] == '' || $buyer['buyerdeliverycity'] == 0)  || ($buyer['buyerdeliveryzone'] == '' || $buyer['buyerdeliveryzone'] == 0) ){
-            $suggestql = 'SELECT SUBSTRING( SOUNDEX( shipping_address ) , 1, 20 ) ,  shipping_address, buyer_name ,latitude, longitude, delivery_id
-                    FROM  delivery_order_active
-                    WHERE (
-                        (
-                            STRCMP( SUBSTRING( SOUNDEX(  shipping_address ) , 1, 20 ) , SUBSTRING( SOUNDEX( ? ) , 1, 20 ) ) =0
-                            OR  STRCMP( SUBSTRING( SOUNDEX(  shipping_address ) , 1, 23 ) , SUBSTRING( SOUNDEX( ? ) , 1, 23 ) ) = 0
-                        )
-                    )
-                    AND delivery_id != ?
-                    AND latitude !=0 AND longitude !=0';
-
-            $suggestquery = $this->db->query( $suggestql, array($buyer['shipping_address'],$buyer['shipping_address'],$buyer['buyerdeliverycity'],$buyer['buyerdeliveryzone'],$buyer['delivery_id']) );
-
-        }else{
-            $suggestql = 'SELECT SUBSTRING( SOUNDEX( shipping_address ) , 1, 20 ) ,  shipping_address, buyer_name ,latitude, longitude, delivery_id
-                    FROM  delivery_order_active
-                    WHERE (
-                        (
-                            STRCMP( SUBSTRING( SOUNDEX(  shipping_address ) , 1, 20 ) , SUBSTRING( SOUNDEX( ? ) , 1, 20 ) ) =0
-                            OR  STRCMP( SUBSTRING( SOUNDEX(  shipping_address ) , 1, 23 ) , SUBSTRING( SOUNDEX( ? ) , 1, 23 ) ) = 0
-                        )
-                    )
-                    AND buyerdeliverycity = ?
-                    AND buyerdeliveryzone = ?
-                    AND delivery_id != ?
-                    AND latitude !=0 AND longitude !=0';
-
-            $suggestquery = $this->db->query( $suggestql, array($buyer['shipping_address'],$buyer['shipping_address'],$buyer['delivery_id']) );
-
-        }
-
-
-        $data['suggestions'] = $suggestquery->result_array();
-
-        //print $this->db->last_query();
 
         $data['page_title'] = 'Set Location';
         $data['id'] = $buyer['id'];
@@ -81,6 +40,17 @@ class Prints extends Application
         $data['type'] = $type;
 
         $this->load->view('auth/pages/setlocation',$data); // Load the view
+    }
+
+    public function barcode($text){
+
+        $this->load->library('barcode');
+
+        $text = base64_decode($text);
+
+        $barcode = new Barcode();
+        $barcode->make($text,'code128',40, 'horizontal' ,true);
+        return $barcode->render('jpg',$text);
     }
 
     public function label($delivery_id, $resolution = 200 ,$cell_height = 50, $cell_width = 200,$col = 2,$margin_right = 20,$margin_bottom = 20, $font_size = 12 ,$code_type = 'qr',$pdf = false, $filename = null){
@@ -155,7 +125,79 @@ class Prints extends Application
 
     }
 
-	public function deliveryslip($delivery_id,$pdf = false, $filename = null)
+    public function ___label($delivery_id, $resolution = 200 ,$cell_height = 50, $cell_width = 200,$col = 2,$margin_right = 20,$margin_bottom = 20, $font_size = 12 ,$code_type = 'barcode', $pdf = false, $filename = null){
+            $this->db->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,
+                        m.id as merchant_id,
+                        m.merchantname as merchant,
+                        m.street as mc_street,
+                        m.fullname as mc_pic,
+                        m.district as mc_district,
+                        m.city as mc_city,
+                        m.province as mc_province,
+                        m.country as mc_country,
+                        m.zip as mc_zip,
+                        m.phone as mc_phone,
+                        m.mobile as mc_mobile,
+                        a.street as m_street,
+                        a.contact_person as m_pic,
+                        a.district as m_district,
+                        a.city as m_city,
+                        a.province as m_province,
+                        a.country as m_country,
+                        a.zip as m_zip,
+                        a.phone as m_phone,
+                        a.mobile as m_mobile,
+                        a.application_name as app_name')
+                    ->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left')
+                    ->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left')
+                    ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_key=a.key','left');
+                if(preg_match('/^SESS:/', $delivery_id)){
+                    $sess = str_replace('SESS:','',$delivery_id);
+                    session_start();
+                    $ids = $_SESSION[$sess];
+                    $main = $this->db->where_in('delivery_id',$ids)->get($this->config->item('assigned_delivery_table'));
+                }else{
+                    $main = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
+                }
+
+            //$pd = get_print_default();
+            /*
+            if($pd){
+                $data['resolution'] = $pd['res'];
+                $data['cell_width'] = $pd['cell_width'];
+                $data['cell_height'] = $pd['cell_height'];
+                $data['columns'] = $pd['col'];
+                $data['margin_right'] = $pd['mright'];
+                $data['margin_bottom'] = $pd['mbottom'];
+            }else{
+                */
+                $data['resolution'] = $resolution;
+                $data['cell_width'] = $cell_width;
+                $data['cell_height'] = $cell_height;
+                $data['columns'] = $col;
+                $data['margin_right'] = $margin_right;
+                $data['margin_bottom'] = $margin_bottom;
+                $data['font_size'] = $font_size;
+                $data['code_type'] = $code_type;
+            //}
+
+
+
+            $data['main_info'] = $main->result_array();
+
+            if($pdf){
+                $html = $this->load->view('print/label',$data,true);
+                //print $html; // Load the view
+                pdf_create($html, 'label_'.$delivery_id.'.pdf','A4','portrait', true);
+            }else{
+                $this->load->view('print/label',$data); // Load the view
+            }
+
+            //print $this->db->last_query();
+
+    }
+
+	public function deliveryslip($delivery_id,$pdf = false)
 	{
 			$main = $this->db
 					->select($this->config->item('assigned_delivery_table').'.*,b.fullname as buyer,
@@ -258,75 +300,79 @@ class Prints extends Application
             }
 
 
-        if($data['main_info']['delivery_type'] != 'Delivery Only' ){
+                if($data['main_info']['delivery_type'] != 'Delivery Only' ){
 
+        			$this->table->add_row(
+        					array('data'=>'Total Price',
+        						'colspan'=>3,
+        						'class'=>'lsums'.$cclass
+        						),
+                            array('data'=>number_format($gt,2,',','.'),
+                                'class'=>$cclass
+                                )
 
+        			);
 
-    			$this->table->add_row(
-    					array('data'=>'Total Price',
-    						'colspan'=>3,
-    						'class'=>'lsums'.$cclass
-    						),
-                        array('data'=>number_format($gt,2,',','.'),
-                            'class'=>$cclass
-                            )
+                    if($dsc > 0){
+                        $this->table->add_row(
+                            array('data'=>'Total Discount',
+                                'colspan'=>3,
+                                'class'=>'lsums'
+                                ),
+                            array(
+                                'data'=>number_format($dsc,2,',','.'),
+                                'class'=>'lsums'
+                                )
+                        );
+                    }
 
-    			);
+                    if($tax > 0){
+                        $this->table->add_row(
+                            array('data'=>'Total Tax',
+                                'colspan'=>3,
+                                'class'=>'lsums'
+                                ),
+                            number_format($tax,2,',','.')
+                        );
+                    }
 
-                $this->table->add_row(
-                    array('data'=>'Total Discount',
-                        'colspan'=>3,
-                        'class'=>'lsums'
-                        ),
-                    array(
-                        'data'=>number_format($dsc,2,',','.'),
-                        'class'=>'lsums'
-                        )
-                );
+    				/*
+    				if($data['main_info']['delivery_bearer'] == 'merchant'){
+    					$chg -= $dc;
+    					$dc = 0;
+    				}
+    				*/
 
-                $this->table->add_row(
-                    array('data'=>'Total Tax',
-                        'colspan'=>3,
-                        'class'=>'lsums'
-                        ),
-                    number_format($tax,2,',','.')
-                );
-
-				/*
-				if($data['main_info']['delivery_bearer'] == 'merchant'){
-					$chg -= $dc;
-					$dc = 0;
-				}
-				*/
-
-                $translasi = array(
+                    $translasi = array(
                     ''=>'',
                     'merchant'=>'toko online',
                     'buyer'=>'pembeli'
                     );
 
-                $paidby = ($data['main_info']['delivery_bearer'] == '')?'':'Dibayar oleh '.$translasi[$data['main_info']['delivery_bearer']];
+                    $paidby = ($data['main_info']['delivery_bearer'] == '')?'':'Dibayar oleh '.$translasi[$data['main_info']['delivery_bearer']];
 
-				$this->table->add_row(
-					array('data'=>$paidby,
-						'colspan'=>2,
-						'class'=>'lsums'
-						),
-					array('data'=>'Delivery Charge',
-                        'class'=>'lsums'.$cclass
-						),
-					array('data'=>number_format($dc,2,',','.'),
-						'class'=>'editable'.$cclass,
-						'id'=>'delivery_cost'
-					)
-				);
+    				$this->table->add_row(
+    					array('data'=>$paidby,
+    						'colspan'=>2,
+    						'class'=>'lsums'
+    						),
+    					array('data'=>'Delivery Charge',
+                            'class'=>'lsums'.$cclass
+    						),
+    					array('data'=>number_format($dc,2,',','.'),
+    						'class'=>'editable'.$cclass,
+    						'id'=>'delivery_cost'
+    					)
+    				);
 
-				/*
-				if($data['main_info']['cod_bearer'] == 'merchant'){
-					$chg -= $cod;
-					$cod = 0;
-				}
-				*/
+    				/*
+    				if($data['main_info']['cod_bearer'] == 'merchant'){
+    					$chg -= $cod;
+    					$cod = 0;
+    				}
+    				*/
+
+
                     $paidby = ($data['main_info']['cod_bearer'] == '')?'':'Dibayar oleh '.$translasi[$data['main_info']['cod_bearer']];
 
                     $this->table->add_row(
@@ -343,19 +389,18 @@ class Prints extends Application
                         )
                     );
 
-				$this->table->add_row(
-					array('data'=>'Total Charges',
-						'colspan'=>3,
-                        'class'=>'lsums'.$cclass
-						),
-                    array('data'=>number_format($chg,2,',','.'),
-                        'class'=>'editable'.$cclass,
-                        'id'=>'delivery_cost'
-                        )
-				);
+    				$this->table->add_row(
+    					array('data'=>'Total Charges',
+    						'colspan'=>3,
+                            'class'=>'lsums'.$cclass
+    						),
+                        array('data'=>number_format($chg,2,',','.'),
+                            'class'=>'editable'.$cclass,
+                            'id'=>'delivery_cost'
+                            )
+    				);
 
-        }
-
+                }
 
 			$data['grand_total'] = $gt;
 			$data['grand_discount'] = $d;
@@ -380,31 +425,10 @@ class Prints extends Application
 
 			//print_r($data['main_info']);
 
-
-            $dtime = date('dmY',strtotime($data['main_info']['deliverytime'] ));
-
-            $pdffilename = strtoupper(escapeVars($data['main_info']['merchant'],'_')).'-'.$dtime.'-'.strtoupper(escapeVars($data['main_info']['buyer_name'])).'-'.strtoupper(escapeVars($data['main_info']['merchant_trans_id']));
-
-			if($pdf == 'pdf'){
+			if($pdf){
 				$html = $this->load->view('print/deliveryslip',$data,true);
-
 				//print $html; // Load the view
-				pdf_create($html, $pdffilename,'A4','landscape', true);
-            }else if($pdf == 'save'){
-                $html = $this->load->view('print/deliveryslip',$data,true);
-                //print $html; // Load the view
-
-                if(isset($filename) && !is_null($filename)){
-                    $saved = @pdf_create($html, $filename.'.pdf','A4','landscape', false);
-                    @file_put_contents(FCPATH.'/public/slip/'.$filename.'.pdf', $saved);
-                }else{
-                    $saved = @pdf_create($html, $pdffilename,'A4','landscape', false);
-                    @file_put_contents(FCPATH.'/public/slip/'.$pdffilename.'.pdf', $saved);
-                }
-
-
-                return file_exists(FCPATH.'/public/slip/'.$delivery_id.'.pdf');
-
+				pdf_create($html, $delivery_id.'.pdf','A4','landscape', true);
 			}else{
 				$this->load->view('print/deliveryslip',$data); // Load the view
 			}
@@ -632,7 +656,7 @@ class Prints extends Application
 
 			$qr_data = $delivery_id."|".$data['main_info']['merchant_trans_id'];
 
-            $data['qr'] = base64_encode($qr_data);
+            $data['qr'] = base64_encode( $qr_data );
 
             $this->gc_qrcode->clear();
 
@@ -881,150 +905,6 @@ class Prints extends Application
 		}
 
 	}
-
-    public function ajaxsendslip(){
-        $ids = $this->input->post('delivery_id');
-        $ccs = $this->input->post('ccfields');
-        $admincc = $this->input->post('admincc');
-        $messages = $this->input->post('msgs');
-
-        $merchants = $this->input->post('mids');
-
-        $mcc = array();
-        for($a = 0;$a < count($merchants);$a++){
-            $mcc[$merchants[$a]] = $ccs[$a];
-            $msg[$merchants[$a]] = $messages[$a];
-        }
-
-        $idstring = implode(',',$ids);
-
-        $this->db->where_in('delivery_id',$ids);
-
-        $merchant_table = $this->config->item('jayon_members_table');
-        $delivery_table = $this->config->item('incoming_delivery_table');
-
-        $this->db->select($delivery_table.'.*, m.email as merchant_email, m.merchantname as merchantname');
-        $this->db->join( $merchant_table.' as m', $delivery_table.'.merchant_id = m.id', 'left' );
-        $res = $this->db->get($this->config->item('incoming_delivery_table'));
-
-        //print_r($res->result_array());
-
-        $digest = array();
-
-        $minfo = array();
-
-        foreach ($res->result() as $r) {
-            $dtime = date('dmY',strtotime($r->deliverytime));
-            $filename = strtoupper(escapeVars($r->merchantname, '_')).'-'.$dtime.'-'.strtoupper(escapeVars($r->buyer_name)).'-'.strtoupper(escapeVars($r->merchant_trans_id));
-
-            $result = $this->deliveryslip($r->delivery_id, 'save', $filename);
-            if(file_exists(FCPATH.'/public/slip/'.$filename.'.pdf') && !is_null($r->merchant_email) ){
-                $digest[$r->merchant_email][] = FCPATH.'/public/slip/'.$filename.'.pdf';
-                $minfo[$r->merchant_email] = array(
-                    'merchantname'=>$r->merchantname,
-                    'id'=>$r->merchant_id,
-                    'mcc'=>$mcc[$r->merchant_id],
-                    'msg'=>$msg[$r->merchant_id]
-                );
-            }
-        }
-
-        //print_r($digest);
-
-        foreach($digest as $email=>$attachments){
-
-            //print_r($attachments);
-
-            $subject = 'Delivery Note - '.$minfo[$email]['merchantname'].' '.date('d-m-Y',time());
-            //$to = 'andy.awidarto@gmail.com';
-            $to = $email;
-            $cc = array();
-            $cc[] = $this->config->item('admin_username');
-
-            if($minfo[$email]['mcc'] != ''){
-                $ccf = explode(',', $minfo[$email]['mcc']);
-                if(is_array($ccf)){
-                    $cc = array_merge($cc,$ccf);
-                }else{
-                    $cc[] = $ccf;
-                }
-            }
-
-            if($admincc != ''){
-                $cca = explode(',', $admincc);
-                if(is_array($cca)){
-                    $cc = array_merge($cc,$cca);
-                }else{
-                    $cc[] = $admincc;
-                }
-            }
-
-            //print_r($cc);
-            //print_r($mcc);
-
-            if($minfo[$email]['msg'] != ''){
-                $body = $minfo[$email]['msg'];
-            }else{
-                $body = 'Dear valued customer, please find attached your delivery notes for date : '.date('d-m-Y',time()).'.';
-            }
-
-            $reply_to = $this->config->item('admin_username');
-            $template = 'deliveryslip';
-            $data = array('body'=>$body);
-            $attachment = $attachments;
-
-            $result = send_notification(
-                $subject,
-                $to,
-                $cc,
-                $reply_to,
-                $template,
-                $data,
-                $attachment
-            );
-
-            if($result){
-                $result = 'OK';
-            }else{
-                $result = 'ERR:SENDINGFAILED';
-            }
-            //return $result;
-
-        }
-
-        print json_encode(array('result'=>$result));
-
-    }
-
-    public function sendslip($delivery_id, $email = null){
-        $result = $this->deliveryslip($delivery_id, 'save');
-        if(file_exists(FCPATH.'/public/slip/'.$delivery_id.'.pdf') && !is_null($email) ){
-
-            $subject = 'JEX Delivery Slip';
-            $to = $email;
-            $cc = null;
-            $reply_to = null;
-            $template = 'deliveryslip';
-            $data = '';
-            $attachment = FCPATH.'/public/slip/'.$delivery_id.'.pdf';
-
-            $result = send_notification(
-                $subject,
-                $to,
-                $cc,
-                $reply_to,
-                $template,
-                $data,
-                $attachment
-            );
-
-            return $result;
-
-        }else{
-            return false;
-        }
-
-    }
 
 
 }
