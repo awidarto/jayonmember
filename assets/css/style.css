@@ -265,3 +265,8 @@ td.currency{
 input.label-opt{
     width:35px;
 }
+
+img.sign{
+    width:100px;
+    height:auto;
+}
