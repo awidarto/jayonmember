@@ -94,6 +94,16 @@ $config['trans_status_admin_devassigned'] = 'dev_assigned';
 $config['trans_status_admin_courierassigned'] = 'cr_assigned';
 $config['trans_status_admin_dispatched'] = 'dispatched';
 
+$config['trans_status_tobepickup'] = 'akan diambil';
+$config['trans_status_pickup'] = 'sudah diambil';
+
+$config['trans_status_atmerchant'] = 'belum di gudang';
+$config['trans_status_pu2wh'] = 'diterima di gudang';
+$config['trans_status_inwh'] = 'di gudang';
+$config['trans_status_wh2ds'] = 'di delivery';
+$config['trans_status_ds2wh'] = 'kembali di gudang';
+$config['trans_status_return2merchant'] = 'kembali ke merchant';
+
 /* status colors */
 
 $config['status_colors'] = array(
@@ -117,7 +127,18 @@ $config['status_colors'] = array(
 	$config['trans_status_admin_dated'] => 'blue',
 	$config['trans_status_admin_devassigned'] => 'black',
 	$config['trans_status_admin_courierassigned'] => 'black',
-	$config['trans_status_admin_dispatched'] => 'green'
+	$config['trans_status_admin_dispatched'] => 'green',
+
+    $config['trans_status_tobepickup'] => 'maroon',
+    $config['trans_status_pickup'] => 'green',
+
+    $config['trans_status_atmerchant'] => 'maroon',
+    $config['trans_status_pu2wh'] => 'green',
+    $config['trans_status_inwh'] => 'black',
+    $config['trans_status_wh2ds'] => 'orange',
+    $config['trans_status_ds2wh'] => 'brown',
+    $config['trans_status_return2merchant'] => 'red'
+
 );
 
 $config['actors_code'] = array(

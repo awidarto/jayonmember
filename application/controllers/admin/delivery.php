@@ -42,7 +42,7 @@ class Delivery extends Application
 			'status'
 			);
 
-		$this->db->select('*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
+		$this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
 		$this->db->join('members as b',$this->config->item('incoming_delivery_table').'.buyer_id=b.id','left');
 		$this->db->join('members as m',$this->config->item('incoming_delivery_table').'.merchant_id=m.id','left');
 		$this->db->join('applications as a',$this->config->item('incoming_delivery_table').'.application_id=b.id','left');
@@ -259,6 +259,8 @@ class Delivery extends Application
 
             $volume = (double)$key['width']*(double)$key['height']*(double)$key['length'];
 
+            $sign = get_pusign($key['merchant_id'], $key['application_id'], date( 'Y-m-d', mysql_to_unix($key['ordertime']) ) );
+
 
             $lat = ($key['latitude'] == 0)? 'Set Loc':$key['latitude'];
             $lon = ($key['longitude'] == 0)? '':$key['longitude'];
@@ -280,11 +282,7 @@ class Delivery extends Application
             //$markscan = '<img src="'.base_url().'admin/prints/barcode/'.base64_encode($key['merchant_trans_id']).'" style="width:100px;height:auto">';
             $markscan = '<img src="'.base_url().'img/qr/'.base64_encode($key['delivery_id'].'|'.$key['merchant_trans_id']).'" style="width:100px;height:auto">';
 
-            if($key['toscan'] == 1){
-                $pick_stat = colorizestatus($key['pickup_status']);
-            }else{
-                $pick_stat = '';
-            }
+            $pick_stat = colorizestatus($key['pickup_status']);
 
             $key['status'] = ($key['status'] == 'pending')?$this->config->item('trans_status_tobeconfirmed'):$key['status'];
 
@@ -308,9 +306,8 @@ class Delivery extends Application
                 $delivery_check,
                 colorizestatus($key['status']).'<br />'.$pick_stat,
                 $direction,
-                $key['width'].' x '.$key['height'].' x '.$key['length'].' = '.$volume,
                 //(double)$key['width']*(double)$key['height']*(double)$key['length'],
-                get_weight_range($key['weight'],$key['application_id']),
+                '<img src="'.$sign['sign'].'" />',
                 $key['delivery_cost'],
                 ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
                 ($key['delivery_type'] == 'COD')?(double)$key['chargeable_amount']:'',
@@ -319,7 +316,8 @@ class Delivery extends Application
                 $key['buyer_name'],
                 $key['shipping_zip'],
                 $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
-                $reference
+                $key['width'].' x '.$key['height'].' x '.$key['length'].' = '.$volume,
+                get_weight_range($key['weight'],$key['application_id'])
 
                 /*
                 $num,
@@ -418,15 +416,15 @@ class Delivery extends Application
             'Delivery ID',
             'Status',
             'Directions',
-            'W x H x L = V',
-            'Weight Range',
+            'TTD Toko',
             'Delivery Fee',
             'COD Surcharge',
             'COD Value',
             'Buyer',
             'ZIP',
             'Phone',
-            'Reference'
+            'W x H x L = V',
+            'Weight Range'
             /*
 			'Timestamp',
 			'Requested Delivery Date',
@@ -469,7 +467,6 @@ class Delivery extends Application
             '<input type="text" name="search_status" value="Search status" class="search_init" />',
             '<input type="text" name="search_directions" value="Search direction" class="search_init" />',
             '',
-            '',
             '<input type="text" name="search_delivery_cost" id="search_delivery_cost" value="Search cost" class="search_init" />',
             '<input type="text" name="search_cod_cost" id="search_cod_cost" value="Search COD sur." class="search_init" />',
             '<input type="text" name="search_chargeable_amount" id="search_chargeable_amount" value="Search Value" class="search_init" />',
@@ -477,7 +474,9 @@ class Delivery extends Application
             //'<input type="text" name="search_merchant" value="Search merchant" class="search_init" />',
             '<input type="text" name="search_zip" id="search_zip" value="Search ZIP" class="search_init" />',
 
-            '<input type="text" name="search_phone" value="Search phone" class="search_init" />'
+            '<input type="text" name="search_phone" value="Search phone" class="search_init" />',
+            '',
+            ''
 
             /*
 			'',
