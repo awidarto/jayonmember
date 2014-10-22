@@ -307,7 +307,7 @@ class Delivery extends Application
                 colorizestatus($key['status']).'<br />'.$pick_stat,
                 $direction,
                 //(double)$key['width']*(double)$key['height']*(double)$key['length'],
-                '<img src="'.$sign['sign'].'" />',
+                '<img class="sign" src="'.$sign['sign'].'" />',
                 $key['delivery_cost'],
                 ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
                 ($key['delivery_type'] == 'COD')?(double)$key['chargeable_amount']:'',
