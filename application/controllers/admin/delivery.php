@@ -39,7 +39,9 @@ class Delivery extends Application
 			'cod_cost',
 			'weight',
 			'phone',
-			'status'
+			'status',
+            'pickup_status',
+            'warehouse_status'
 			);
 
 		$this->db->select($this->config->item('incoming_delivery_table').'.*,b.fullname as buyer,m.merchantname as merchant,a.application_name as app_name');
@@ -283,6 +285,7 @@ class Delivery extends Application
             $markscan = '<img src="'.base_url().'img/qr/'.base64_encode($key['delivery_id'].'|'.$key['merchant_trans_id']).'" style="width:100px;height:auto">';
 
             $pick_stat = colorizestatus($key['pickup_status']);
+            $wh_stat = colorizestatus($key['warehouse_status']);
 
             $key['status'] = ($key['status'] == 'pending')?$this->config->item('trans_status_tobeconfirmed'):$key['status'];
 
@@ -304,7 +307,7 @@ class Delivery extends Application
                 ($key['status'] == 'canceled')?$printslip.'<br /><br />'.$printlabel:$printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reschedule,
                 //$printslip.'<br /><br />'.$reschedule.'<br />'.$changestatus,
                 $delivery_check,
-                colorizestatus($key['status']).'<br />'.$pick_stat,
+                colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$wh_stat,
                 $direction,
                 //(double)$key['width']*(double)$key['height']*(double)$key['length'],
                 '<img class="sign" src="'.$sign['sign'].'" />',
