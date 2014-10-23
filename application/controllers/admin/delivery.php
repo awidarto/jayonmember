@@ -2029,6 +2029,9 @@ class Delivery extends Application
                 $thumbstat .= '<br />'.$thumbnail;
             }
 
+            $pick_stat = colorizestatus($key['pickup_status']);
+            $wh_stat = colorizestatus($key['warehouse_status']);
+
             $aadata[] = array(
                 $num,
                 $datefield,
@@ -2045,7 +2048,7 @@ class Delivery extends Application
                 $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
                 $delivery_check,
                 //'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
-                $thumbstat,
+                $thumbstat.'<br />'.$pick_stat.'<br />'.$wh_stat,
                 $key['pending_count'],
                 $key['delivery_note'],
                 $printslip.'<br /><br />'.$printlabel,
@@ -2193,6 +2196,8 @@ class Delivery extends Application
                 '.$mtab.'.mobile2,
                 delivery_note,
                 status,
+                pickup_status,
+                warehouse_status,
                 device_id,
                 deliverytime,
                 chargeable_amount,
@@ -2328,6 +2333,9 @@ class Delivery extends Application
             //}else{
             //    $thumbnail = get_thumbnail($key['delivery_id']);
             //}
+            $pick_stat = colorizestatus($key['pickup_status']);
+                $wh_stat = colorizestatus($key['warehouse_status']);
+
 
             $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" dev_id="'.$key['device_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
 
@@ -2347,7 +2355,7 @@ class Delivery extends Application
                 $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
                 $thumbnail,
                 $key['delivery_note'],
-                colorizestatus($key['status']),
+                colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$wh_stat,
                 $key['delivery_note'],
                 form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" data-merchantid="'.$key['merchant_id'].'" data-merchant="'.$key['merchant'].'" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
                 $this->hide_trx($key['merchant_trans_id']),
