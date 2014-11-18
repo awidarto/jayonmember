@@ -124,7 +124,9 @@
                     <?php
                         $logo = get_logo($address['merchant_id']);
                         if($logo['exist'] == true){
-                            print '<img class="logo" src="'.$logo['logo'].'" alt="" />';
+                            print '<img class="logo" src="'.$logo['logo'].'" alt="'.$address['merchant'].'" />';
+                        }else{
+                            print $address['merchant'];
                         }
                     ?>
                 </td>
