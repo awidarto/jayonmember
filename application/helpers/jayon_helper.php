@@ -718,6 +718,14 @@ function generate_thumbnail($delivery_id){
 
 }
 
+function hide_trx($trx_id){
+    if(preg_match('/^TRX_/', $trx_id) || preg_match('/^UP_/', $trx_id)){
+        return '';
+    }else{
+        return $trx_id;
+    }
+}
+
 
 /*
 function get_thumbnail($delivery_id, $class = 'thumb'){
