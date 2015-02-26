@@ -46,6 +46,7 @@ $config['delivery_details_table'] = 'delivery_order_details';
 $config['applications_table'] = 'applications';
 $config['delivery_log_table'] = 'delivery_log';
 $config['location_log_table'] = 'location_log';
+$config['access_log_table'] = 'api_access_log';
 $config['sequence_table'] = 'applications';
 $config['device_assignment_table'] = 'device_assignment';
 

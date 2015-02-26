@@ -81,6 +81,8 @@ class Import extends Application
 
         $this->breadcrumb->add_crumb('Home','admin/dashboard');
 
+        $this->accessor_ip = $_SERVER['REMOTE_ADDR'];
+
     }
 
     public function index()
