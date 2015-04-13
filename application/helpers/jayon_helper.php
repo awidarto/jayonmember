@@ -1093,6 +1093,43 @@ function send_admin($subject,$to,$cc = null,$template = 'default',$data = '',$at
 	return $result;
 }
 
+function colorizelatlon($lat, $lon, $field = 'lat', $id = 0){
+    $CI =& get_instance();
+
+    //$d = distance( $CI->config->item('origin_lat'), $CI->config->item('origin_lon'), $lat, $lon, 'K' );
+    $d = 0;
+    $loc_set = true;
+    if($lat == 'Set Loc'){
+        $loc_set = false;
+    }else{
+        $d = vincentyGreatCircleDistance( $CI->config->item('origin_lat'), $CI->config->item('origin_lon'), $lat, $lon );
+    }
+
+    //print $d;
+
+    if($d < 1000 && $loc_set == true){
+
+        if($field == 'lat'){
+            return sprintf('<span id="%s" class="locpick %s">%s</span>',$id,'textred',$lat);
+        }elseif ($field == 'lon') {
+            return sprintf('<span id="%s" class="locpick %s">%s</span>',$id,'textred',$lon);
+        }else{
+            return sprintf('<span id="%s" class="locpick %s">%s</span>',$id,'textred',$lat.','.$lon);
+        }
+    }else{
+        if($field == 'lat'){
+            return $lat;
+        }elseif ($field == 'lon') {
+            return $lon;
+        }else{
+            return $lat.','.$lon;
+        }
+
+    }
+
+}
+
+
 function colorizestatus($status){
 
 	$colors = config_item('status_colors');
@@ -1358,5 +1395,43 @@ function getrangedatacountarray($year,$from,$to,$where = null,$merchant_id = nul
 	//$series = str_replace('"', '', json_encode($series)) ;
 	return $series;
 }
+
+function distance($lat1, $lon1, $lat2, $lon2, $unit = 'K') {
+    $lat1 = (int) $lat1;
+    $lon1 = (int) $lon1;
+    $lat2 = (int) $lat2;
+    $lon2 = (int) $lon2;
+    $theta = $lon1 - $lon2;
+    $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+    $dist = acos($dist);
+    $dist = rad2deg($dist);
+    $miles = $dist * 60 * 1.1515;
+    $unit = strtoupper($unit);
+    if ($unit == 'K') {
+        return ($miles * 1.609344);
+    } else if ($unit == 'N') {
+        return ($miles * 0.8684);
+    } else {
+        return $miles;
+    }
+}
+
+function vincentyGreatCircleDistance( $latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo, $earthRadius = 6371000)
+{
+  // convert from degrees to radians
+  $latFrom = deg2rad($latitudeFrom);
+  $lonFrom = deg2rad($longitudeFrom);
+  $latTo = deg2rad($latitudeTo);
+  $lonTo = deg2rad($longitudeTo);
+
+  $lonDelta = $lonTo - $lonFrom;
+  $a = pow(cos($latTo) * sin($lonDelta), 2) +
+    pow(cos($latFrom) * sin($latTo) - sin($latFrom) * cos($latTo) * cos($lonDelta), 2);
+  $b = sin($latFrom) * sin($latTo) + cos($latFrom) * cos($latTo) * cos($lonDelta);
+
+  $angle = atan2(sqrt($a), $b);
+  return $angle * $earthRadius;
+}
+
 
 ?>

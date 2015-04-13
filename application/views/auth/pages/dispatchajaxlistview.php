@@ -102,6 +102,39 @@
 			}
 		});
 
+        $('#download-csv').on('click',function(){
+            var flt = $('tfoot td input, tfoot td select');
+            var dlfilter = [];
+
+            flt.each(function(){
+                var name = this.name;
+                var val = this.value;
+                dlfilter.push({ name : name, value : val });
+            });
+            console.log(dlfilter);
+
+            var sort = oTable.fnSettings().aaSorting;
+            console.log(sort);
+
+            $.post('<?php print base_url() ?>admin/dl/dispatch',
+                {
+                    datafilter : dlfilter,
+                    sort : sort[0],
+                    sortdir : sort[1]
+                },
+                function(data) {
+                    if(data.status == 'OK'){
+                        console.log(data.data.urlcsv);
+                        window.location.href = data.data.urlcsv;
+
+                    }
+                },'json');
+
+            //return false;
+            event.preventDefault();
+        });
+
+
         $('#doLabel').click(function(){
             var assigns = [];
             var count = 0;
@@ -412,6 +445,12 @@
 		<?php echo anchor($add_button['link'],$add_button['label'],'class="button add"')?>
 	</div>
 <?php endif;?>
+<div class="button_nav">
+    <span id="download-csv" class="button" style="cursor:pointer">
+        Download Excel
+    </span>
+</div>
+<br />
 <?php echo $this->table->generate(); ?>
 
 <div style="text-align:right;margin-top:12px;">

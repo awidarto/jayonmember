@@ -13,5 +13,6 @@ $config['class_prefix'] = 'oi_';
 // default alert element
 $config['alert_element'] = 'div';
 
+$config['xls_columns'] = range('A','Z');
 
 /* End of file oi.php */
