@@ -353,7 +353,6 @@ class Dl extends Application
         $filter = $this->input->post('datafilter');
         $sorts = $this->input->post('sort');
 
-
         $mtab = $this->config->item('assigned_delivery_table');
 
         $mfields = $mtab.'.id as id,delivery_type,
@@ -413,6 +412,10 @@ class Dl extends Application
                     $this->db->like('m.merchantname', $f['value'],'both');
                 }elseif($field == 'buyer'){
                     $this->db->like('buyer_name', $f['value'],'both');
+                }elseif($field == 'dateFrom'){
+                    $date_from = $f['value'];
+                }elseif($field == 'dateTo'){
+                    $date_to = $f['value'];
                 }else{
                     $this->db->like($field, $f['value'],'both');
                 }
@@ -427,6 +430,15 @@ class Dl extends Application
         $this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left');
         $this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
         $this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
+
+        $date_from = $date_from.' 00:00:00';
+
+        $date_to = $date_to.' 23:59:59';
+
+        $column = 'deliverytime';
+        $daterange = sprintf("`%s`between '%s' and '%s' ", $column, $date_from, $date_to);
+
+        $this->db->where($daterange, null, false);
 
         $this->db->where($this->config->item('assigned_delivery_table').'.merchant_id', $this->session->userdata('userid'));
 
