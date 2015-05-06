@@ -22,6 +22,12 @@
 				 ],
 			<?php endif;?>
 			    "fnServerData": function ( sSource, aoData, fnCallback ) {
+                    aoData.push({
+                        'name':'dateFrom', 'value': $('#date_from').val()
+                    });
+                    aoData.push({
+                        'name':'dateTo', 'value': $('#date_to').val()
+                    });
 		            $.ajax( {
 		                "dataType": 'json',
 		                "type": "POST",
@@ -120,6 +126,17 @@
 
 		});
 
+        $('#date_from').datepicker({ dateFormat: 'yy-mm-dd' });
+        $('#date_to').datepicker({ dateFormat: 'yy-mm-dd' });
+
+        $('#date_from').on('change',function(){
+            oTable.fnDraw();
+        })
+
+        $('#date_to').on('change',function(){
+            oTable.fnDraw();
+        })
+
 		$('#search_timestamp').datepicker({ dateFormat: 'yy-mm-dd' });
 		$('#search_reporttime').datepicker({ dateFormat: 'yy-mm-dd' });
 
@@ -159,6 +176,14 @@
                 var val = this.value;
                 dlfilter.push({ name : name, value : val });
             });
+
+            dlfilter.push({
+                'name':'dateFrom', 'value': $('#date_from').val()
+            });
+            dlfilter.push({
+                'name':'dateTo', 'value': $('#date_to').val()
+            });
+
             console.log(dlfilter);
 
             var sort = oTable.fnSettings().aaSorting;
@@ -244,6 +269,10 @@
 	</div>
 <?php endif;?>
     <div class="button_nav">
+        <label for="from_date">From</label>
+        <input type="text" id="date_from" name="from_date" value="<?php print date('Y-m-d',time()) ?>" />
+        <label for="from_date">To</label>
+        <input type="text" id="date_to" value="<?php print date('Y-m-d',time()) ?>" />
         <span id="download-csv" class="button" style="cursor:pointer">
             Download Excel
         </span>

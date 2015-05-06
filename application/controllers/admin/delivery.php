@@ -2636,6 +2636,10 @@ class Delivery extends Application
         $limit_count = $this->input->post('iDisplayLength');
         $limit_offset = $this->input->post('iDisplayStart');
 
+        $date_from = $this->input->post('dateFrom');
+        $date_to = $this->input->post('dateTo');
+
+
         // get total count result
         //$count_all = $this->db->count_all($this->config->item('delivered_delivery_table'));
 
@@ -2675,6 +2679,15 @@ class Delivery extends Application
         $this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left');
         $this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
         $this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
+
+        $date_from = $date_from.' 00:00:00';
+
+        $date_to = $date_to.' 23:59:59';
+
+        $column = 'deliverytime';
+        $daterange = sprintf("`%s`between '%s' and '%s' ", $column, $date_from, $date_to);
+
+        $this->db->where($daterange, null, false);
 
         $this->db->where($this->config->item('assigned_delivery_table').'.merchant_id',$this->session->userdata('userid'));
 
@@ -2750,11 +2763,15 @@ class Delivery extends Application
             $this->db->and_();
         }
 
+
         $this->db->group_start()
             ->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
             ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_revoked'))
             ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_noshow'))
             ->group_end();
+
+        //$this->db->and_();
+
 
         $dbca = clone $this->db;
 
