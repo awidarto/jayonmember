@@ -189,6 +189,8 @@
             var sort = oTable.fnSettings().aaSorting;
             console.log(sort);
 
+            $('#download-csv').html('Processing...')
+
             $.post('<?php print base_url() ?>admin/dl/delivered',
                 {
                     datafilter : dlfilter,
@@ -196,10 +198,13 @@
                     sortdir : sort[1]
                 },
                 function(data) {
+                    $('#download-csv').html('Download Excel');
                     if(data.status == 'OK'){
                         console.log(data.data.urlcsv);
                         window.location.href = data.data.urlcsv;
                     }
+
+
                 },'json');
 
             //return false;
