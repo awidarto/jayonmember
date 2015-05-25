@@ -83,6 +83,7 @@ $config['trans_status_rescheduled'] = 'rescheduled';
 
 $config['trans_status_mobile_pickedup'] = 'pickedup';
 $config['trans_status_mobile_enroute'] = 'enroute';
+$config['trans_status_mobile_return'] = 'returned';
 $config['trans_status_mobile_location'] = 'loc_update';
 $config['trans_status_mobile_rescheduled'] = 'rescheduled';
 $config['trans_status_mobile_delivered'] = 'delivered';
