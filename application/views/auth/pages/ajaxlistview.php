@@ -116,6 +116,15 @@
 				}
 		   	}
 
+            if ($(e.target).is('.printslip')) {
+                var delivery_id = e.target.id;
+                $('#print_id').val(delivery_id);
+                var src = '<?php print base_url() ?>admin/prints/deliveryslip/' + delivery_id;
+
+                $('#print_frame').attr('src',src);
+                $('#print_dialog').dialog('open');
+            }
+
 			if ($(e.target).is('.view_detail')) {
 				var delivery_id = e.target.id;
 				var src = '<?php print base_url() ?>admin/prints/deliveryview/' + delivery_id;
