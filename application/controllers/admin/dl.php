@@ -613,8 +613,8 @@ class Dl extends Application
 
         $merchantname = $this->session->userdata('merchantname');
 
-        $fname = $ndate_from.'-'.$ndate_to.'_dldate_'.date('Y-m-d',time()).'_'.$merchantname.'_deliverystatus.csv';
-        $xname = $ndate_from.'-'.$ndate_to.'_dldate_'.date('Y-m-d',time()).'_'.$merchantname.'_deliverystatus.xlsx';
+        $fname = $ndate_from.'_'.$ndate_to.'_dldate_'.date('Y-m-d',time()).'_'.$merchantname.'_deliverystatus.csv';
+        $xname = $ndate_from.'_'.$ndate_to.'_dldate_'.date('Y-m-d',time()).'_'.$merchantname.'_deliverystatus.xlsx';
 
         $xlswrite->xlsx(FCPATH.'public/dl/'.$xname);
 
