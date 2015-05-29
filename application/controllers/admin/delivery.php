@@ -2295,7 +2295,8 @@ class Delivery extends Application
             '',
             'status',
             'merchant_id',
-            'merchant_trans_id'
+            'merchant_trans_id',
+
             );
 
         // get total count result
@@ -2367,15 +2368,45 @@ class Delivery extends Application
 
 
         if($this->input->post('sSearch_9') != ''){
-            $this->db->like($this->config->item('assigned_delivery_table').'.delivery_id',$this->input->post('sSearch_9'));
+            if($search == true){
+                $this->db->and_();
+            }
+            $this->db->group_start();
+            $this->db->like($this->config->item('incoming_delivery_table').'.phone',$this->input->post('sSearch_9'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.mobile1',$this->input->post('sSearch_9'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.mobile2',$this->input->post('sSearch_9'));
+            $this->db->group_end();
+
             $search = true;
         }
 
         if($this->input->post('sSearch_10') != ''){
-            $this->db->like($this->config->item('assigned_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_10'));
+            $this->db->like($this->config->item('assigned_delivery_table').'.delivery_id',$this->input->post('sSearch_10'));
             $search = true;
         }
 
+
+        if($this->input->post('sSearch_11') != ''){
+            if($search == true){
+                $this->db->and_();
+            }
+            $this->db->group_start();
+            $this->db->like($this->config->item('incoming_delivery_table').'.status',$this->input->post('sSearch_11'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.pickup_status',$this->input->post('sSearch_11'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.warehouse_status',$this->input->post('sSearch_11'));
+            $this->db->group_end();
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_12') != ''){
+            $this->db->like($this->config->item('assigned_delivery_table').'.merchant_trans_id',$this->input->post('sSearch_12'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_13') != ''){
+            $this->db->like($this->config->item('assigned_delivery_table').'.fulfillment_code',$this->input->post('sSearch_13'));
+            $search = true;
+        }
 
         /* handle pulldown type filter , hacky thing but should work for now */
 
@@ -2391,28 +2422,37 @@ class Delivery extends Application
         }
 
 
-        $this->db->select($this->config->item('assigned_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
+        $this->db->select($this->config->item('assigned_delivery_table').'.*,m.merchantname as merchant,a.application_name as app_name,fulfillment_code,d.identifier as device,c.fullname as courier');
         //$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
         $this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
         $this->db->join('applications as a',$this->config->item('assigned_delivery_table').'.application_id=a.id','left');
         $this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
         $this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
 
-        $this->db->where($this->config->item('assigned_delivery_table').'.merchant_id',$this->session->userdata('userid'));
 
-        //if($search){
+        if($search){
             $this->db->and_();
-        //}
+        }
+
+
+
+
         $this->db->group_start()
-            ->where('status',$this->config->item('trans_status_admin_courierassigned'))
-            ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
-            ->or_where('status',$this->config->item('trans_status_mobile_enroute'))
-            ->or_()
-                ->group_start()
-                    ->where('status',$this->config->item('trans_status_new'))
-                    ->where('pending_count >', 0)
-                ->group_end()
-            ->group_end();
+            ->where($this->config->item('assigned_delivery_table').'.merchant_id',$this->session->userdata('userid'))
+            ->and_()
+            ->group_start()
+                ->where('status',$this->config->item('trans_status_admin_courierassigned'))
+                ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
+                ->or_where('status',$this->config->item('trans_status_mobile_enroute'))
+                ->or_()
+                    ->group_start()
+                        ->where('status',$this->config->item('trans_status_new'))
+                        ->where('pending_count >', 0)
+                    ->group_end()
+            ->group_end()
+        ->group_end();
+
+
 
         $dbca = clone $this->db;
 
@@ -2520,6 +2560,7 @@ class Delivery extends Application
                 //.' '.$reassign.' '.$changestatus.' '.$viewlog,
 
                 $this->hide_trx($key['merchant_trans_id']),
+                $key['fulfillment_code'],
                 $key['delivery_cost'],
                 ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
                 $key['width'].' x '.$key['height'].' x '.$key['length'],
@@ -2575,6 +2616,7 @@ class Delivery extends Application
             'Actions',
 
             'No Kode Penjualan Toko',
+            'Fulfillment / Order ID',
             'Delivery Fee',
             'COD Surcharge',
             'W x H x L',
@@ -2596,16 +2638,16 @@ class Delivery extends Application
             '<input type="text" name="search_buyer" id="search_buyer" value="Search Buyer" class="search_init" />',
             '<input type="text" name="search_recipient_name" id="search_recipient" value="Search Recipient" class="search_init" />',
             '<input type="text" name="search_shipping_address" id="search_shipping" value="Search Address" class="search_init" />',
-            '',
+            '<input type="text" name="search_phone" value="Search phone" class="search_init" />',
             '<input type="text" name="search_delivery_id" value="Search delivery ID" class="search_init" />',
-            '',
+            '<input type="text" name="search_status" value="Search status" class="search_init" />',
             '',
             //'<input type="text" name="search_trxid" value="Search Trans ID" class="search_init" />',
             '',
             '',
             '',
             '<input type="text" name="search_merchant_trans_id" value="Search transaction ID" class="search_init" />',
-            '',
+            '<input type="text" name="search_fulfillment_code" value="Search Fulfillment" class="search_init" />',
             ''
             );
 
