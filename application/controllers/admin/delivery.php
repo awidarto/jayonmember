@@ -98,70 +98,75 @@ class Delivery extends Application
         }
 
         if($this->input->post('sSearch_7') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_type',$this->input->post('sSearch_7'));
+            $this->db->like($this->config->item('incoming_delivery_table').'.fulfillment_code',$this->input->post('sSearch_7'));
             $search = true;
         }
 
         if($this->input->post('sSearch_8') != ''){
-            if($search == true){
-                $this->db->and_();
-            }
-            $this->db->group_start();
-            $this->db->like('a.application_name',$this->input->post('sSearch_8'));
-            $this->db->or_like('m.merchantname',$this->input->post('sSearch_8'));
-            $this->db->group_end();
+            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_type',$this->input->post('sSearch_8'));
             $search = true;
         }
 
         if($this->input->post('sSearch_9') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_id',$this->input->post('sSearch_9'));
-            $search = true;
-        }
-
-        if($this->input->post('sSearch_10') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.status',$this->input->post('sSearch_10'));
-            $search = true;
-        }
-
-        if($this->input->post('sSearch_11') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.directions',$this->input->post('sSearch_11'));
-            $search = true;
-        }
-
-        if($this->input->post('sSearch_12') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_cost',$this->input->post('sSearch_12'));
-            $search = true;
-        }
-
-        if($this->input->post('sSearch_13') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.cod_cost',$this->input->post('sSearch_13'));
-            $search = true;
-        }
-
-        if($this->input->post('sSearch_14') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.chargeable_amount',$this->input->post('sSearch_14'));
-            $search = true;
-        }
-
-        if($this->input->post('sSearch_15') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.buyer_name',$this->input->post('sSearch_15'));
-            $search = true;
-        }
-
-        if($this->input->post('sSearch_16') != ''){
-            $this->db->like($this->config->item('incoming_delivery_table').'.shipping_zip',$this->input->post('sSearch_16'));
-            $search = true;
-        }
-
-
-        if($this->input->post('sSearch_17') != ''){
             if($search == true){
                 $this->db->and_();
             }
             $this->db->group_start();
-            $this->db->like($this->config->item('incoming_delivery_table').'.phone',$this->input->post('sSearch_17'));
-            $this->db->or_like($this->config->item('incoming_delivery_table').'.mobile1',$this->input->post('sSearch_17'));
-            $this->db->or_like($this->config->item('incoming_delivery_table').'.mobile2',$this->input->post('sSearch_17'));
+            $this->db->like('a.application_name',$this->input->post('sSearch_9'));
+            $this->db->or_like('m.merchantname',$this->input->post('sSearch_9'));
+            $this->db->group_end();
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_10') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_id',$this->input->post('sSearch_10'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_11') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.status',$this->input->post('sSearch_11'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_12') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.directions',$this->input->post('sSearch_12'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_13') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.delivery_cost',$this->input->post('sSearch_13'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_14') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.cod_cost',$this->input->post('sSearch_14'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_15') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.chargeable_amount',$this->input->post('sSearch_15'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_16') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.buyer_name',$this->input->post('sSearch_16'));
+            $search = true;
+        }
+
+        if($this->input->post('sSearch_17') != ''){
+            $this->db->like($this->config->item('incoming_delivery_table').'.shipping_zip',$this->input->post('sSearch_17'));
+            $search = true;
+        }
+
+
+        if($this->input->post('sSearch_18') != ''){
+            if($search == true){
+                $this->db->and_();
+            }
+            $this->db->group_start();
+            $this->db->like($this->config->item('incoming_delivery_table').'.phone',$this->input->post('sSearch_18'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.mobile1',$this->input->post('sSearch_18'));
+            $this->db->or_like($this->config->item('incoming_delivery_table').'.mobile2',$this->input->post('sSearch_18'));
             $this->db->group_end();
 
             $search = true;
@@ -302,6 +307,7 @@ class Delivery extends Application
                 $key['buyerdeliverycity'],
                 $key['shipping_address'],
                 '<span class="'.( ($key['dupe'] > 0 )?'red':'' ).'">'.$this->hide_trx($key['merchant_trans_id']).'</span>'.$markscan,
+                $key['fulfillment_code'],
                 //$this->hide_trx($key['merchant_trans_id']).$markscan,
                 colorizetype($key['delivery_type']),
                 '<b>'.$key['merchant'].'</b><br />'.$app_name,
@@ -414,6 +420,7 @@ class Delivery extends Application
             'City',
             'Shipping Address',
             'No Kode Penjualan Toko',
+            'Fulfillment / Order ID',
             'Type',
             'Merchant / App Name',
             'Actions',
@@ -464,6 +471,7 @@ class Delivery extends Application
             '<input type="text" name="search_buyerdeliverycity" id="search_buyerdeliverycity" value="Search city" class="search_init" />',
             '<input type="text" name="search_shipping_address" value="Search address" class="search_init" />',
             '<input type="text" name="search_merchantid" value="Search merchant ID" class="search_init" />',
+            '<input type="text" name="search_fulfillment_code" value="Search Fulfillment" class="search_init" />',
             '<input type="text" name="search_delivery_type" id="search_delivery_type" value="Search type" class="search_init" />',
             '<input type="text" name="search_application_name" id="search_application_name" value="Search app name" class="search_init" />',
             '',
