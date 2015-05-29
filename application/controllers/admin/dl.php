@@ -59,6 +59,7 @@ class Dl extends Application
             status,
             '.$mtab.'.merchant_id as merchant_id,
             merchant_trans_id,
+            fulfillment_code,
             '.$mtab.'.delivery_type,
             delivery_cost,
             cod_cost,
@@ -104,7 +105,8 @@ class Dl extends Application
             '',
             'status',
             'merchant_id',
-            'merchant_trans_id'
+            'merchant_trans_id',
+            'fulfillment_code'
             );
 
         $search = false;
@@ -192,6 +194,7 @@ class Dl extends Application
             'Pending',
             'Note',
             'No Kode Penjualan Toko',
+            'Fulfillment / Order ID',
             'Delivery Fee',
             'COD Surcharge',
             'W x H x L',
@@ -291,6 +294,7 @@ class Dl extends Application
                 $key['delivery_note'],
                 //$printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reassign.'<br /><br />'.$changestatus.'<br /><br />'.$puchangestatus.'<br /><br />'.$whchangestatus.'<br /><br />'.$viewlog,
                 $this->hide_trx($key['merchant_trans_id']),
+                $key['fulfillment_code'],
                 $key['delivery_cost'],
                 ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
                 $key['width'].' x '.$key['height'].' x '.$key['length'],
@@ -498,6 +502,7 @@ class Dl extends Application
             'Note',
             'Delivery ID',
             'No Kode Penjualan Toko',
+            'Fulfillment / Order ID',
             'Delivery Fee',
             'COD Surcharge',
             'Reschedule Ref',
@@ -582,6 +587,7 @@ class Dl extends Application
                 $key['delivery_note'],
                 $key['delivery_id'],
                 $this->hide_trx($key['merchant_trans_id']),
+                $key['fulfillment_code'],
                 $key['delivery_cost'],
                 ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
                 $key['reschedule_ref'],

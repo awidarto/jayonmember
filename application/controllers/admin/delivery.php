@@ -2666,6 +2666,7 @@ class Delivery extends Application
                 chargeable_amount,
                 delivery_id,
                 merchant_trans_id,
+                fulfillment_code,
                 delivery_cost,
                 delivery_type,cod_cost,
                 delivery_note,
@@ -2759,6 +2760,11 @@ class Delivery extends Application
             $search = true;
         }
 
+        if($this->input->post('sSearch_11') != ''){
+            $this->db->like($this->config->item('assigned_delivery_table').'.fulfillment_code',$this->input->post('sSearch_11'));
+            $search = true;
+        }
+
         if($search){
             $this->db->and_();
         }
@@ -2836,6 +2842,7 @@ class Delivery extends Application
                 $key['delivery_note'],
                 form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" data-merchantid="'.$key['merchant_id'].'" data-merchant="'.$key['merchant'].'" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
                 $this->hide_trx($key['merchant_trans_id']),
+                $key['fulfillment_code'],
                 $key['delivery_cost'],
                 ($key['delivery_type'] == 'COD')?$key['cod_cost']:'',
                 $key['reschedule_ref'],
@@ -2883,6 +2890,7 @@ class Delivery extends Application
             'Note',
             'Delivery ID',
             'No Kode Penjualan Toko',
+            'Fulfillment / Order ID',
             'Delivery Fee',
             'COD Surcharge',
             'Reschedule Ref',
@@ -2910,7 +2918,7 @@ class Delivery extends Application
             '',
             '<input type="text" name="search_deliveryid" value="Search delivery ID" class="search_init" />',
             '<input type="text" name="search_merchant_trans_id" value="Search kode toko" class="search_init" />',
-            '',//form_button('do_sending','Send Slip','id="doSending"'),
+            '<input type="text" name="search_fulfillment_code" value="Search Fulfillment" class="search_init" />',
             ''//form_button('do_archive','Archive Selection','id="doArchive"')
 
             );
