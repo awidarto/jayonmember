@@ -2692,7 +2692,7 @@ class Delivery extends Application
 
         $this->db->where($this->config->item('assigned_delivery_table').'.merchant_id',$this->session->userdata('userid'));
 
-        $this->db->and_();
+        //$this->db->and_();
 
         $search = false;
 
