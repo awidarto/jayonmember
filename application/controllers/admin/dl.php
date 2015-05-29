@@ -606,11 +606,12 @@ class Dl extends Application
 
 
         }
+        $merchantname = $this->session->userdata('merchantname');
 
 
 
-        $fname = date('Y-m-d',time()).'_deliverystatus.csv';
-        $xname = date('Y-m-d',time()).'_deliverystatus.xlsx';
+        $fname = date('Y-m-d',time()).'_'.$merchantname.'_deliverystatus.csv';
+        $xname = date('Y-m-d',time()).'_'.$merchantname.'_deliverystatus.xlsx';
 
         $xlswrite->xlsx(FCPATH.'public/dl/'.$xname);
 
