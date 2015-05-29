@@ -377,6 +377,7 @@ class Dl extends Application
                 chargeable_amount,
                 delivery_id,
                 merchant_trans_id,
+                fulfillment_code,
                 delivery_cost,
                 delivery_type,cod_cost,
                 delivery_note,
