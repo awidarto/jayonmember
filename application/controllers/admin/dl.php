@@ -429,6 +429,9 @@ class Dl extends Application
             }
         }
 
+        $ndate_from = $date_from;
+        $ndate_to = $date_to;
+
         $this->db->select($mfields.',m.merchantname as merchant,a.application_name as app_name,d.identifier as device,c.fullname as courier');
         //$this->db->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left');
         $this->db->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left');
@@ -610,8 +613,8 @@ class Dl extends Application
 
         $merchantname = $this->session->userdata('merchantname');
 
-        $fname = date('Y-m-d',time()).'_'.$merchantname.'_deliverystatus.csv';
-        $xname = date('Y-m-d',time()).'_'.$merchantname.'_deliverystatus.xlsx';
+        $fname = $ndate_from.'-'.$ndate_to.'_dldate_'.date('Y-m-d',time()).'_'.$merchantname.'_deliverystatus.csv';
+        $xname = $ndate_from.'-'.$ndate_to.'_dldate_'.date('Y-m-d',time()).'_'.$merchantname.'_deliverystatus.xlsx';
 
         $xlswrite->xlsx(FCPATH.'public/dl/'.$xname);
 
