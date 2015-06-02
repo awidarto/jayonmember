@@ -1334,10 +1334,10 @@
                                 <td>Cost Bearer<hr /><span class="fine">Ongkos Dibayar Oleh</span></td>
                                 <td>
                                     <label for"delivery_bearer">Delivery Fee :</label><br />
-                                        <?php print form_checkbox(array('name'=>'delivery_bearer','id'=>'delivery_bearer','value'=>'buyer','checked'=>TRUE ));?> Bill buyer / tagihkan ke buyer
+                                        <?php print form_checkbox(array('name'=>'delivery_bearer','id'=>'delivery_bearer','value'=>'buyer','checked'=>FALSE ));?> Bill buyer / tagihkan ke buyer
                                     <br />
                                     <label for="cod_surcharge_bearer">COD / CCOD Surcharges:</label><br />
-                                        <?php print form_checkbox(array('name'=>'cod_surcharge_bearer','id'=>'cod_surcharge_bearer','value'=>'buyer','checked'=>TRUE ));?> Bill buyer / tagihkan ke buyer
+                                        <?php print form_checkbox(array('name'=>'cod_surcharge_bearer','id'=>'cod_surcharge_bearer','value'=>'buyer','checked'=>FALSE ));?> Bill buyer / tagihkan ke buyer
                                 </td>
                             </tr>
                             <tr>
