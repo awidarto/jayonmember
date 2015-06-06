@@ -2,7 +2,7 @@
 
 class Order extends Application
 {
-	
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -13,7 +13,7 @@ class Order extends Application
 			'tbody_open' => '<tbody id="detail_body">'
 		);
 		$this->table->set_template($this->table_tpl);
-	    
+
 	}
 
 	public function neworder()
@@ -90,11 +90,11 @@ class Order extends Application
 		$this->table->clear();
 
 		$tmpl = array ( 'table_open'=> '<table class="tariff" id="cod_table" border="0" cellpadding="3" cellspacing="0">');
-		$this->table->set_template($tmpl);		
+		$this->table->set_template($tmpl);
 
 		$this->table->set_heading('Total Price', 'Tariff');
 
-		$this->db->select('seq,from_price,to_price,surcharge');	
+		$this->db->select('seq,from_price,to_price,surcharge');
 		$this->db->order_by('seq','asc');
 		$cods = $this->db->get($this->config->item('jayon_cod_fee_table'));
 
@@ -105,6 +105,8 @@ class Order extends Application
 		$codtable = $this->table->generate();
 
 		$codhash = json_encode($cods->result_array());
+
+        $data['merchantdata'] = get_merchant_data($merchant_id);
 
 	    $data['merchantemail'] = $this->session->userdata('email');
 	    $data['merchantname'] = $this->session->userdata('merchantname');

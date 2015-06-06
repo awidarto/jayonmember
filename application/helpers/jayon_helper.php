@@ -217,6 +217,21 @@ function ajax_find_buyer_email($zone,$col = 'fullname',$idcol = 'id'){
 	return $q->result_array();
 }
 
+function get_merchant_data($id){
+    $CI =& get_instance();
+
+    if(is_null($id)){
+        return false;
+    }
+    $q = $CI->db->where('id',$id)
+            ->get('members');
+
+    if($q->num_rows() > 0){
+        return $q->row_array();
+    }else{
+        return false;
+    }
+}
 
 function get_merchant($id = null,$flatten = true){
 	$CI =& get_instance();
