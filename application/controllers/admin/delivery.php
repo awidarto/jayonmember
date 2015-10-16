@@ -2228,6 +2228,7 @@ class Delivery extends Application
             $reassign = '<span class="reassign" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Reassign</span>';
             $viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
             $printlabel = '<span class="printlabel" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Label</span>';
+            $viewmore = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >See more</span>';
 
 
             $datefield = ($bardate == $key['assignment_date'])?'':$key['assignment_date'];
@@ -2280,7 +2281,7 @@ class Delivery extends Application
                 $thumbstat.'<br />'.$pick_stat.'<br />'.$wh_stat,
                 '<img class="sign" src="'.$sign['sign'].'" />',
                 $key['pending_count'],
-                $key['delivery_note'],
+                $key['delivery_note'].'<br /><br />'.$viewmore,
                 $printslip.'<br /><br />'.$printlabel,
                 //.' '.$reassign.' '.$changestatus.' '.$viewlog,
 
@@ -2614,8 +2615,8 @@ class Delivery extends Application
                 $key['phone'].'<br />'.$key['mobile1'].'<br />'.$key['mobile2'],
                 $thumbnail,
                 $key['delivery_note'].'<br /><br />'.$viewmore,
-                colorizestatus($key['status']).'<br /><br />'.$viewmore.'<br />'.$pick_stat.'<br />'.$wh_stat,
-                $key['delivery_note'],
+                colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$wh_stat,
+                $key['delivery_note'].'<br /><br />'.$viewmore,
                 form_checkbox('assign[]',$key['delivery_id'],FALSE,'class="assign_check" data-merchantid="'.$key['merchant_id'].'" data-merchant="'.$key['merchant'].'" title="'.$key['status'].'"').'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
                 $this->hide_trx($key['merchant_trans_id']),
                 $key['fulfillment_code'],
