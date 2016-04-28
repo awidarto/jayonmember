@@ -479,7 +479,7 @@ function get_weight_tariff($weight, $delivery_type ,$app_id = null){
     }
 }
 
-function get_cod_tariff($total_price){
+function _old_get_cod_tariff($total_price){
 	$CI =& get_instance();
 
 	$CI->db->select_max('to_price','max');
@@ -501,6 +501,39 @@ function get_cod_tariff($total_price){
 	return $row->surcharge;
 
 }
+
+function get_cod_tariff($total_price,$app_id = null, $date = null){
+    $CI =& get_instance();
+
+    $CI->db->select_max('to_price','max');
+    $result = $CI->db->get($CI->config->item('jayon_cod_fee_table'));
+    $row = $result->row();
+
+    if($total_price > $row->max){
+        $CI->db->select_max('surcharge');
+        $result = $CI->db->get($CI->config->item('jayon_cod_fee_table'));
+        $row = $result->row();
+    }else{
+        $CI->db->select('surcharge');
+        $CI->db->where('from_price <= ',$total_price);
+        $CI->db->where('to_price >= ',$total_price);
+
+        if(!is_null($date)){
+            $CI->db->where('period_from <= ',$date);
+            $CI->db->where('period_to >= ',$date);
+        }
+
+        if(!is_null($app_id)){
+            $CI->db->where('app_id',$app_id);
+        }
+        $result = $CI->db->get($CI->config->item('jayon_cod_fee_table'));
+        $row = $result->row();
+    }
+
+    return $row->surcharge;
+
+}
+
 
 function get_pickup_charge_table($app_id){
 	$CI =& get_instance();
