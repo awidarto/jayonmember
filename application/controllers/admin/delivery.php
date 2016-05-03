@@ -2555,9 +2555,9 @@ class Delivery extends Application
             $search = true;
         }
 
-        //if($search){
+        if($search){
             $this->db->and_();
-        //}
+        }
 
         $this->db->group_start()
             ->where($daterange, null, false)
