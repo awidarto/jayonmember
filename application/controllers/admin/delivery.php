@@ -2560,7 +2560,7 @@ class Delivery extends Application
         //}
 
         $this->db->group_start()
-            ->where($daterange, null, false);
+            ->where($daterange, null, false)
             ->where($this->config->item('assigned_delivery_table').'.merchant_id',$this->session->userdata('userid'))
             ->and_()
             ->group_start()
