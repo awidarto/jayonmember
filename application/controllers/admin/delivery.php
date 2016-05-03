@@ -179,8 +179,8 @@ class Delivery extends Application
 		}
 
 		$this->db
-			->where($this->config->item('incoming_delivery_table').'.merchant_id',$this->session->userdata('userid'))
 			->and_()->group_start()
+            ->where($this->config->item('incoming_delivery_table').'.merchant_id',$this->session->userdata('userid'))
             ->where($this->config->item('incoming_delivery_table').'.pending_count < ',1)
 			->where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_new'))
 			->or_where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_confirmed'))
