@@ -2555,9 +2555,9 @@ class Delivery extends Application
             $search = true;
         }
 
-        if($search){
+        //if($search){
             $this->db->and_();
-        }
+        //}
 
         $this->db->group_start()
             ->where($this->config->item('assigned_delivery_table').'.merchant_id',$this->session->userdata('userid'))
