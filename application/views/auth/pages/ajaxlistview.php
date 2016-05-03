@@ -88,9 +88,16 @@
                 var images = [];
 
                 $('.gal_' + delivery_id).each(function(el){
+
+                    var pic_url = $(this).val() + '?' + currentTime.getTime();
+
+                    if($(this).val().indexOf('http:') == -1){
+                        pic_url = '<?php print $this->config->item('admin_url');?>public/receiver/' + $(this).val() + '?' + currentTime.getTime();
+                    }
+
                     images.push(
                         {
-                            href : '<?php print $this->config->item('admin_url');?>public/receiver/' + $(this).val() + '?' + currentTime.getTime(),
+                            href : pic_url,
                             title : delivery_id
                         }
                     );
