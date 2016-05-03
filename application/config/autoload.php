@@ -52,7 +52,7 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc','oi');
 */
 
-$autoload['libraries'] = array('ag_asset','table','ag_auth','curl','breadcrumb','gc_qrcode','oi','jexclient','ciqrcode');
+$autoload['libraries'] = array('ag_asset','table','ag_auth','curl','breadcrumb','gc_qrcode','oi','jexclient','ciqrcode','mongo_db');
 
 
 /*
