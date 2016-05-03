@@ -2480,7 +2480,7 @@ class Delivery extends Application
 
         $this->db->where($daterange, null, false);
 
-        $this->db->where($this->config->item('assigned_delivery_table').'.merchant_id',$this->session->userdata('userid'));
+        //$this->db->where($this->config->item('assigned_delivery_table').'.merchant_id',$this->session->userdata('userid'));
 
         //$this->db->and_();
 
@@ -2555,17 +2555,29 @@ class Delivery extends Application
             $search = true;
         }
 
-        //if($search){
+        if($search){
             $this->db->and_();
-        //}
+        }
 
+        $this->db->group_start()
+            ->where($this->config->item('assigned_delivery_table').'.merchant_id',$this->session->userdata('userid'))
+            ->and_()
+            ->group_start()
+                ->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
+                ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_revoked'))
+                ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_noshow'))
+                ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_return'))
+            ->group_end()
+        ->group_end();
 
+        /*
         $this->db->group_start()
             ->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
             ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_revoked'))
             ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_noshow'))
             ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_return'))
             ->group_end();
+        */
 
         //$this->db->and_();
 
