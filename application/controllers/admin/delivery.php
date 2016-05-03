@@ -2478,7 +2478,7 @@ class Delivery extends Application
         $column = 'deliverytime';
         $daterange = sprintf("`%s`between '%s' and '%s' ", $column, $date_from, $date_to);
 
-        $this->db->where($daterange, null, false);
+        //$this->db->where($daterange, null, false);
 
         //$this->db->where($this->config->item('assigned_delivery_table').'.merchant_id',$this->session->userdata('userid'));
 
@@ -2560,6 +2560,7 @@ class Delivery extends Application
         //}
 
         $this->db->group_start()
+            ->where($daterange, null, false);
             ->where($this->config->item('assigned_delivery_table').'.merchant_id',$this->session->userdata('userid'))
             ->and_()
             ->group_start()
