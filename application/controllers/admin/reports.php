@@ -115,8 +115,8 @@ class Reports extends Application
 
         $data['period'] = $from.' s/d '.$to;
 
-        $sfrom = date('Y-m-d',strtotime($from));
-        $sto = date('Y-m-d',strtotime($to));
+        $sfrom = date('Y-m-d 00:00:00',strtotime($from));
+        $sto = date('Y-m-d 23:59:59',strtotime($to));
 
         $this->db->from($this->config->item('jayon_revenue_table'));
 
@@ -552,6 +552,7 @@ class Reports extends Application
         $this->db->and_();
             $this->db->group_start();
                 $this->db->where('status',   $this->config->item('trans_status_mobile_delivered'));
+                $this->db->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_return'));
                 /*
                 $this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
                 $this->db->or_where('status',$this->config->item('trans_status_mobile_noshow'));
