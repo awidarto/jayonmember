@@ -259,9 +259,10 @@
                             var cell_width = $('#label_cell_width').val();
                             var mright = $('#label_margin_right').val();
                             var mbottom = $('#label_margin_bottom').val();
+                            var showqty = $('#label_show_qty').val();
 
                             $('#label_id').val(delivery_id);
-                            var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id  + '/' +  res +'/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom;
+                            var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id  + '/' +  res +'/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom + '/' + showqty;
                             //var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + col;
                             $('#label_frame').attr('src',src);
                             $('#label_dialog').dialog('open');
@@ -284,8 +285,9 @@
             var mbottom = $('#label_margin_bottom').val();
             var fsize = $('#label_font_size').val();
             var codetype = $('#label_code_type').val();
+            var showqty = $('#label_show_qty').val();
 
-            var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + res + '/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom +'/'+ fsize +'/'+ codetype;
+            var src = '<?php print base_url() ?>admin/prints/label/' + delivery_id + '/' + res + '/' +  cell_height + '/' + cell_width + '/' + col +'/'+ mright +'/'+ mbottom +'/'+ fsize +'/'+ codetype+'/'+ showqty;
 
             $('#label_frame').attr('src',src);
         });
@@ -300,6 +302,7 @@
             var mbottom = $('#label_margin_bottom').val();
             var fsize = $('#label_font_size').val();
             var codetype = $('#label_code_type').val();
+            var showqty = $('#label_show_qty').val();
 
             $.post(
                 '<?php print base_url();?>ajax/printdefault',
@@ -312,7 +315,8 @@
                     mright : mright,
                     mbottom : mbottom,
                     fsize : fsize,
-                    codetype : codetype
+                    codetype : codetype,
+                    showqty : showqty
                 },
                 function(data){
                     if(data.result == 'OK'){
@@ -829,6 +833,9 @@
 
         <label>Code Type
                 <?php print form_dropdown('', array( 'qr'=>'QR Code' ), $code_type, 'id="label_code_type"'  ) ?>
+        </label><br>
+        <label>Show Qty & Price
+                <?php print form_dropdown('', array( 'no'=>'No', 'yes'=>'Yes' ), $code_type, 'id="label_show_qty"'  ) ?>
         </label>
 
         <button id="label_refresh">refresh</button>
