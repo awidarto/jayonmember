@@ -109,7 +109,7 @@ class Prints extends Application
                     ->join('members as b',$this->config->item('assigned_delivery_table').'.buyer_id=b.id','left')
                     ->join('members as m',$this->config->item('assigned_delivery_table').'.merchant_id=m.id','left')
                     ->join('applications as a',$this->config->item('assigned_delivery_table').'.application_key=a.key','left');
-                    
+
                 if(preg_match('/^SESS:/', $delivery_id)){
                     $sess = str_replace('SESS:','',$delivery_id);
                     session_start();
@@ -131,7 +131,7 @@ class Prints extends Application
                     }
                 }
 
-                print_r($qty_arr);
+                //print_r($qty_arr);
 
             //$pd = get_print_default();
             /*
