@@ -156,10 +156,13 @@
             <tr>
                 <td colspan="2" style="width:50%;text-align:left">
                     Item Qty : <?php print (isset($qty_arr[$address['delivery_id']] ))?$qty_arr[$address['delivery_id']]:1  ?><br />
-                    Total : IDR <?php print $address['chargeable_amount'] ?> 
+                    Total : IDR <?php print $address['chargeable_amount'] ?>
+                    <p>
+                        Jumlah dan harga diisi oleh merchant. Jika ada perbedaan silakan hubungi merchant.
+                    </p>
                 </td>
             </tr>
-            <?php endif ?>            
+            <?php endif ?>
             <tr>
                 <td style="width:50%;text-align:left">
                     <?php print colorizetype( $address['delivery_type'], 'Jayon ' )?>

@@ -116,6 +116,7 @@ class Prints extends Application
                     $ids = $_SESSION[$sess];
                     $main = $this->db->where_in('delivery_id',$ids)->get($this->config->item('assigned_delivery_table'));
                 }else{
+                    $ids = array($delivery_id);
                     $main = $this->db->where('delivery_id',$delivery_id)->get($this->config->item('assigned_delivery_table'));
                 }
 
@@ -125,7 +126,7 @@ class Prints extends Application
 
                 $qty_arr = array();
 
-                if($detsql->result_array()){
+                if($detsql->num_rows() > 0){
                     foreach($detsql->result_array() as $qt){
                         $qty_arr[ $qt['delivery_id'] ] = $qt['unit_quantity'];
                     }
