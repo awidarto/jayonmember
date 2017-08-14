@@ -612,6 +612,8 @@ class Dl extends Application
 
         $merchantname = $this->session->userdata('merchantname');
 
+        $merchantname = str_replace([" ", "/"], "_", $merchantname);
+
         $fname = $ndate_from.'_'.$ndate_to.'_dldate_'.date('Y-m-d',time()).'_'.$merchantname.'_deliverystatus.csv';
         $xname = $ndate_from.'_'.$ndate_to.'_dldate_'.date('Y-m-d',time()).'_'.$merchantname.'_deliverystatus.xlsx';
 
