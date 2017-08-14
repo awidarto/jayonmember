@@ -468,7 +468,11 @@
 <?php echo $this->table->generate(); ?>
 
 <div style="text-align:right;margin-top:12px;">
+<?php
 
+    print form_button('do_label','Print Selection Label','id="doLabel"');
+
+?>
 </div>
 
 <div id="assign_dialog" title="Assign Selection to Device">

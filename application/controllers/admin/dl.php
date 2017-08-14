@@ -226,10 +226,11 @@ class Dl extends Application
             $delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
             $edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
             //$printslip = anchor_popup("admin/prints/deliveryslip/".$key['delivery_id'], "Print Slip"); // Build actions links
-            $printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
+            
             $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
             $reassign = '<span class="reassign" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Reassign</span>';
             $viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
+            $printlabel = '<span class="printlabel" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Label</span>';
 
             $puchangestatus = '<span class="puchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >PUChgStat</span>';
 
@@ -538,7 +539,7 @@ class Dl extends Application
             $num++;
             $delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
             $edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
-            $printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
+            
             $viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
 
             $puchangestatus = '<span class="puchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >PUChgStat</span>';
@@ -611,8 +612,6 @@ class Dl extends Application
         }
 
         $merchantname = $this->session->userdata('merchantname');
-
-        $merchantname = str_replace([" ", "/"], "_", $merchantname);
 
         $fname = $ndate_from.'_'.$ndate_to.'_dldate_'.date('Y-m-d',time()).'_'.$merchantname.'_deliverystatus.csv';
         $xname = $ndate_from.'_'.$ndate_to.'_dldate_'.date('Y-m-d',time()).'_'.$merchantname.'_deliverystatus.xlsx';

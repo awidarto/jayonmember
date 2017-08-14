@@ -239,8 +239,8 @@ class Delivery extends Application
 			$reschedule = '<span class="reschedule_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Reschedule</span>';
 			$revoke = '<span class="revoke_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Revoke</span>';
 			$purge = '<span class="purge_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Purge</span>';
-            $printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Preview Slip</span>';
-            
+            $printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;" ></span>';
+            $printlabel = '<span class="printlabel" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Label</span>';
 
 			$app = $this->get_app_info($key['application_key']);
 
@@ -325,7 +325,7 @@ class Delivery extends Application
                 //$this->hide_trx($key['merchant_trans_id']).$markscan,
                 colorizetype($key['delivery_type']),
                 '<b>'.$key['merchant'].'</b><br />'.$app_name,
-                ($key['status'] == 'canceled')?$printslip.'<br /><br />'.$printlabel:$printslip.'<br /><br />'.$reschedule,
+                ($key['status'] == 'canceled')?$printslip.'<br /><br />'.$printlabel:$printslip.'<br /><br />'.$printlabel.'<br /><br />'.$reschedule,
                 //$printslip.'<br /><br />'.$reschedule.'<br />'.$changestatus,
                 $delivery_check,
                 colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$wh_stat,
@@ -874,8 +874,7 @@ class Delivery extends Application
             $revoke = '<span class="revoke_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Revoke</span>';
             $purge = '<span class="purge_link" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Purge</span>';
             $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
-            $printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Preview Slip</span>';
-            
+            $printlabel = '<span class="printlabel" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Label</span>';
             $viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
 
             $app = $this->get_app_info($key['application_key']);
@@ -962,7 +961,7 @@ class Delivery extends Application
                 //$this->hide_trx($key['merchant_trans_id']).$markscan,
                 colorizetype($key['delivery_type']),
                 '<b>'.$key['merchant'].'</b><br />'.$app_name,
-                $printslip.'<br /><br />'.$reschedule.'<br /><br />'.$changestatus.'<br /><br />'.$viewlog,
+                $printlabel.'<br /><br />'.$reschedule.'<br /><br />'.$changestatus.'<br /><br />'.$viewlog,
                 $delivery_check,
                 colorizestatus($key['status']).'<br />'.$pick_stat.'<br />'.$wh_stat,
                 $direction,
@@ -2237,11 +2236,11 @@ class Delivery extends Application
             $delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
             $edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
             //$printslip = anchor_popup("admin/prints/deliveryslip/".$key['delivery_id'], "Print Slip"); // Build actions links
-            $printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
+            
             $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
             $reassign = '<span class="reassign" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Reassign</span>';
             $viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
-            
+            $printlabel = '<span class="printlabel" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Label</span>';
             $viewmore = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >See more</span>';
 
 
@@ -2296,7 +2295,7 @@ class Delivery extends Application
                 '<img class="sign" src="'.$sign['sign'].'" />',
                 $key['pending_count'],
                 $key['delivery_note'].'<br /><br />'.$viewmore,
-                $printslip.'<br /><br />'.$printlabel,
+                $printlabel,
                 //.' '.$reassign.' '.$changestatus.' '.$viewlog,
 
                 $this->hide_trx($key['merchant_trans_id']),
@@ -2612,7 +2611,7 @@ class Delivery extends Application
             $num++;
             $delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
             $edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
-            $printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Print Slip</span>';
+            $printslip = '<span class="printslip" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" ></span>';
             $viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >View Log</span>';
             $viewmore = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >See more</span>';
             //if($key['status'] == 'pending'){
