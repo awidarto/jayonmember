@@ -132,7 +132,7 @@
                 $('#print_dialog').dialog('open');
             }
 
-			if ($(e.target).is('.view_detail')) {
+			if ($(e.target).is('.view_details')) {
 				var delivery_id = e.target.id;
 				var src = '<?php print base_url() ?>admin/prints/deliveryview/' + delivery_id;
 
@@ -361,7 +361,7 @@
     title="Dialog Title">Your browser does not suppr</iframe>
 </div>
 
-<div id="view_dialog" title="Order Detail" style="overflow:hidden;padding:8px;">
+<div id="view_dialogs" title="Order Detail" style="overflow:hidden;padding:8px;">
 	<input type="hidden" value="" id="print_id" />
 	<iframe id="view_frame" name="print_frame" width="100%" height="100%"
     marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
