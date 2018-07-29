@@ -450,6 +450,27 @@ class Reports extends Application
 
         $id = $this->session->userdata('userid');
 
+        //Update Sahlan
+        $idgrup = $this->session->userdata('merchantgroup_id');
+
+        if( $idgrup == '100' ){
+
+            $merchantId = $id;
+
+        }else{
+
+            $merchant_group = $this->db->where('merchantgroup_id',$idgrup)->get($this->config->item('jayon_members_table'))->result_array();
+
+            $merchantId =[];
+
+            foreach ($merchant_group as $m)
+            {  
+                $merchantId[] = trim($m['id']);  
+            }   
+        }
+        //end
+        //print_r($merchantId);
+
         $downloadurl = null;
 
         if(is_null($scope)){
@@ -546,12 +567,22 @@ class Reports extends Application
         $this->db->where($column.' != ','0000-00-00');
 
         if($id != 'noid'){
-            $this->db->where($this->config->item('assigned_delivery_table').'.merchant_id',$id);
+            //update Sahlan
+            if(count($merchantId) > 1 ){
+                $this->db->where_in($this->config->item('assigned_delivery_table').'.merchant_id',$merchantId);
+                // $this->db->or_where_in($this->config->item('assigned_delivery_table').'.merchant_id',$merchantId);
+            }else{
+                $this->db->where($this->config->item('assigned_delivery_table').'.merchant_id',$id);
+            }
+            //end
+
+            //$this->db->where($this->config->item('assigned_delivery_table').'.merchant_id',$id);
+            
         }
 
         $this->db->and_();
             $this->db->group_start();
-                $this->db->where('status',   $this->config->item('trans_status_mobile_delivered'));
+                $this->db->where('status', $this->config->item('trans_status_mobile_delivered'));
                 $this->db->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_return'));
                 /*
                 $this->db->or_where('status',$this->config->item('trans_status_mobile_revoked'));
