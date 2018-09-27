@@ -2015,6 +2015,28 @@ class Delivery extends Application
 
     public function ajaxdispatched(){
 
+        //Update Sahlan
+
+        $id = $this->session->userdata('userid');
+
+        $idgrup = $this->session->userdata('merchantgroup_id');
+
+        if( $idgrup == '100' ){
+
+            $merchantId = $id;
+
+        }else{
+
+            $merchant_group = $this->db->where('merchantgroup_id',$idgrup)->get($this->config->item('jayon_members_table'))->result_array();
+
+            $merchantId =[];
+
+            foreach ($merchant_group as $m)
+            {  
+                $merchantId[] = trim($m['id']);  
+            }   
+        }
+        //end
         $limit_count = $this->input->post('iDisplayLength');
         $limit_offset = $this->input->post('iDisplayStart');
 
@@ -2172,25 +2194,41 @@ class Delivery extends Application
             $this->db->and_();
         }
 
+        //update Sahlan
+        if(count($merchantId) > 1 ){
 
-
-
-        $this->db->group_start()
-            ->where($this->config->item('assigned_delivery_table').'.merchant_id',$this->session->userdata('userid'))
-            ->and_()
-            ->group_start()
-                ->where('status',$this->config->item('trans_status_admin_courierassigned'))
-                ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
-                ->or_where('status',$this->config->item('trans_status_mobile_enroute'))
-                ->or_()
-                    ->group_start()
-                        ->where('status',$this->config->item('trans_status_new'))
-                        ->where('pending_count >', 0)
-                    ->group_end()
-            ->group_end()
-        ->group_end();
-
-
+            $this->db->group_start()
+                ->where_in($this->config->item('assigned_delivery_table').'.merchant_id',$merchantId)
+                ->and_()
+                ->group_start()
+                    ->where('status',$this->config->item('trans_status_admin_courierassigned'))
+                    ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
+                    ->or_where('status',$this->config->item('trans_status_mobile_enroute'))
+                    ->or_()
+                        ->group_start()
+                            ->where('status',$this->config->item('trans_status_new'))
+                            ->where('pending_count >', 0)
+                        ->group_end()
+                ->group_end()
+            ->group_end();
+                
+            }else{
+                $this->db->group_start()
+                ->where($this->config->item('assigned_delivery_table').'.merchant_id',$this->session->userdata('userid'))
+                ->and_()
+                ->group_start()
+                    ->where('status',$this->config->item('trans_status_admin_courierassigned'))
+                    ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
+                    ->or_where('status',$this->config->item('trans_status_mobile_enroute'))
+                    ->or_()
+                        ->group_start()
+                            ->where('status',$this->config->item('trans_status_new'))
+                            ->where('pending_count >', 0)
+                        ->group_end()
+                ->group_end()
+            ->group_end();
+            }
+        //end
 
         $dbca = clone $this->db;
 
@@ -2422,6 +2460,29 @@ class Delivery extends Application
 
     public function ajaxdelivered()
     {
+
+        //Update Sahlan
+        $id = $this->session->userdata('userid');
+
+        
+        $idgrup = $this->session->userdata('merchantgroup_id');
+
+        if( $idgrup == '100' ){
+
+            $merchantId = $id;
+
+        }else{
+
+            $merchant_group = $this->db->where('merchantgroup_id',$idgrup)->get($this->config->item('jayon_members_table'))->result_array();
+
+            $merchantId =[];
+
+            foreach ($merchant_group as $m)
+            {  
+                $merchantId[] = trim($m['id']);  
+            }   
+        }
+        //end
         $limit_count = $this->input->post('iDisplayLength');
         $limit_offset = $this->input->post('iDisplayStart');
 
@@ -2558,18 +2619,37 @@ class Delivery extends Application
             $this->db->and_();
         }
 
-        $this->db->group_start()
-            //->where($daterange, null, false)
-            ->where($this->config->item('assigned_delivery_table').'.merchant_id',$this->session->userdata('userid'))
-            ->and_()
-            ->group_start()
-                ->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
-                ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_revoked'))
-                ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_noshow'))
-                ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_return'))
-            ->group_end()
-        ->group_end();
+        //Update Sahlan
 
+        if(count($merchantId) > 1 ){
+                $this->db->group_start()
+            
+                ->where_in($this->config->item('assigned_delivery_table').'.merchant_id',$merchantId)
+                ->and_()
+                ->group_start()
+                    ->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
+                    ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_revoked'))
+                    ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_noshow'))
+                    ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_return'))
+                ->group_end()
+            ->group_end();
+
+            }else{
+                $this->db->group_start()
+            //->where($daterange, null, false)
+                ->where($this->config->item('assigned_delivery_table').'.merchant_id',$this->session->userdata('userid'))
+                ->and_()
+                ->group_start()
+                    ->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
+                    ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_revoked'))
+                    ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_noshow'))
+                    ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_return'))
+                ->group_end()
+            ->group_end();
+
+            }
+        //end
+        
         /*
         $this->db->group_start()
             ->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
