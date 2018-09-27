@@ -43,6 +43,29 @@ class Dl extends Application
 
     public function dispatch(){
 
+        //Update Sahlan
+
+        $id = $this->session->userdata('userid');
+
+        $idgrup = $this->session->userdata('merchantgroup_id');
+
+        if( $idgrup == '100' ){
+
+            $merchantId = $id;
+
+        }else{
+
+            $merchant_group = $this->db->where('merchantgroup_id',$idgrup)->get($this->config->item('jayon_members_table'))->result_array();
+
+            $merchantId =[];
+
+            foreach ($merchant_group as $m)
+            {  
+                $merchantId[] = trim($m['id']);  
+            }   
+        }
+        //end
+
         $filter = $this->input->post('datafilter');
         $sorts = $this->input->post('sort');
 
@@ -134,7 +157,13 @@ class Dl extends Application
         $this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
         $this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
 
-        $this->db->where($this->config->item('assigned_delivery_table').'.merchant_id', $this->session->userdata('userid'));
+        //update Sahlan
+            if(count($merchantId) > 1 ){
+                $this->db->where_in($this->config->item('assigned_delivery_table').'.merchant_id',$merchantId);
+            }else{
+                $this->db->where($this->config->item('assigned_delivery_table').'.merchant_id', $this->session->userdata('userid'));
+            }
+        //end
 
         //if($search){
             $this->db->and_();
@@ -354,6 +383,29 @@ class Dl extends Application
 
     public function delivered(){
 
+        //Update Sahlan
+
+        $id = $this->session->userdata('userid');
+
+        $idgrup = $this->session->userdata('merchantgroup_id');
+
+        if( $idgrup == '100' ){
+
+            $merchantId = $id;
+
+        }else{
+
+            $merchant_group = $this->db->where('merchantgroup_id',$idgrup)->get($this->config->item('jayon_members_table'))->result_array();
+
+            $merchantId =[];
+
+            foreach ($merchant_group as $m)
+            {  
+                $merchantId[] = trim($m['id']);  
+            }   
+        }
+        //end
+
         $filter = $this->input->post('datafilter');
         $sorts = $this->input->post('sort');
 
@@ -448,7 +500,15 @@ class Dl extends Application
 
         $this->db->where($daterange, null, false);
 
-        $this->db->where($this->config->item('assigned_delivery_table').'.merchant_id', $this->session->userdata('userid'));
+        //update Sahlan
+            if(count($merchantId) > 1 ){
+                $this->db->where_in($this->config->item('assigned_delivery_table').'.merchant_id',$merchantId);
+            }else{
+                $this->db->where($this->config->item('assigned_delivery_table').'.merchant_id', $this->session->userdata('userid'));
+            }
+        //end
+
+        // $this->db->where($this->config->item('assigned_delivery_table').'.merchant_id', $this->session->userdata('userid'));
 
         //if($search){
             $this->db->and_();
