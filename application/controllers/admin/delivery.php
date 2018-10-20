@@ -2499,6 +2499,7 @@ class Delivery extends Application
         $mtab = $this->config->item('assigned_delivery_table');
 
         $mfields = $mtab.'.id as id,delivery_type,
+                pickuptime,
                 buyerdeliverycity,
                 buyerdeliveryzone,
                 buyer_name,
@@ -2708,6 +2709,7 @@ class Delivery extends Application
             $aadata[] = array(
                 $num,
                 '<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
+                $key['pickuptime'],
                 $key['device'],
                 $key['courier'],
                 colorizetype($key['delivery_type']),
@@ -2756,6 +2758,7 @@ class Delivery extends Application
         $this->table->set_heading(
             '#',
             'Delivery Time',
+            'Pickup time',
             'Device',
             'Courier',
             'Type',

@@ -412,6 +412,7 @@ class Dl extends Application
         $mtab = $this->config->item('assigned_delivery_table');
 
         $mfields = $mtab.'.id as id,delivery_type,
+                pickuptime,
                 buyerdeliverycity,
                 buyerdeliveryzone,
                 buyer_name,
@@ -551,6 +552,7 @@ class Dl extends Application
         $headrow = array(
             '#',
             'Delivery Time',
+            'Pickup Time',
             'Device',
             'Courier',
             'Type',
@@ -636,6 +638,7 @@ class Dl extends Application
             $xdata = array(
                 $num,
                 $key['deliverytime'],
+                $key['pickuptime'],
                 $key['device'],
                 $key['courier'],
                 $key['delivery_type'],
