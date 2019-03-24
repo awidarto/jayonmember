@@ -664,6 +664,7 @@ class Reports extends Application
             'Delivery ID',
             'Merchant Name',
             'Store',
+            'Assigned Date',
             'Delivery Date',
             'Buyer Name',
             'Delivery Type',
@@ -712,6 +713,7 @@ class Reports extends Application
                 $r->fullname.' - '.$r->merchant_name,
                 $r->app_name,
                 date('d-m-Y',strtotime($r->assignment_date)),
+                date('d-m-Y',strtotime($r->assignment_date)),
                 $r->buyer_name,
                 $r->delivery_type,
                 $r->status,
@@ -726,8 +728,8 @@ class Reports extends Application
             $seq++;
         }
 
-        $total_span = 12;
-        $say_span = 13;
+        $total_span = 13;
+        $say_span = 14;
 
         $this->table->add_row(
             array('data'=>'Total','colspan'=>$total_span),
