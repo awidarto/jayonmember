@@ -2500,6 +2500,7 @@ class Delivery extends Application
 
         $mfields = $mtab.'.id as id,delivery_type,
                 pickuptime,
+                assignment_date,
                 buyerdeliverycity,
                 buyerdeliveryzone,
                 buyer_name,
@@ -2759,6 +2760,7 @@ class Delivery extends Application
             '#',
             'Delivery Time',
             'Pickup time',
+            'Assigned Date',
             'Device',
             'Courier',
             'Type',
@@ -2787,6 +2789,7 @@ class Delivery extends Application
         $this->table->set_footing(
             '',
             '<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
+            '',
             '<input type="text" name="search_device" id="search_device" value="Search Device" class="search_init" />',
             '',
             '<input type="text" name="search_delivery_type" id="search_delivery_type" value="Search delivery type" class="search_init" />',
