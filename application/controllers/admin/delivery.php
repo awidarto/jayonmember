@@ -2791,6 +2791,7 @@ class Delivery extends Application
             '',
             '<input type="text" name="search_deliverytime" id="search_deliverytime" value="Search delivery time" class="search_init" />',
             '',
+            '',
             '<input type="text" name="search_device" id="search_device" value="Search Device" class="search_init" />',
             '',
             '<input type="text" name="search_delivery_type" id="search_delivery_type" value="Search delivery type" class="search_init" />',
