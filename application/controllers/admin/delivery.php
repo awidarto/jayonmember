@@ -2711,6 +2711,7 @@ class Delivery extends Application
                 $num,
                 '<span id="dt_'.$key['delivery_id'].'">'.$key['deliverytime'].'</span>',
                 $key['pickuptime'],
+                $key['assignment_date'],
                 $key['device'],
                 $key['courier'],
                 colorizetype($key['delivery_type']),
