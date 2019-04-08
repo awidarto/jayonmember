@@ -413,6 +413,7 @@ class Dl extends Application
 
         $mfields = $mtab.'.id as id,delivery_type,
                 pickuptime,
+                assignment_date,
                 buyerdeliverycity,
                 buyerdeliveryzone,
                 buyer_name,
@@ -553,6 +554,7 @@ class Dl extends Application
             '#',
             'Delivery Time',
             'Pickup Time',
+            'Assigned Date',
             'Device',
             'Courier',
             'Type',
@@ -639,6 +641,7 @@ class Dl extends Application
                 $num,
                 $key['deliverytime'],
                 $key['pickuptime'],
+                $key['assignment_date'],
                 $key['device'],
                 $key['courier'],
                 $key['delivery_type'],
