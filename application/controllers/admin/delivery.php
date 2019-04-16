@@ -2388,7 +2388,7 @@ class Delivery extends Application
             'Delivery ID',
             'Status',
             'TTD Toko',
-            'Pending',
+            //'Pending',
             //'Note',
             'Actions',
 
@@ -2420,7 +2420,7 @@ class Delivery extends Application
             '<input type="text" name="search_status" value="Search status" class="search_init" />',
             //'',
             //'<input type="text" name="search_trxid" value="Search Trans ID" class="search_init" />',
-            '',
+            //'',
             '',
             '',
             '<input type="text" name="search_merchant_trans_id" value="Search transaction ID" class="search_init" />',
