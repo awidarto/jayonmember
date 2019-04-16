@@ -2331,7 +2331,7 @@ class Delivery extends Application
                 //'<span class="view_detail" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">'.$key['delivery_id'].'</span>',
                 $thumbstat.'<br />'.$pick_stat.'<br />'.$wh_stat,
                 '<img class="sign" src="'.$sign['sign'].'" />',
-                $key['pending_count'],
+                //$key['pending_count'],
                 //$key['delivery_note'].'<br /><br />'.$viewmore,
                 $printlabel,
                 //.' '.$reassign.' '.$changestatus.' '.$viewlog,
