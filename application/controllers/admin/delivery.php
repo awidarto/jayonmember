@@ -816,6 +816,7 @@ class Delivery extends Application
         //}
 
         $this->db->group_start()
+            ->where('is_archived',0)
             ->where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_canceled'))
             ->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
             ->group_end();
@@ -2032,9 +2033,9 @@ class Delivery extends Application
             $merchantId =[];
 
             foreach ($merchant_group as $m)
-            {  
-                $merchantId[] = trim($m['id']);  
-            }   
+            {
+                $merchantId[] = trim($m['id']);
+            }
         }
         //end
         $limit_count = $this->input->post('iDisplayLength');
@@ -2198,6 +2199,7 @@ class Delivery extends Application
         if(count($merchantId) > 1 ){
 
             $this->db->group_start()
+                ->where('is_archived',0)
                 ->where_in($this->config->item('assigned_delivery_table').'.merchant_id',$merchantId)
                 ->and_()
                 ->group_start()
@@ -2211,9 +2213,10 @@ class Delivery extends Application
                         ->group_end()
                 ->group_end()
             ->group_end();
-                
+
             }else{
                 $this->db->group_start()
+                    ->where('is_archived',0)
                 ->where($this->config->item('assigned_delivery_table').'.merchant_id',$this->session->userdata('userid'))
                 ->and_()
                 ->group_start()
@@ -2274,7 +2277,7 @@ class Delivery extends Application
             $delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
             $edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
             //$printslip = anchor_popup("admin/prints/deliveryslip/".$key['delivery_id'], "Print Slip"); // Build actions links
-            
+
             $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
             $reassign = '<span class="reassign" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Reassign</span>';
             $viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
@@ -2464,7 +2467,7 @@ class Delivery extends Application
         //Update Sahlan
         $id = $this->session->userdata('userid');
 
-        
+
         $idgrup = $this->session->userdata('merchantgroup_id');
 
         if( $idgrup == '100' ){
@@ -2478,9 +2481,9 @@ class Delivery extends Application
             $merchantId =[];
 
             foreach ($merchant_group as $m)
-            {  
-                $merchantId[] = trim($m['id']);  
-            }   
+            {
+                $merchantId[] = trim($m['id']);
+            }
         }
         //end
         $limit_count = $this->input->post('iDisplayLength');
@@ -2625,7 +2628,7 @@ class Delivery extends Application
 
         if(count($merchantId) > 1 ){
                 $this->db->group_start()
-            
+                ->where('is_archived',0)
                 ->where_in($this->config->item('assigned_delivery_table').'.merchant_id',$merchantId)
                 ->and_()
                 ->group_start()
@@ -2651,7 +2654,7 @@ class Delivery extends Application
 
             }
         //end
-        
+
         /*
         $this->db->group_start()
             ->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
