@@ -157,6 +157,8 @@ class Dl extends Application
         $this->db->join('devices as d',$this->config->item('assigned_delivery_table').'.device_id=d.id','left');
         $this->db->join('couriers as c',$this->config->item('assigned_delivery_table').'.courier_id=c.id','left');
 
+        $this->db->where('is_archived',0);
+
         //update Sahlan
             if(count($merchantId) > 1 ){
                 $this->db->where_in($this->config->item('assigned_delivery_table').'.merchant_id',$merchantId);
@@ -170,7 +172,6 @@ class Dl extends Application
         //}
 
         $this->db->group_start()
-            ->where('is_archived',0)
             ->where('status',$this->config->item('trans_status_admin_courierassigned'))
             ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
             ->or_where('status',$this->config->item('trans_status_mobile_enroute'))
@@ -502,6 +503,7 @@ class Dl extends Application
         $daterange = sprintf("`%s`between '%s' and '%s' ", $column, $date_from, $date_to);
 
         $this->db->where($daterange, null, false);
+        $this->db->where('is_archived',0);
 
         //update Sahlan
             if(count($merchantId) > 1 ){
