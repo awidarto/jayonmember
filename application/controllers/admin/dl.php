@@ -60,9 +60,9 @@ class Dl extends Application
             $merchantId =[];
 
             foreach ($merchant_group as $m)
-            {  
-                $merchantId[] = trim($m['id']);  
-            }   
+            {
+                $merchantId[] = trim($m['id']);
+            }
         }
         //end
 
@@ -170,6 +170,7 @@ class Dl extends Application
         //}
 
         $this->db->group_start()
+            ->where('is_archived',0)
             ->where('status',$this->config->item('trans_status_admin_courierassigned'))
             ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
             ->or_where('status',$this->config->item('trans_status_mobile_enroute'))
@@ -255,7 +256,7 @@ class Dl extends Application
             $delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
             $edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
             //$printslip = anchor_popup("admin/prints/deliveryslip/".$key['delivery_id'], "Print Slip"); // Build actions links
-            
+
             $changestatus = '<span class="changestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >ChgStat</span>';
             $reassign = '<span class="reassign" id="'.$key['delivery_id'].'" style="text-decoration:underline;cursor:pointer;">Reassign</span>';
             $viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
@@ -400,9 +401,9 @@ class Dl extends Application
             $merchantId =[];
 
             foreach ($merchant_group as $m)
-            {  
-                $merchantId[] = trim($m['id']);  
-            }   
+            {
+                $merchantId[] = trim($m['id']);
+            }
         }
         //end
 
@@ -603,7 +604,7 @@ class Dl extends Application
             $num++;
             $delete = anchor("admin/delivery/delete/".$key['id']."/", "Delete"); // Build actions links
             $edit = anchor("admin/delivery/edit/".$key['id']."/", "Edit"); // Build actions links
-            
+
             $viewlog = '<span class="view_log" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >Log</span>';
 
             $puchangestatus = '<span class="puchangestatus" id="'.$key['delivery_id'].'" style="cursor:pointer;text-decoration:underline;" >PUChgStat</span>';
